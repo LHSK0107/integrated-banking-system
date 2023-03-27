@@ -93,9 +93,15 @@ npm version etc icon으로 세팅 예정
 
 - PR에서 어떤 요소가 변경되었는지 Commits, Files changed 등 항목에서 확인
 
+[변경 전]
+
 ![assign-merge](./setupImages/request-review.png)
 
-- 리뷰가 필요한 경우, 아래 comment쪽에서 서로 진행
+[변경 후]
+
+![require-review](./setupImages/require-review.png)
+
+- 리뷰가 필요한 경우, 아래 comment쪽에서 서로 진행하도록 정했으나, 최소 한 명 이상의 팀원이 리뷰를 하도록 지정
 - Comment 등 작성 후, 이상 요소가 없다면 merge
 - 이 외에도 rebase 등이 가능하나 상황에 맞춰서 진행
 
@@ -106,7 +112,7 @@ npm version etc icon으로 세팅 예정
 ### Issue 생성 (수정 중)
 
 - 어떤 부분이 작동하지 않거나 충돌 등의 에러가 발생한 경우뿐만 아니라 meeting 등 각종 이벤트에 대해서 추가 및 선택
-- 타이틀은 '[이슈 요소 #number] text'로 진행 => 이슈, PR은 생성 후에도 프로젝트 작업 등에서 타이틀 수정이 가능
+- 타이틀은 '[이슈 요소 #number] text'로 진행 => 이슈, PR은 생성 후에도 프로젝트 작업 등에서 타이틀 수정이 가능 (Issue, Todo, PR 등)
 
 ### Project -Workflows
 
@@ -127,9 +133,18 @@ npm version etc icon으로 세팅 예정
 
 - Webcash Project Board 제목 바로 밑에 있는 탭 'board' 옆의 화살표를 클릭하면, Layout 3가지를 볼 수 있으며, 일정은 Board와 Roadmap에서 확인 가능
 
-#### (2) 일정 등록을 위한 Date Field 생성
+### (2) 이슈 및 작업에 일정 등록하기
 
-![project-roadmap-image](./setupImages/config-field-1.png)
+![add-date-into-issue](./setupImages/new-config-2.png)
+
+-  일정에 등록하려는 항목을 클릭하면 우측 옵션 항목에서 아까 생성한 항목들을 볼 수 있으며, 'Enter a date'를 클릭하여 날짜 설정이 가능 
+-  설정 후에는 우측 상단의 'X'를 클릭
+
+#### (3) 일정 등록을 위한 Date Field 생성 (참고 사항)
+
+*이미 등록되어 있는 start, end 필드 사용
+
+![project-roadmap-image](./setupImages/new-config-field-1.png)
 
 - 일정을 등록하기 위해서는 캘린더 우측 상단에 있는 Date fields에서 필드 생성을 해야 하는데, State와 End 날짜에 해당하는 필드를 각각 설정해줘야 함
 
@@ -137,10 +152,4 @@ npm version etc icon으로 세팅 예정
 
 - Filed name으로 start #'num', end #'num' 로 필드를 생성 ex) #1 start 등 예제에서는 start 'write srs document'
 
-![add-date-into-issue](./setupImages/config-field-3.png)
-
--  일정에 등록하려는 항목을 클릭하면 우측 옵션 항목에서 아까 생성한 항목들을 볼 수 있으며, 'Enter a date'를 클릭하여 날짜 설정이 가능 
-
-- 설정 후에는 우측 상단의 'X'를 클릭
-
-  
+### 
