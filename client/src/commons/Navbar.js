@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { Link } from "react-router-dom";
 import brandLogo from "../assets/brand/webcash_logo.png";
+import userImg from "../assets/images/icon/user.png";
 
 const Navbar = () => {
     // context 처리
@@ -19,14 +20,14 @@ const Navbar = () => {
           </div>
           {/* 로그인 체크 부분 */}
           <div class="user_info_wrap">
-            {isAuth ? <p><Link to="./logout">logout</Link></p> : <p><Link to="./login">Login</Link>></p>}
+            {isAuth ? <LogoutSection/> :<LoginSection/>}
           </div>
         </div>
         <div class="nav_menu_section">
           <Link to="/">
             <figure>
               <img
-                class="main_logo"
+                className="main_logo"
                 src={brandLogo}
                 alt="메인 로고 이미지"
               />
@@ -51,5 +52,25 @@ const Navbar = () => {
     </header>
   );
 };
+
+const LoginSection = () =>{
+    return(
+        <div class="login">
+            <figure>
+                <img src={userImg} alt="user 이미지"/>
+            </figure>
+            <p><Link to="./signup">Sign Up</Link></p>
+            <p><Link to="./login">Login</Link></p>
+        </div>
+    )
+}
+
+const LogoutSection = () => {
+    return(
+        <>
+            <p><Link to="/">Logout</Link></p>
+        </>
+    )
+}
 
 export default Navbar;
