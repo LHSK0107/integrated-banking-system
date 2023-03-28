@@ -25,7 +25,6 @@ li{
 }
 
 #root{
-
 }
 /* --- reset */
 
@@ -46,8 +45,8 @@ li{
 #header{
   position: fixed;
   width: 100%;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
 }
 #header #nav{
   position: relative;
@@ -57,21 +56,33 @@ li{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 0;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 #header #nav .nav_info_section{
   color: #666;
   font-size: 1rem;
   font-weight: 400;
 }
+/* family site */
 #header #nav .nav_info_section .family_site{
   display: flex;
 }
-#header #nav .nav_info_section .family_site li{
+#header #nav .nav_info_section .family_site li {
+  padding: 10px 0;
 }
 #header #nav .nav_info_section .family_site li:not(:last-child){
   margin-right: 15px;
 }
+#header #nav .nav_info_section .family_site li a{
+  display: inline-block;
+  border-right: 2px solid #bcbcbc;
+  padding-right: 15px;
+}
+#header #nav .nav_info_section .family_site li:last-child a {
+  border: none;
+}
+/* login */
 #header #nav .user_info_wrap{
   position: relative;
 }
@@ -93,44 +104,36 @@ li{
 #header #nav .user_info_wrap .login p:not(:last-child){
   margin-right: 15px;
 }
-
+/* menu */
 #header #nav .nav_menu_section{
   position: relative;
   background-color: #f6f9fc;
+  padding: 17px 0;
 }
 
 #header #nav .nav_menu_section figure{
-  width: 200px;
-  height: 100%;
+  width: 46px;
+  height: 46px;
 }
 #header #nav .nav_menu_section figure .main_logo{
   width: 100%;
-  height: auto;
   object-fit: cover;
 }
 #header #nav .nav_menu_section .menu_list{
   display: flex;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
 #header #nav .nav_menu_section .menu_list li:not(:last-child){
-  margin-right: 15px;
+  margin-right: 70px;
 }
 #header #nav .nav_menu_section .menu_list li a{
   display: block;
   width: 100%;
   height: 100%;
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: 700;
-}
-#header #nav .menu_list li{
-  
-}
-#header #nav .menu_list li:not(:last-child){
-  margin-right: 15px;
-}
-#header #nav .menu_list li a{
-  font-size:1em;
-  font-weight: 300;
 }
 /* --- header(navbar) */
 

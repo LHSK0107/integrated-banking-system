@@ -69,8 +69,8 @@ const LoginSection = () =>{
             {/* <figure>
                 <img src={userImg} alt="user 이미지"/>
             </figure> */}
-            <p><Link to="./signup">Sign Up</Link></p>
-            <p><Link to="./login">Login</Link></p>
+            <p><Link to="./signup">회원가입</Link></p>
+            <p><Link to="./login">로그인</Link></p>
             <p><Link to="./help">고객센터</Link></p>
         </div>
     )
@@ -79,7 +79,7 @@ const LoginSection = () =>{
 const LogoutSection = () => {
     return(
         <>
-            <p><Link to="/">Logout</Link></p>
+            <p><Link to="/">로그아웃</Link></p>
             <p><Link to="/">보고서 만들기</Link></p>
             <p><Link to="./help">고객센터</Link></p>
         </>
