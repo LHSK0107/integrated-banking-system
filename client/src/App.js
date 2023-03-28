@@ -4,12 +4,16 @@ import Navbar from "./commons/Navbar";
 const App = () => {
   return (
     <div className="App">
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<></>}/>
-        </Routes>
-      </Router>
+      <div className="container">
+        <div className="inner">
+          <Router>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<></>} />
+            </Routes>
+          </Router>
+        </div>
+      </div>
     </div>
   );
 }
