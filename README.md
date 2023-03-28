@@ -24,6 +24,42 @@ npm version etc icon으로 세팅 예정
   ### Remote Info
   - origin: [LHSK repository](testing)
 
+### Folder별 Push, Pull 설정
+
+- git version 확인 -> ```git --version```
+
+- 버전이 2.25 이상일 경우
+
+  #### (1) Pull
+
+  - mkdir 등 pull 받을 폴더로 이동
+
+  - ```git init``` 으로 초기화
+
+  - sparse-checkout 세팅
+
+  - ```tex 
+    $ git sparse-checkout init
+    $ git sparse-checkout set "/directory path/"
+    $ git sparse-checkout list
+    # /<Path>/
+    ```
+
+    * client의 경우 -> "/client/", server의 경우 -> "/server/" 지정
+
+  - git remote add origin https://github.com/LHSK0107/integrated-banking-system.git
+
+  - git pull origin main
+
+  
+
+  #### (2) Push
+
+  - Pull 진행 후에 지정한 폴더를 받은 후, 작업하고 push
+  - Push 방법은 기존과 동일
+
+  <a href="https://bitlog.tistory.com/132">참조 사이트</a>
+
 ### Branch Info
 
   * main 브랜치를 주축으로 각 요소 별 branch를 생성 후, 작업
