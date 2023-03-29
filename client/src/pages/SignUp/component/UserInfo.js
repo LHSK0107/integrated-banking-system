@@ -28,11 +28,6 @@ const UserInfo = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [inputChangeList, setInputChangeList] = useState(["", "", "", ""]);
-  const [value, setValue] = useState("");
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
   const onSubmit = (data) => {
     const values = {
       id: data.id,
@@ -40,11 +35,7 @@ const UserInfo = () => {
       confirmPassword: data.confirmPassword,
       email: data.email,
     };
-    for(ele of values){
-      setInputChangeList({...inputChangeList, ele})
-    }
     setFormData({ ...formData, ...values });
-    setValue(data.id);
     setPageNum(pageNum + 1);
   };
 
@@ -56,8 +47,6 @@ const UserInfo = () => {
           <input
             type="text"
             placeholder="아이디를 입력하세요."
-            value={value}
-            onChange={(e) => onChange(e)}
             {...register("id")}
           />
           <p>{errors.id?.message}</p>
