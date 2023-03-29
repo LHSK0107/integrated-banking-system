@@ -1,31 +1,34 @@
 /* eslint-disable */
 import "./index.css";
-import React, { memo, useState, createContext } from "react";
-import UserInfo from "./component/UserInfo";
-import PersonalInfo from "./component/PersonalInfo";
-import Result from "./component/Result";
+import React, { useState, useRef, useEffect } from "react";
+
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
-import UserIcon from "../../assets/images/icon/user.png";
-const Index = memo(() => {
+import { PageContext } from "./context/PageContext";
+import Steps from "./Steps";
+
+const Index = () => {
   const [pageNum, setPageNum] = useState(0);
   const [formData, setFormData] = useState({
-    username: "",
+    id: "",
     password: "",
     confirmPassword: "",
     email: "",
+    username: "",
     department: "",
+    phoneNum: "",
+    isVerify: false,
   });
 
+  // context를 통해 각 페이지에 대한 정보가 담긴 Steps에 state 전달
   const showCurrentPage = () => {
-    if (pageNum === 0) {
-      return <UserInfo formData={formData} setFormData={setFormData} />;
-    } else if (pageNum === 1) {
-      return <PersonalInfo formData={formData} setFormData={setFormData} />;
-    } else {
-      return <Result />;
-    }
+    return (
+      <PageContext.Provider
+        value={{ pageNum, setPageNum, formData, setFormData }}
+      >
+        <Steps />
+      </PageContext.Provider>
+    );
   };
-  const FormTitles = ["Sign Up", "Personal Info", "Other"];
   return (
     <div className="signup_section">
       <div className="signup_image_section">
@@ -34,40 +37,14 @@ const Index = memo(() => {
         </figure>
       </div>
       <div className="signup_form_section">
-        <div className="p_container">
-        <div className="progress">
-        </div>
-          <img className="circle active" src={UserIcon} alt="icon"/>
-          <img className="circle" src={UserIcon} alt="icon"/>
-          <img className="circle" src={UserIcon} alt="icon"/>
-          <img className="circle" src={UserIcon} alt="icon"/>
-        </div>
         <div className="signup_form_wrap">
-          <h1>Hello! We are I'am! <br/>Create Account</h1>
           <div className="signup_form">
             {showCurrentPage()}
-          </div>
-          <hr/>
-          <div className="form_btn_wrap">
-            {
-              pageNum!==0 && <button onClick={()=>{setPageNum((currentIdx)=>currentIdx-1)}}>이전</button> 
-            }
-            <button
-              onClick={() => {
-                if (pageNum === 2) {
-                  console.log(formData);
-                } else {
-                  setPageNum((currentIdx) => currentIdx + 1);
-                }
-              }}
-            >
-              {pageNum === 2 ? "등록" : "다음"}
-            </button>
           </div>
         </div>
       </div>
     </div>
   );
-});
+};
 
 export default Index;
