@@ -1,4 +1,4 @@
-package com.lhsk.iam.config;
+package com.lhsk.iam.global.config;
 
 import org.springframework.boot.web.servlet.view.MustacheViewResolver;
 import org.springframework.context.annotation.Configuration;
