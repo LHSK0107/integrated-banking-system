@@ -1,11 +1,16 @@
-package com.lhsk.iam.controller;
+package com.lhsk.iam.domain.user.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class IndexController {
+public class HomeController {
 
+	@GetMapping("/")
+	public String home() {
+		return "index";
+	}
+	
 	@GetMapping("/index")
 	public String index() {
 		return "index";
