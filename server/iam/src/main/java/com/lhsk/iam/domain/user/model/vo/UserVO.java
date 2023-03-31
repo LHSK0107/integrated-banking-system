@@ -1,15 +1,20 @@
 package com.lhsk.iam.domain.user.model.vo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class UserVO {
-	private int user_no;
-	private String user_code; // (ROLE_USER or ROLE_ADMIN)
+	
+	private int userNo;
+	private String userCode;
 	private String id;
 	private String password;
 	private String name;
@@ -17,6 +22,7 @@ public class UserVO {
 	private String email;
 	private String phone;
 	
+
 	public List<String> getUserCodeList() {
 		if(this.user_code.length()>0) {
 			return Arrays.asList(this.user_code);
