@@ -22,4 +22,12 @@ public class UserVO {
 	private String email;
 	private String phone;
 	
+
+	public List<String> getUserCodeList() {
+		if(this.user_code.length()>0) {
+			return Arrays.asList(this.user_code);
+		}
+		return new ArrayList<>();
+			
+	}
 }
