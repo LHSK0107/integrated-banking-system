@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.STRING(20),
         allowNull: false,
+        unique: true
       },
       password: {
         type: DataTypes.STRING(140),
@@ -29,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING(330),
         allowNull: false,
+        unique: true
       },
       phone: {
         type: DataTypes.STRING(20),

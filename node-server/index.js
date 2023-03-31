@@ -10,6 +10,9 @@ require("dotenv").config();
 const usersRouter = require("./routes/Users");
 app.use("/auth", usersRouter);
 
+const apisRouter = require("/routes/Inquiry");
+app.use("/api", apisRouter);
+
 db.sequelize
   .sync()
   .then(() => {
