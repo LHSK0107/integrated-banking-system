@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhsk.iam.domain.user.model.mapper.UserMapper">
+	<insert id="signup" 
+			parameterType="com.lhsk.iam.domain.user.model.vo.UserVO" 
+			useGeneratedKeys="true" keyProperty="userNo">
+		INSERT INTO user (id, password, name, dept, email, phone) 
+		VALUES (#{id}, #{password}, #{name}, #{dept}, #{email}, #{phone})
+	</insert>
+	
+	<update id="updateUser">
+		UPDATE user SET 
+			password=#{password}, 
+			name=#{name}, 
+			dept=#{dept}, 
+			email=#{email}, 
+			phone=#{phone}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="deleteUser">
+		DELETE FROM user WHERE id=#{id}
+	</delete>
+	
+	<select id="selectUserOne">
+		SELECT (id, name, dept, email, phone) 
+		FROM user 
+		WHERE id=#{id}
+	</select>
+	
+	<select id="selectUserAll">
+		SELECT (userNo, userCode, id, name, dept, email, phone)
+		FROM user
+		ORDER BY ASC userNo;
+	</select>
+</mapper>
