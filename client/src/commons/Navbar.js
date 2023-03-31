@@ -90,7 +90,7 @@ const LoginSection = () => {
         <Link to="./login">로그인</Link>
       </p>
       <p>
-        <Link to="./help">고객센터</Link>
+        <Link to="./help">공지사항</Link>
       </p>
     </div>
   );

@@ -141,7 +141,7 @@ img {
   -webkit-box-pack: end;
   -ms-flex-pack: end;
 }
-.justify_ceter {
+.justify_center {
   justify-content: center;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
