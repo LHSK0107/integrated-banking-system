@@ -83,10 +83,18 @@ const ProgressBar = (props) => {
   return (
     <div ref={progressWrapRef} className="progress_wrap">
       <div ref={progressBarRef} className="progress_bar"></div>
-      <img className="circle active" src={UserIcon} alt="icon" />
-      <img className="circle" src={UserIcon} alt="icon" />
-      <img className="circle" src={UserIcon} alt="icon" />
-      <img className="circle" src={UserIcon} alt="icon" />
+      <p className="circle active" src={UserIcon} alt="icon">
+        1
+      </p>
+      <p className="circle" src={UserIcon} alt="icon">
+        2
+      </p>
+      <p className="circle" src={UserIcon} alt="icon">
+        3
+      </p>
+      <p className="circle" src={UserIcon} alt="icon">
+        4
+      </p>
     </div>
   );
 };
