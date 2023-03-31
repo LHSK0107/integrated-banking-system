@@ -23,15 +23,15 @@
 		DELETE FROM user WHERE id=#{id}
 	</delete>
 	
-	<select id="selectUserOne">
+	<select id="findOneUser">
 		SELECT (id, name, dept, email, phone) 
 		FROM user 
 		WHERE id=#{id}
 	</select>
 	
-	<select id="selectUserAll">
-		SELECT (userNo, userCode, id, name, dept, email, phone)
+	<select id="findAllUser" resultType="com.lhsk.iam.domain.user.model.vo.UserVO" >
+		SELECT user_no, user_code, id, name, dept, email, phone
 		FROM user
-		ORDER BY ASC userNo;
+		ORDER BY user_no ASC;
 	</select>
 </mapper>
