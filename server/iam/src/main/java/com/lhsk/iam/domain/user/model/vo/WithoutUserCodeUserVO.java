@@ -15,27 +15,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserVO {
+public class WithoutUserCodeUserVO {
 	
-	private int userNo;
-	private String userCode;
 	private String id;
-	private String password;
 	private String name;
 	private String dept;
 	private String email;
 	private String phone;
-	
-
-	public List<String> getUserCodeList() {
-		if(this.userCode.length()>0) {
-			return Arrays.asList(this.userCode);
-		}
-		return new ArrayList<>();
-			
-	}
-
-	
-
 	
 }
