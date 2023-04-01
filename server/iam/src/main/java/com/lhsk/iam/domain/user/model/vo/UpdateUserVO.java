@@ -1,9 +1,5 @@
 package com.lhsk.iam.domain.user.model.vo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,27 +11,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserVO {
+public class UpdateUserVO {
 	
 	private int userNo;
-	private String userCode;
-	private String id;
 	private String password;
 	private String name;
 	private String dept;
 	private String email;
 	private String phone;
-	
 
-	public List<String> getUserCodeList() {
-		if(this.userCode.length()>0) {
-			return Arrays.asList(this.userCode);
-		}
-		return new ArrayList<>();
-			
-	}
-
-	
-
-	
 }

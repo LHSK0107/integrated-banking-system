@@ -1,12 +1,13 @@
 package com.lhsk.iam.domain.user.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.lhsk.iam.domain.user.model.mapper.UserMapper;
+import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
+import com.lhsk.iam.domain.user.model.vo.WithoutUserCodeUserVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,15 @@ public class UserService {
 		List<UserVO> userList = userMapper.findAllUser();
 		log.info("userList size: "+userList.size());
 		return userList;
+	}
+
+	public WithoutUserCodeUserVO findByUserNo(int userNo) {
+		return userMapper.findByUserNo(userNo);
+	}
+
+	public UpdateUserVO updateUser(int userNo) {
+		return userMapper.updateUser(userNo);
+		
 	}
 
 	

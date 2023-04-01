@@ -9,29 +9,27 @@
 		VALUES (#{id}, #{password}, #{name}, #{dept}, #{email}, #{phone})
 	</insert>
 	
-	<update id="updateUser">
-		UPDATE user SET 
-			password=#{password}, 
-			name=#{name}, 
-			dept=#{dept}, 
-			email=#{email}, 
-			phone=#{phone}
-		WHERE id=#{id}
+	<update id="updateUser" parameterType="com.lhsk.iam.domain.user.model.vo.UpdateUserVO">
+		UPDATE user 
+		SET password=#{password}, name=#{name}, dept=#{dept}, 
+			email=#{email}, phone=#{phone}
+		WHERE user_no=#{userNo}
 	</update>
 	
 	<delete id="deleteUser">
 		DELETE FROM user WHERE id=#{id}
 	</delete>
 	
-	<select id="findOneUser">
-		SELECT (id, name, dept, email, phone) 
+	<select id="findByUserNo" parameterType="int" resultType="com.lhsk.iam.domain.user.model.vo.WithoutUserCodeUserVO">
+		SELECT id, name, dept, email, phone 
 		FROM user 
-		WHERE id=#{id}
+		WHERE user_no=#{userNo}
 	</select>
 	
-	<select id="findAllUser" resultType="com.lhsk.iam.domain.user.model.vo.UserVO" >
+	<select id="findAllUser" resultType="com.lhsk.iam.domain.user.model.vo.UserVO">
 		SELECT user_no, user_code, id, name, dept, email, phone
 		FROM user
 		ORDER BY user_no ASC;
 	</select>
+	
 </mapper>
