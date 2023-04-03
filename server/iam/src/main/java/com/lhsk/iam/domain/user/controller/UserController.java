@@ -2,10 +2,6 @@ package com.lhsk.iam.domain.user.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-//@Controller
 @RequiredArgsConstructor
 public class UserController {
 	// 생성자 주입
@@ -41,48 +36,51 @@ public class UserController {
 		log.info("UserController.signup");
 //		log.info("userVO: "+userVO);
 		userService.signup(userVO);
-		return "index";
+		return "{\"status\":\"ok\"}";
+	}
+	
+	// 회원정보 수정
+	@PutMapping("/user/update")
+	public String updateUser(@RequestBody UpdateUserVO updateUserVO) {
+		log.info("UserController.update"); 
+		log.info(updateUserVO.toString());
+		userService.updateUser(updateUserVO);
+		return "{\"status\":\"ok\"}";
 	}
 
-	// 회원 리스트 출력
-	// @RestController를 이용하는 경우
+	// 회원 리스트 출력(ROLE_ADMIN, ROLE_MANAGER)
 	@GetMapping("/user/list")
 	public List<UserVO> findAllUser() {
 		log.info("UserController.userList");
 		return userService.findAllUser();
 	}
-	
-	// 회원 리스트 출력(ROLE_ADMIN, ROLE_MANAGER)
-	// @Controller를 이용하는 경우
-//	@GetMapping("/user/list")
-//	public String findAllUser(Model model) {			// Model : html로 가져갈 데이터가 있다면 사용
-//		log.info("UserController.userList - model"); 
-//		model.addAttribute("user", userService.findAllUser());
-//		return "user";
-//	}
 	  
 	// 회원 상세조회(ROLE_USER)
-	// @RestController를 이용하는 경우
 	@PostMapping("/user/{userNo}")
 	public WithoutUserCodeUserVO findByUserNo(@PathVariable int userNo) {	// @PathVariable : 경로 상의 값을 가져올 때 사용 
 		log.info("UserController.findByUserNo"); 
 		return userService.findByUserNo(userNo);
 	}
 	
+	
+
+// -----------------------------------------------------------------------------------------------
+// @Controller를 이용하는 경우
+
+//	// 회원 상세조회(ROLE_USER)
 //	@PostMapping("/user/{userNo}")
-//	// @Controller를 이용하는 경우
 //	public String findByUserNo(@PathVariable int userNo, Model model) {	
 //		log.info("UserController.findByUserNo"); 
 //		model.addAttribute("user", userService.findByUserNo(userNo));
 //		return "user";
 //	}
 	
-	// 회원정보 수정
-	@PutMapping("/user/update")
-	public UpdateUserVO updateUser(UpdateUserVO updateUserVO) {
-		return userService.updateUser(updateUserVO.getUserNo());
-	}
-	
-	
+//	// 회원 리스트 출력(ROLE_ADMIN, ROLE_MANAGER)
+//	@GetMapping("/user/list")
+//	public String findAllUser(Model model) {			// Model : html로 가져갈 데이터가 있다면 사용
+//		log.info("UserController.userList - model"); 
+//		model.addAttribute("user", userService.findAllUser());
+//		return "user";
+//	}
 	
 }

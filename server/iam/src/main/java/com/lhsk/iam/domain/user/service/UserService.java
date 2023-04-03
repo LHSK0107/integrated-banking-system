@@ -24,6 +24,10 @@ public class UserService {
 		userMapper.signup(userVO);
 	}
 
+	public void updateUser(UpdateUserVO updateUserVO) {
+		userMapper.updateUser(updateUserVO);
+	}
+
 	public List<UserVO> findAllUser() {
 		// userVO 객체를 userList에 담아서 리턴
 		List<UserVO> userList = userMapper.findAllUser();
@@ -35,10 +39,6 @@ public class UserService {
 		return userMapper.findByUserNo(userNo);
 	}
 
-	public UpdateUserVO updateUser(int userNo) {
-		return userMapper.updateUser(userNo);
-		
-	}
 
 	
 

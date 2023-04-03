@@ -14,10 +14,9 @@ public interface UserMapper {
 	
 	void signup(UserVO userVO);
 
+	void updateUser(UpdateUserVO updateUserVO);
+
 	List<UserVO> findAllUser();
-
+	
 	WithoutUserCodeUserVO findByUserNo(int userNo);
-
-	UpdateUserVO updateUser(int userNo);
-
 }
