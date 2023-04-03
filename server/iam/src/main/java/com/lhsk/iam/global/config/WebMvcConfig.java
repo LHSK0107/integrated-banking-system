@@ -1,6 +1,5 @@
 package com.lhsk.iam.global.config;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.web.servlet.view.MustacheViewResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
