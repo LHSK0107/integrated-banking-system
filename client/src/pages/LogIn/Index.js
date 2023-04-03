@@ -43,7 +43,7 @@ const Index = () => {
     axios
       .post("/user", {
         id: data.id,
-        pw: data.pw,
+        password: data.password,
       })
       .then(function (response) {
         console.log(response, response.status, response.data.token);
@@ -56,8 +56,8 @@ const Index = () => {
   console.log(watch("example")); // watch input value by passing the name of it
 
   return (
-    <div className="login_section">
-      <div className="login_image_section">
+    <div className="login_section flex justify_center align_center">
+      <div className="login_image_section flex justify_center align_center">
         <figure>
           <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
         </figure>
@@ -65,9 +65,9 @@ const Index = () => {
 
       <div className="login_form_section">
         <h1>로그인</h1>
-        <div className="login_form">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
+        <div>
+          <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
+            <div className="flex">
               <input
                 type="text"
                 placeholder="아이디를 입력하세요."
@@ -78,7 +78,7 @@ const Index = () => {
               {/* {errors.id && <p>This field is required</p>} */}
               <p>{errors.id?.message}</p>
             </div>
-            <div>
+            <div className="flex">
               <input
                 type="password"
                 placeholder="패스워드를 입력하세요."
@@ -88,10 +88,10 @@ const Index = () => {
               />
               <p>{errors.password?.message}</p>
             </div>
-            <div className="login_btn_wrap">
-              <button type="button">뒤로</button>
-              <button type="reset">취소</button>
-              <button type="submit">로그인</button>
+            <div className="login_btn_wrap flex justify_center align_center">
+              <button className="more_btn" type="button">뒤로</button>
+              <button className="more_btn" type="reset">취소</button>
+              <button className="more_btn" type="submit">로그인</button>
             </div>
           </form>
         </div>
