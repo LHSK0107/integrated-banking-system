@@ -53,7 +53,6 @@ const Steps = () => {
 const ProgressBar = (props) => {
   const progressBarRef = useRef();
   const progressWrapRef = useRef();
-  const progressItem = useRef();
 
   // 추후 progress wrap 이용해서 전부 처리
   useEffect(() => {
@@ -75,6 +74,7 @@ const ProgressBar = (props) => {
     // progress_bar div도 포함되어 있으니 1을 빼야 하니 총 2를 뺌
     progressFunc(props.pageNum, progressWidth, progressCountImg - 2);
   }, [props.pageNum]);
+
   // 현재 width를 바탕으로 progress bar 작업
   const progressFunc = (pageNum, width, count) => {
     progressBarRef.current.style.transition = "0.4s ease-in-out";
@@ -83,16 +83,16 @@ const ProgressBar = (props) => {
   return (
     <div ref={progressWrapRef} className="progress_wrap">
       <div ref={progressBarRef} className="progress_bar"></div>
-      <p className="circle active" src={UserIcon} alt="icon">
+      <p className="step active" src={UserIcon} alt="icon">
         1
       </p>
-      <p className="circle" src={UserIcon} alt="icon">
+      <p className="step" src={UserIcon} alt="icon">
         2
       </p>
-      <p className="circle" src={UserIcon} alt="icon">
+      <p className="step" src={UserIcon} alt="icon">
         3
       </p>
-      <p className="circle" src={UserIcon} alt="icon">
+      <p className="step" src={UserIcon} alt="icon">
         4
       </p>
     </div>
