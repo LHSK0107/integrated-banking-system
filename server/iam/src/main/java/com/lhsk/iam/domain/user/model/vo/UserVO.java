@@ -32,7 +32,7 @@ public class UserVO {
 
 	public List<String> getRoleList() {
 		if(this.userCode.length()>0) {
-			return Arrays.asList(this.userCode.split(","));
+			return Arrays.asList(this.userCode);
 		}
 		return new ArrayList<>();
 			
