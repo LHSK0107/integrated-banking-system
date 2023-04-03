@@ -3,13 +3,13 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lhsk.iam.domain.user.model.mapper.UserMapper">
 	<insert id="signup" 
-			parameterType="com.lhsk.iam.domain.user.model.vo.UserVO" 
+			parameterType="UserVO" 
 			useGeneratedKeys="true" keyProperty="userNo">
 		INSERT INTO user (id, password, name, dept, email, phone) 
 		VALUES (#{id}, #{password}, #{name}, #{dept}, #{email}, #{phone})
 	</insert>
 	
-	<update id="updateUser" parameterType="com.lhsk.iam.domain.user.model.vo.UpdateUserVO">
+	<update id="updateUser" parameterType="UpdateUserVO">
 		UPDATE user 
 		SET password=#{password}, name=#{name}, dept=#{dept}, 
 			email=#{email}, phone=#{phone}
@@ -20,13 +20,13 @@
 		DELETE FROM user WHERE id=#{id}
 	</delete>
 	
-	<select id="findByUserNo" parameterType="int" resultType="com.lhsk.iam.domain.user.model.vo.WithoutUserCodeUserVO">
+	<select id="findByUserNo" parameterType="int" resultType="WithoutUserCodeUserVO">
 		SELECT id, name, dept, email, phone 
 		FROM user 
 		WHERE user_no=#{userNo}
 	</select>
 	
-	<select id="findAllUser" resultType="com.lhsk.iam.domain.user.model.vo.UserVO">
+	<select id="findAllUser" resultType="UserVO">
 		SELECT user_no, user_code, id, name, dept, email, phone
 		FROM user
 		ORDER BY user_no ASC;
