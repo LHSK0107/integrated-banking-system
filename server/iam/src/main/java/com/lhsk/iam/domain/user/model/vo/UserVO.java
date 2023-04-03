@@ -30,7 +30,7 @@ public class UserVO {
 	private String phone;
 	
 
-	public List<String> getRoleList() {
+	public List<String> getUserCode() {
 		if(this.userCode.length()>0) {
 			return Arrays.asList(this.userCode);
 		}
