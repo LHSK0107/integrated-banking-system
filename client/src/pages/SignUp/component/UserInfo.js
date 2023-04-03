@@ -20,7 +20,7 @@ const UserInfo = () => {
       .required("패스워드를 다시 입력해주세요."),
     email: yup.string().email().required("이메일을 다시 입력해주세요."),
   }).required();
-  const { register ,handleSubmit, trigger, formState: { errors }, unregister} = useForm({
+  const { register ,handleSubmit, formState: { errors }, unregister} = useForm({
     resolver: yupResolver(schema),
   });
   // 다음 버튼 클릭 시, formData에 각 입력값 전달
@@ -60,53 +60,53 @@ const UserInfo = () => {
   }, []);
   return (
     <div>
-      <form class="userInfo_form" onSubmit={handleSubmit(onSubmit)}>
+      <form className="userInfo_form" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label></label>
           <input
             type="text"
             placeholder="아이디를 입력하세요."
             {...register("id")}
             value={userInputValue.id}
             onChange={onChange}
+            autoComplete="none"
           />
           <p>{errors.id?.message}</p>
         </div>
         <div>
-          <label></label>
           <input
             type="password"
             placeholder="패스워드를 입력하세요."
             {...register("password")}
             value={userInputValue.password}
             onChange={onChange}
+            autoComplete="none"
           />
           <p>{errors.password?.message}</p>
         </div>
         <div>
-          <label></label>
           <input
             type="password"
             placeholder="패스워드를 다시 입력하세요."
             {...register("confirmPassword")}
             value={userInputValue.confirmPassword}
             onChange={onChange}
+            autoComplete="none"
           />
           <p>{errors.confirmPassword?.message}</p>
         </div>
         <div>
-          <label></label>
           <input
             type="text"
             placeholder="이메일을 입력하세요."
             {...register("email")}
             value={userInputValue.email}
             onChange={onChange}
+            autoComplete="none"
           />
           <p>{errors.email?.message}</p>
         </div>
         <hr />
-        <input onClick={()=>{console.log(errors)}} type="submit" value="다음" />
+        <input type="submit" value="다음" />
       </form>
     </div>
   );
