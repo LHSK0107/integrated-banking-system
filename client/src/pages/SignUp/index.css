@@ -1,6 +1,9 @@
 /* signup page start */
 .signup_section {
   overflow-y: hidden;
+  width: 100vw;
+  height: calc(100vh - 120px);
+  padding: 40px;
 }
 .signup_section .signup_image_section,
 .signup_section .signup_form_section {
@@ -8,32 +11,17 @@
   height: 100%;
   padding: 40px;
   position: relative;
+  background-color: #ffffff;
 }
 .signup_section .signup_form_section {
-  min-height: 650px;
+  /* min-height: 650px; */
 }
 .signup_section .signup_form_section h1 {
-  margin-bottom: 20px;
-}
-.signup_section .signup_form_section .progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.signup_section .signup_image_section figure {
-  width: 100%;
-  height: 100%;
-}
-.signup_section .signup_form_section {
-  background-color: #ffffff;
+  margin-bottom: 30px;
 }
 .signup_form_wrap {
   position: relative;
   width: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   min-height: 650px;
 }
 .signup_form_wrap .signup_form {
@@ -119,16 +107,17 @@
 .progress_wrap figure {
   z-index: 9990;
 }
-.progress_wrap .circle {
-  width: 30px;
-  height: 30px;
+.progress_wrap .step {
+  width: 40px;
+  height: 40px;
   background-color: #ffffff;
+  border: 3px solid #efefef;
   line-height: 26px;
   text-align: center;
   border-radius: 50%;
   z-index: 9997;
 }
-.progress_wrap .circle.active {
+.progress_wrap .step.active {
   border: 3px solid var(--color-point);
   transition: 0.4s ease-in-out;
   background-color: var(--color-point);
