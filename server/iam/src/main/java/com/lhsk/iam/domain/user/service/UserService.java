@@ -19,6 +19,12 @@ public class UserService {
 
 	private final UserMapper userMapper;
 	
+	public boolean checkDuplicateId(String id) {
+		log.info("Duplicate id count: "+userMapper.checkDuplicateId(id));
+		if(userMapper.checkDuplicateId(id) > 0) return true;
+		else return false;
+	}
+	
 	public void signup(UserVO userVO) {
 		// mapper의 signup메서드 호출 (조건 : VO객체를 넘겨줘야 함)
 		userMapper.signup(userVO);
@@ -38,6 +44,11 @@ public class UserService {
 	public WithoutUserCodeUserVO findByUserNo(int userNo) {
 		return userMapper.findByUserNo(userNo);
 	}
+
+	public void deleteUser(int userNo) {
+		userMapper.deleteUser(userNo);
+	}
+
 
 
 	
