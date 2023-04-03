@@ -14,8 +14,8 @@ const Index = () => {
     confirmPassword: "",
     email: "",
     username: "",
-    department: "",
-    phoneNum: "",
+    dept: "",
+    phone: "",
     isVerify: false,
   });
 
