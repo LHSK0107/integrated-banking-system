@@ -17,7 +17,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@JsonIgnoreProperties
 public class UserVO {
 	
 	private int userNo;
