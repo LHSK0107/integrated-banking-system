@@ -68,7 +68,6 @@ const UserInfo = () => {
             {...register("id")}
             value={userInputValue.id}
             onChange={onChange}
-            autoComplete="none"
           />
           <p>{errors.id?.message}</p>
         </div>
@@ -79,7 +78,6 @@ const UserInfo = () => {
             {...register("password")}
             value={userInputValue.password}
             onChange={onChange}
-            autoComplete="none"
           />
           <p>{errors.password?.message}</p>
         </div>
@@ -90,7 +88,6 @@ const UserInfo = () => {
             {...register("confirmPassword")}
             value={userInputValue.confirmPassword}
             onChange={onChange}
-            autoComplete="none"
           />
           <p>{errors.confirmPassword?.message}</p>
         </div>
@@ -101,7 +98,6 @@ const UserInfo = () => {
             {...register("email")}
             value={userInputValue.email}
             onChange={onChange}
-            autoComplete="none"
           />
           <p>{errors.email?.message}</p>
         </div>
