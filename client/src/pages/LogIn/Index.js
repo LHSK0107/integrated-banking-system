@@ -1,30 +1,40 @@
 import "./index.css";
-import React, { memo, useState } from "react";
-import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
+import React, { useCallback, useState } from "react";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 import axios from "axios";
 
-const Index = memo(() => {
-  const [id, setId] = useState();
-  const [pw, setPw] = useState();
-
-  // id 값 변화
-  const idChange = (e) => {
-    setId(e.target.value);
-  };
-
-  // pw 값 변화
-  const pwChange = (e) => {
-    setPw(e.target.value);
-  };
-
+const Index = () => {
+  const schema = yup.object({
+    id: yup.string().required("아이디를 다시 입력해주세요."),
+    password: yup
+      .string()
+      .min(8, "최소 8자 이상 입력해주세요.")
+      .max(14)
+      .required("패스워드를 다시 입력해주세요.")
+  }).required();
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
     //   } = useForm({ resolver: yupResolver(schema) });
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  // input value 관리를 위한 state
+  const [userInputValue, setUserInputValue] = useState({
+    id:"",
+    password:""
+  });
+  // input name별 onChange 관리
+  const onChange = useCallback((e) => {
+    const {name, value} = e.target;
+    setUserInputValue({...userInputValue,[name]:value});
+  });
 
   const onSubmit = (data) => {
     console.log("data", data);
@@ -59,25 +69,24 @@ const Index = memo(() => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <input
-                id="id"
                 type="text"
-                name="id"
-                onChange={idChange}
                 placeholder="아이디를 입력하세요."
-                {...register("id", { required: true })}
+                {...register("id")}
+                value={userInputValue.id}
+                onChange={onChange}
               />
-              {errors.id && <p>This field is required</p>}
+              {/* {errors.id && <p>This field is required</p>} */}
+              <p>{errors.id?.message}</p>
             </div>
             <div>
               <input
-                id="pw"
                 type="password"
-                name="pw"
-                onChange={pwChange}
                 placeholder="패스워드를 입력하세요."
-                {...register("pw", { required: true })}
+                {...register("password")}
+                value={userInputValue.password}
+                onChange={onChange}
               />
-              {errors.pw && <p>This field is required</p>}
+              <p>{errors.password?.message}</p>
             </div>
             <div className="login_btn_wrap">
               <button type="button">뒤로</button>
@@ -89,6 +98,6 @@ const Index = memo(() => {
       </div>
     </div>
   );
-});
+};
 
 export default Index;
