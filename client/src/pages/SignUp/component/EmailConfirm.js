@@ -4,6 +4,8 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
+import { ReqSignUp } from "../../../api/ReqSignUp";
+import axios from 'axios';
 const UserInfo = () => {
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
   // form의 각 요소 지정
@@ -22,15 +24,24 @@ const UserInfo = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-
   const onSubmit = (data) => {
+    console.log(formData);
+    axios.post("http://localhost:3001/auth/signup",{
+      id: formData.id,
+      password: formData.password,
+      email: formData.email,
+      name: formData.name,
+      dept: formData.dept,
+      phone: formData.phone,
+    }).then((res)=>{console.log(res.data)});
+    
+    // isVerify === true ? setPageNum(pageNum+1) : alert("다시 한 번 확인해주시기 바랍니다.");
     setPageNum(pageNum+1);
   };
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div class="email_verify_wrap" >
+        <div className="email_verify_wrap" >
           <div>
             <input type="number" placeholder="" {...register("emailCode1")} />
             <p>{errors.emailCode1?.message}</p>
@@ -56,9 +67,9 @@ const UserInfo = () => {
             <p>{errors.emailCode6?.message}</p>
           </div>
         </div>
-        <div class="form_btn_wrap">
+        <div className="form_btn_wrap">
           <button
-            class="prev_btn"
+            className="prev_btn"
             onClick={() => {
               setPageNum(pageNum - 1);
             }}
