@@ -8,6 +8,7 @@ import lombok.Setter;
 public class UpdateUserVO {
 	
 	private int userNo;
+	private String userCode;
 	private String password;
 	private String name;
 	private String dept;

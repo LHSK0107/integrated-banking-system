@@ -67,6 +67,13 @@
 	      <artifactId>spring-boot-starter-mustache</artifactId>
 	    </dependency>
 	    
+	    <!-- Depedency for Dynamic SQL(String utils) -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		</dependency>
+
+	    
 	    <!--JWT-->
 		<dependency>
 		    <groupId>com.auth0</groupId>

@@ -2,6 +2,7 @@ package com.lhsk.iam.domain.user.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +25,17 @@ public class UserController {
 	// 생성자 주입
 	private final UserService userService;
 	
-	// 회원가입 페이지 출력 요청
-	@GetMapping("/user/signup")
-	public String signupForm() {
-		return "signup";
+	// id 중복 체크
+	@GetMapping("/api/signup/{id}")
+	public boolean checkDuplicateId(@PathVariable String id) {
+		log.info("UserController.CheckDuplicateId");
+		return userService.checkDuplicateId(id);
 	}
 	
+	// email 인증 /api/signup/email
+
 	// 회원가입
-	@PostMapping("/user/signup")
+	@PostMapping("/api/user")
 	public String signup(@RequestBody UserVO userVO) {
 		log.info("UserController.signup");
 //		log.info("userVO: "+userVO);
@@ -40,28 +44,35 @@ public class UserController {
 	}
 	
 	// 회원정보 수정
-	@PutMapping("/user/update")
+	@PutMapping("/api/user")
 	public String updateUser(@RequestBody UpdateUserVO updateUserVO) {
 		log.info("UserController.update"); 
-		log.info(updateUserVO.toString());
+//		log.info(updateUserVO.toString());
 		userService.updateUser(updateUserVO);
 		return "{\"status\":\"ok\"}";
 	}
 
-	// 회원 리스트 출력(ROLE_ADMIN, ROLE_MANAGER)
-	@GetMapping("/user/list")
+	// 회원 리스트 (ROLE_ADMIN, ROLE_MANAGER)
+	@GetMapping("/api/user")
 	public List<UserVO> findAllUser() {
 		log.info("UserController.userList");
 		return userService.findAllUser();
 	}
 	  
-	// 회원 상세조회(ROLE_USER)
-	@PostMapping("/user/{userNo}")
+	// 회원 상세조회 (ROLE_USER)
+	@GetMapping("/api/user/{userNo}")
 	public WithoutUserCodeUserVO findByUserNo(@PathVariable int userNo) {	// @PathVariable : 경로 상의 값을 가져올 때 사용 
 		log.info("UserController.findByUserNo"); 
 		return userService.findByUserNo(userNo);
 	}
 	
+	// 회원 삭제
+	@DeleteMapping("/api/user/{userNo}")
+	public String deleteUser(@PathVariable int userNo) {
+		log.info("UserController.deleteUser"); 
+		userService.deleteUser(userNo);
+		return "{\"status\":\"ok\"}";
+	}
 	
 
 // -----------------------------------------------------------------------------------------------

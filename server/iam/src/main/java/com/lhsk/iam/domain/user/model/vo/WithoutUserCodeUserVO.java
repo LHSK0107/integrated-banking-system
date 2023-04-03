@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class WithoutUserCodeUserVO {
 	
+	private int userNo;
 	private String id;
 	private String name;
 	private String dept;

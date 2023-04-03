@@ -19,4 +19,9 @@ public interface UserMapper {
 	List<UserVO> findAllUser();
 	
 	WithoutUserCodeUserVO findByUserNo(int userNo);
+
+	void deleteUser(int userNo);
+
+	int checkDuplicateId(String id);
+	
 }
