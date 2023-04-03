@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
+import { ReqSignUp } from "../../../api/ReqSignUp";
 const UserInfo = () => {
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
   // form의 각 요소 지정
@@ -23,42 +24,44 @@ const UserInfo = () => {
     resolver: yupResolver(schema),
   });
 
-
   const onSubmit = (data) => {
+    console.log(formData);
+    // const isVerify =  ReqSignUp(data);
+    // isVerify === true ? setPageNum(pageNum+1) : alert("다시 한 번 확인해주시기 바랍니다.");
     setPageNum(pageNum+1);
   };
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div class="email_verify_wrap" >
+        <div className="email_verify_wrap" >
           <div>
-            <input type="number" placeholder="" {...register("emailCode1")} />
+            <input type="number" placeholder="" autoComplete="none" {...register("emailCode1")} />
             <p>{errors.emailCode1?.message}</p>
           </div>
           <div>
-            <input type="number" placeholder="" {...register("emailCode2")} />
+            <input type="number" placeholder="" autoComplete="none" {...register("emailCode2")} />
             <p>{errors.emailCode2?.message}</p>
           </div>
           <div>
-            <input type="number" placeholder="" {...register("emailCode3")} />
+            <input type="number" placeholder="" autoComplete="none" {...register("emailCode3")} />
             <p>{errors.emailCode3?.message}</p>
           </div>
           <div>
-            <input type="number" placeholder="" {...register("emailCode4")} />
+            <input type="number" placeholder="" autoComplete="none" {...register("emailCode4")} />
             <p>{errors.emailCode4?.message}</p>
           </div>
           <div>
-            <input type="number" placeholder="" {...register("emailCode5")} />
+            <input type="number" placeholder="" autoComplete="none" {...register("emailCode5")} />
             <p>{errors.emailCode5?.message}</p>
           </div>
           <div>
-            <input type="number" placeholder="" {...register("emailCode6")} />
+            <input type="number" placeholder="" autoComplete="none" {...register("emailCode6")} />
             <p>{errors.emailCode6?.message}</p>
           </div>
         </div>
-        <div class="form_btn_wrap">
+        <div className="form_btn_wrap">
           <button
-            class="prev_btn"
+            className="prev_btn"
             onClick={() => {
               setPageNum(pageNum - 1);
             }}
