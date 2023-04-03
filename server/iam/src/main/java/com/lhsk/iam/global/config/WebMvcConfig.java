@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@MapperScan(value= {"com.lhsk.iam.doamin.user.model.mapper"})
 public class WebMvcConfig implements WebMvcConfigurer{
 
 	@Override
