@@ -100,7 +100,6 @@
   position: absolute;
   top: 50%;
   left: 0;
-  width: 100%;
   height: 5px;
   background-color: var(--color-point);
 }
@@ -114,12 +113,13 @@
   border: 3px solid #efefef;
   line-height: 26px;
   text-align: center;
+  border: 3px solid var(--color-lightgray);
   border-radius: 50%;
   z-index: 9997;
 }
 .progress_wrap .step.active {
-  border: 3px solid var(--color-point);
-  transition: 0.4s ease-in-out;
+  border: 3px solid var(--color-main);
+  transition: 0.8s ease-in-out;
   background-color: var(--color-point);
   color: #ffffff;
 }
