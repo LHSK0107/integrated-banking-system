@@ -23,7 +23,7 @@ public class PrincipalDetails implements UserDetails{
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		userVO.getUserCodeList().forEach(r->{
+		userVO.getUserCode().forEach(r->{
 			authorities.add(()->r);
 		});
 		return authorities;
