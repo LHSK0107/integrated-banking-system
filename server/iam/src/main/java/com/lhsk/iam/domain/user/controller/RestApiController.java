@@ -9,7 +9,7 @@ import com.lhsk.iam.global.config.auth.PrincipalDetails;
 @RestController
 public class RestApiController {
 	
-	@GetMapping("/api/v1/user")
+	@GetMapping("user")
 	public String user(Authentication authentication) {
 		PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
 		System.out.println("principal : " + principal.getUserVO().getId());

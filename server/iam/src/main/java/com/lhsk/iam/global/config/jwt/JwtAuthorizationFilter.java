@@ -48,10 +48,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// 내가 SecurityContext에 집적접근해서 세션을 만들때 자동으로 UserDetailsService에 있는
 		// loadByUsername이 호출됨.
 		String jwtToken = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
-		
+		System.out.println("jwtToken : "+jwtToken);
 		String id = 
 				JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("id").asString();
-		
+		System.out.println("id : "+id);
 		// 서명이 정상적으로 됨
 		if(id != null) {
 			
