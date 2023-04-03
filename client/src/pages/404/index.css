@@ -1,1 +1,64 @@
 @charset "UTF-8";
+@font-face {
+    font-family: 'SBAggroL';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroL.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SBAggroM';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroM.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+.notFound_wrap {
+    width: 100vw;
+    height: calc(100vh - 120px);
+    padding: 40px 0;
+    text-align: center;
+    font-family: 'SBAggroM';
+}
+
+.notFound {
+    width: 50%;
+    height: 90%;
+    background: url(../../assets/images/notfound_bg.png) center/contain no-repeat;
+    padding: 80px 0;
+}
+
+.notFound_title {
+    width: 40%;
+    margin-bottom: 4rem;
+}
+
+.notFound_cont {
+    margin-bottom: 4rem;
+}
+
+.notFound_cont h2 {
+    font-size: 1.8rem;
+    font-weight: lighter;
+    color: var(--color-main);
+    margin-bottom: 1rem;
+}
+
+.notFound_cont h3 {
+    font-family: 'SBAggroL';
+    font-weight: lighter;
+    font-size: 1.5rem;
+    color: #232323;
+    line-height: 2.2rem;
+}
+
+.notFound_btn_wrap .more_btn {
+    font-family: 'SBAggroM';
+    font-size: 1.5rem;
+    color: #232323;
+    margin: 0 10px;
+    border: 3px solid var(--color-main);
+    border-radius: 0px;
+}
+
+.notFound_btn_wrap .more_btn:hover {
+    color: #ffffff;
+}
