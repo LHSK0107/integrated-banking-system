@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React,{useEffect, useContext,useRef, useState, useCallback} from 'react';
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -22,7 +23,7 @@ const PersonalInfo = () => {
       }
       setFormData({...formData, ...values});
       setPageNum(pageNum+1);
-    }
+    };
     // input value 관리를 위한 state
     const [personalInputValue, setPersonalInputValue] = useState({
       name: "",
@@ -34,10 +35,7 @@ const PersonalInfo = () => {
       const {name, value}=e.target;
       setPersonalInputValue({...personalInputValue,[name]:value});
     });
-    // 최상단 input focus를 위해 Ref 부여
-    const initialFocusRef=useRef();
     useEffect(()=>{
-      formData.id==="" && initialFocusRef.current.focus();
       unregister(["name","dept","phone"]);
       setPersonalInputValue({...personalInputValue,
         name:formData.name,
@@ -49,15 +47,15 @@ const PersonalInfo = () => {
     <div>
        <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <input ref={initialFocusRef} type="text" value={personalInputValue.name} onChange={onChange} placeholder="이름을 입력하세요." autoComplete="none" {...register("name")} />
+          <input type="text" placeholder="이름을 입력하세요." {...register("name")} value={personalInputValue?.name} onChange={onChange} />
           <p>{errors.name?.message}</p>
         </div>
         <div>
-          <input type="text" value={personalInputValue.dept} onChange={onChange} placeholder="부서를 입력하세요." autoComplete="none" {...register("dept")} />
+          <input type="text" value={personalInputValue?.dept} {...register("dept")} onChange={onChange} placeholder="부서를 입력하세요." />
           <p>{errors.dept?.message}</p>
         </div>
         <div>
-          <input type="text" value={personalInputValue.phone} onChange={onChange} placeholder="휴대폰 번호를 '-'를 포함하여 입력하세요." autoComplete="none" {...register("phone")} />
+          <input type="text" value={personalInputValue?.phone} {...register("phone")} onChange={onChange} placeholder="휴대폰 번호를 '-'를 포함하여 입력하세요." />
           <p>{errors.phone?.message}</p>
         </div>
         <hr/>
