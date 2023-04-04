@@ -34,6 +34,6 @@ public class UserVO {
 			return Arrays.asList(this.userCode);
 		}
 		return new ArrayList<>();
-			
 	}
+	
 }

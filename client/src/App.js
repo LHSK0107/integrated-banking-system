@@ -4,6 +4,7 @@ import Navbar from "./commons/Navbar";
 import SignUp from "./pages/SignUp/Index";
 import LogIn from "./pages/LogIn/Index";
 import Inquiry from "./pages/Inquiry/Index";
+import NotFound from "./pages/404/Index";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
             <Route path="/" element={<></>} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<LogIn />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </div>
