@@ -11,7 +11,7 @@ import com.lhsk.iam.domain.user.model.vo.UserVO;
 import lombok.Data;
 
 @Data
-public class PrincipalDetails implements UserDetails{
+public class PrincipalDetails implements UserDetails {
 
 	private UserVO userVO;
 	
