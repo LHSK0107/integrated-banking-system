@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios, { all } from "axios";
 import "./index.css";
 import IamIcon from "../../assets/images/account_bg.png";
+// 은행 코드별 이미지 출력 추가하기
 import KakaoIcon from "../../assets/images/icon/bank/kakao_icon.png";
 
 const Index = () => {
@@ -67,7 +68,7 @@ const Index = () => {
               {statementList.map((ele, i) => {
                 return (
                   <li key={i} className="account_li flex justify_between align_center">
-                    <div className="idx">{i<10 ? <p>0{i}</p> : <p>{i}</p>}</div>
+                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
                     <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                     <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
                     <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
@@ -96,7 +97,7 @@ const Index = () => {
               {depAInsList.map((ele, i) => {
                 return (
                   <li key={i} className="account_li flex justify_between align_center">
-                    <div className="idx">{i<10 ? <p>0{i}</p> : <p>{i}</p>}</div>
+                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
                     <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                     <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
                     <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
@@ -126,7 +127,7 @@ const Index = () => {
               {loanList.map((ele, i) => {
                 return (
                   <li key={i} className="account_li flex justify_between align_center">
-                    <div className="idx">{i<10 ? <p>0{i}</p> : <p>{i}</p>}</div>
+                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
                     <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                     <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
                     <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
