@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.lhsk.iam.domain.user.model.mapper.UserMapper">
 	<select id="checkDuplicateId" parameterType="String" resultType="int">
-		SELECT EXISTS (SELECT id FROM user WHERE id='{id}') AS flag;
+		SELECT EXISTS (SELECT id FROM user WHERE id=#{id}) AS flag;
 	</select>
 	
-	<insert id="signup" 
-			parameterType="UserVO" 
-			useGeneratedKeys="true" keyProperty="userNo">
+	<insert id="signup" parameterType="UserVO" useGeneratedKeys="true" keyProperty="userNo">
 		INSERT INTO user (id, password, name, dept, email, phone) 
 		VALUES (#{id}, #{password}, #{name}, #{dept}, #{email}, #{phone})
 	</insert>
@@ -31,7 +30,9 @@
 			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(email)">
 				email=#{email}, 
 			</if>
-			phone=#{phone}
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(phone)">
+				phone=#{phone}
+			</if>
 		</set> 
 		WHERE user_no=#{userNo}
 	</update>
@@ -40,13 +41,13 @@
 		DELETE FROM user WHERE user_no=#{userNo}
 	</delete>
 	
-	<select id="findByUserNo" parameterType="int" resultType="WithoutUserCodeUserVO">
-		SELECT user_no, id, name, dept, email, phone 
+	<select id="findByUserNo" parameterType="int" resultType="DetailUserVO">
+		SELECT user_no, user_code, id, name, dept, email, phone 
 		FROM user 
 		WHERE user_no=#{userNo}
 	</select>
 	
-	<select id="findAllUser" resultType="UserVO">
+	<select id="findAllUser" resultType="DetailUserVO">
 		SELECT user_no, user_code, id, name, dept, email, phone
 		FROM user
 		ORDER BY user_no ASC;
