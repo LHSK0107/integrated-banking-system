@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios, { all } from "axios";
 import "./index.css";
 import IamIcon from "../../assets/images/account_bg.png";
@@ -7,7 +8,6 @@ import IamIcon from "../../assets/images/account_bg.png";
 import KakaoIcon from "../../assets/images/icon/bank/kakao_icon.png";
 
 const Index = () => {
-  const [accountList, setAccountList] = useState({});
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
   const [loanList, setLoanList] = useState([]);
@@ -20,30 +20,31 @@ const Index = () => {
   let stateArr=[];
   let depAInsArr=[];
   let loanArr=[];
-  const getData = async () =>{
-    const url = "http://localhost:3001/api/getAccountList";
-    await axios.get(url).then((res) => {
-      setAccountList(res.data.RESP_DATA);
-      const allAccount = accountList.REC;
-      allAccount.map((ele, i) => {
-        if (ele.ACCT_DV === "01") {
-          stateArr.push(ele);
-          setStatementList(stateArr);
-        } else if (ele.ACCT_DV === "02") {
-          depAInsArr.push(ele);
-          setDepAInsList(depAInsArr);
-        } else if (ele.ACCT_DV === "03") {
-          loanArr.push(ele);
-          setLoanList(loanArr);
-        };
-      });
-    }).catch((err)=>console.log(err));
-  }
 
   // useQuery를 통한 로딩 처리 추가하기
   useEffect(() => {
-    getData();
-  }, [accountList]);
+    const url = "http://localhost:3001/api/getAccountList";
+      axios.get(url).then((res) => {
+      res.data.RESP_DATA.REC===null ? console.log('failed') : console.log("success");
+      clearData(res.data.RESP_DATA);
+    }).catch((err)=>console.log(err));
+  }, []);
+  
+  const clearData = (allAccount) => {
+    let arr = allAccount.REC;
+    arr.map((ele, i) => {
+      if (ele.ACCT_DV === "01") {
+        stateArr.push(ele);
+        setStatementList(stateArr);
+      } else if (ele.ACCT_DV === "02") {
+        depAInsArr.push(ele);
+        setDepAInsList(depAInsArr);
+      } else if (ele.ACCT_DV === "03") {
+        loanArr.push(ele);
+        setLoanList(loanArr);
+      };
+    });
+  }
 
   // 금액 단위 , 정규화 필요
   return (
@@ -67,12 +68,14 @@ const Index = () => {
               </li>
               {statementList.map((ele, i) => {
                 return (
-                  <li key={i} className="account_li flex justify_between align_center">
-                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                    <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-                    <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                    <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
-                  </li>
+                  <Link key={i} className="flex align_center" to={`/inquiry?acct_no=${ele.ACCT_NO}`}>
+                    <li className="account_li flex justify_between align_center">
+                      <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
+                      <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+                      <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
+                      <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
+                    </li>
+                  </Link>
                 );
               })}
             </ul>
@@ -96,15 +99,17 @@ const Index = () => {
               </li>
               {depAInsList.map((ele, i) => {
                 return (
-                  <li key={i} className="account_li flex justify_between align_center">
-                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                    <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-                    <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                    <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
-                    {/* <div className="bal"><ConfigNum number={ele?.BAL.split(".",1)} /></div> */}
-                  </li>
+                  <Link key={i} className="flex align_center " to="">
+                    <li className="account_li flex justify_between align_center">
+                      <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
+                      <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+                      <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
+                      <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
+                    </li>
+                  </Link>
                 );
               })}
+              {/* <div className="bal"><ConfigNum number={ele?.BAL.split(".",1)} /></div> */}
             </ul>
           </div>
         </div>
@@ -126,13 +131,14 @@ const Index = () => {
               </li>
               {loanList.map((ele, i) => {
                 return (
-                  <li key={i} className="account_li flex justify_between align_center">
-                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                    <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-                    <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                    <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
-                    {/* <div className="bal"><ConfigNum number={ele?.BAL.split(".",1)} /></div> */}
-                  </li>
+                  <Link key={i} className="flex align_center " to="">
+                    <li className="account_li flex justify_between align_center">
+                      <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
+                      <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+                      <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
+                      <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
+                    </li>
+                  </Link>
                 );
               })}
             </ul>
