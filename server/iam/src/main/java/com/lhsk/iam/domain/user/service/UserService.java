@@ -26,9 +26,19 @@ public class UserService {
 		else return false;
 	}
 	
+	// 최초 가입 유무 체크
+	public int checkExistsUser() {
+		log.info("Exist Users count: "+userMapper.checkExistsUser());
+		return userMapper.checkExistsUser();
+	}
+	
 	// 회원가입
 	public String signup(UserVO userVO) {
 		try {
+			// existUser 값이 0이면 userCode를 ROLE_ADMIN으로 세팅
+			String userCode = checkExistsUser() == 0 ? "ROLE_ADMIN" : "ROLE_USER";
+			userVO.setUserCode(userCode);
+			log.info(userVO.getUserCode());
 			// mapper의 signup메서드 호출 (조건 : VO객체를 넘겨줘야 함)
 			userMapper.signup(userVO);			
 		} catch (Exception e) {

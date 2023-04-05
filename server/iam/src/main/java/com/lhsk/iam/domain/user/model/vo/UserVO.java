@@ -32,7 +32,7 @@ public class UserVO {
 	public void setEmail(String email) { this.email = email; }
 	public void setPhone(String phone) { this.phone = phone; }
 	
-	public List<String> getUserCode() {
+	public List<String> getUserCodeList() {
 		if(this.userCode.length()>0) {
 			return Arrays.asList(this.userCode);
 		}
