@@ -8,7 +8,7 @@ app.use(express.static("public"));
 require("dotenv").config();
 
 const inquiryRouter = require("./routes/Inquiry");
-app.use("/inquiry", inquiryRouter);
+app.use("/api", inquiryRouter);
 
 const usersRouter = require("./routes/Users");
 app.use("/auth", usersRouter);
