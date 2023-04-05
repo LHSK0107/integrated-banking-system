@@ -14,6 +14,8 @@ public interface UserMapper {
 	
 	// id 중복체크
 	int checkDuplicateId(String id);
+	// 최초 가입 유무 체크
+	int checkExistsUser();
 	// 회원가입
 	int signup(UserVO userVO);
 	// 회원정보 수정
