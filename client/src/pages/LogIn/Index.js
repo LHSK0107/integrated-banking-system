@@ -45,10 +45,13 @@ const Index = () => {
         id: data.id,
         password: data.password,
       })
-      .then(function (response) {
+      .then((response) => {
         console.log(response, response.status, response.data.token);
+        if(response.status === 200) {
+          // 로그인 성공 시
+        }
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   };
