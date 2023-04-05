@@ -135,6 +135,7 @@
 .contents_wrap {
 }
 .content {
+  border-radius: 10px;
   margin: 100px 0;
   padding: 40px;
   background-color: #ffffff;
