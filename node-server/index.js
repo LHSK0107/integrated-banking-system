@@ -13,6 +13,9 @@ app.use("/api", inquiryRouter);
 const usersRouter = require("./routes/Users");
 app.use("/auth", usersRouter);
 
+const newsRouter = require("./routes/News");
+app.use("/news", newsRouter);
+
 db.sequelize
   .sync()
   .then(() => {
