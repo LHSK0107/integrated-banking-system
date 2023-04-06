@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhsk.iam.domain.account.model.mapper.AccountApiMapper">
+	
+	<select id="isEmptyAccountTable" resultType="Integer">
+	  SELECT COUNT(*) FROM account
+	</select>
+	
+	<delete id="deleteAccounts">
+		DELETE * FROM account
+	</delete>
+	
+	<insert id="insertAccount" parameterType="AccountApiVO">
+	  INSERT INTO ACCOUNTS (ACCT_NO, BANK_CD, BAL, IB_TYPE, ACCT_DV, LOAN_NM, ACCT_NICK_NM, AGMT_AMT, PYAT_AMT, PYAT_DT, NEW_DT, EXPI_DT, REPAY_WAY, CONT_RT, DPSV_DV, LOAN_KIND, CLTR_CTT, INT_PAYT_DT, CURR_CD, REAL_AMT)
+	  VALUES (
+	    <if test="StringUtils.isNotBlank(acctNo)">#{acctNo},</if>
+	    <if test="StringUtils.isNotBlank(bankCd)">#{bankCd},</if>
+	    <if test="bal != null and bal != 0">#{bal},</if>
+	    <if test="StringUtils.isNotBlank(ibType)">#{ibType},</if>
+	    <if test="StringUtils.isNotBlank(acctDv)">#{acctDv},</if>
+	    <if test="StringUtils.isNotBlank(loanNm)">#{loanNm},</if>
+	    <if test="StringUtils.isNotBlank(acctNickNm)">#{acctNickNm},</if>
+	    <if test="agmtAmt != null and agmtAmt != 0">#{agmtAmt},</if>
+	    <if test="pyatAmt != null and pyatAmt != 0">#{pyatAmy},</if>
+	    <if test="pyatDt != null">#{pyatDt},</if>
+	    <if test="newDt != null">#{newDt},</if>
+	    <if test="expiDt != null">#{expiDt},</if>
+	    <if test="StringUtils.isNotBlank(repayWay)">#{repayWay},</if>
+	    <if test="contRt != null and contRt != 0">#{contRt},</if>
+	    <if test="StringUtils.isNotBlank(dpsvDv)">#{dpsvDv},</if>
+	    <if test="StringUtils.isNotBlank(loanKind)">#{loanKind},</if>
+	    <if test="StringUtils.isNotBlank(cltrCtt)">#{cltrCtt},</if>
+	    <if test="intPaytDt != null">#{intPaytDt},</if>
+	    <if test="StringUtils.isNotBlank(currCd)">#{currCd},</if>
+	    <if test="realAmt != null and realAmt != 0">#{realAmt}</if>
+	  )
+	</insert>
+	
+</mapper>
