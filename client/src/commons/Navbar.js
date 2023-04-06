@@ -1,6 +1,6 @@
 import "./Common.css";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import brandLogo from "../assets/brand/webcash_logo.png";
 import userImg from "../assets/images/icon/user.png";
 import logo from "../assets/brand/logo.png";
@@ -8,6 +8,8 @@ import logo from "../assets/brand/logo.png";
 const Navbar = () => {
   // context 처리
   const [isAuth, setIsAuth] = useState(false);
+
+  const navigate=useNavigate();
 
   return (
     <header id="header">
@@ -55,19 +57,19 @@ const Navbar = () => {
             </Link>
             <ul className="menu_list flex">
               <li>
-                <Link to="#!">메인</Link>
+                <span onClick={()=>navigate("/")}>메인</span>
               </li>
               <li>
-                <Link to="#!">소개</Link>
+                <span onClick={()=>navigate("/")}>소개</span>
               </li>
               <li>
-                <Link to="#!">조회</Link>
+                <span onClick={()=>navigate("/inquiry")}>조회</span>
               </li>
               <li>
-                <Link to="#!">금융상품</Link>
+                <span onClick={()=>navigate("/inquiry")}>금융상품</span>
               </li>
               <li>
-                <Link to="#!">금융정보</Link>
+                <span onClick={()=>navigate("/inquiry")}>금융정보</span>
               </li>
             </ul>
           </div>

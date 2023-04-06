@@ -1,0 +1,114 @@
+@charset "UTF-8";
+
+.index_wrap {
+  background: url(../../assets/images/index_bg_line.png) center repeat-y;
+}
+.index_wrap .inner {
+  padding: 0 30px;
+}
+.index_wrap > section {
+  margin-bottom: 200px;
+}
+
+/* main_slider --- */
+.main_slider_section {
+  width: 100%;
+  height: calc(100vh - 120px);
+}
+.main_slider_section figure {
+  width: 100%;
+  height: 100%;
+}
+/* --- main_slider */
+
+/* main_introduce --- */
+.main_introduce_section h2 {
+  font-size: 100px;
+  text-align: center;
+  margin-bottom: 5rem;
+}
+.main_introduce_section h2 span {
+  font-weight: bolder;
+  color: transparent;
+  -webkit-background-clip: text;
+}
+.main_introduce_strong_wrap > div {
+  width: 30%;
+}
+.main_introduce_strong_wrap > div:not(:last-child) {
+  margin-right: 5%;
+}
+.main_introduce_strong_wrap figure {
+  position: relative;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+.main_introduce_strong_wrap figure::after {
+  display: block;
+  content: "";
+  padding-bottom: 100%;
+}
+.main_introduce_strong_wrap figure img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+}
+.main_introduce_strong_wrap div div {
+  font-size: 1.7rem;
+  text-align: center;
+  font-weight: 700;
+  line-height: 3rem;
+}
+/* --- main_introduce */
+
+/* main_notice --- */
+.main_notice_wrap {
+  width: 100%;
+}
+.main_notice_wrap > div {
+  width: 48%;
+}
+.main_notice_detail h3 {
+  font-size: 3.6rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+.main_notice_detail div {
+  margin-bottom: 50px;
+}
+.main_notice_detail button {
+  padding: 12px 40px;
+  border: 2px solid #dfdfdf;
+  border-radius: 0;
+  font-size: 1rem;
+  color: #232323;
+  font-weight: 700;
+}
+.main_notice_board {
+  background-color: #efefef;
+}
+/* --- main_notice */
+
+/* main_news --- */
+.main_news_section > div > div {
+  width: 100%;
+}
+.main_news_section div div:last-child figure {
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+}
+.main_news_section figure {
+  width: 160px;
+  opacity: 0.4;
+  margin: 20px 0;
+}
+.main_news_section figure img {
+  height: auto;
+}
+.main_news_wrap > div {
+  width: 30%;
+  height: 400px;
+}
+/* --- main_news */
