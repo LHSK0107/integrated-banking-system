@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -16,7 +18,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
-import com.lhsk.iam.domain.account.model.vo.AccountVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,10 +29,16 @@ public class AccountClient {
 	private final WebClient webClient;
 	private final ObjectMapper objectMapper;
 	
+	@Value("${webCashApi.cookie}")
+	private String COOKIE;
+	@Value("${webCashApi.allAccounts}")
+	private String ALLACCOUNTS;
+	
 	// 생성자를 통해 baseUrl을 지정해준다.
-	public AccountClient() {
+	@Autowired
+	public AccountClient(@Value("${webCashApi.url}") String apiUrl) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://scloudadmin.appplay.co.kr/gw/ErpGateWay")
+                .baseUrl(apiUrl)
                 .build();
         this.objectMapper = new ObjectMapper();
     }
@@ -41,8 +48,8 @@ public class AccountClient {
 			// baseUrl을 지정해줬고, 다른 url로 요청을 보낼 일이 없기 때문에 url()을 작성할 필요가 없다.
             String response = webClient.post()
             		.contentType(MediaType.APPLICATION_JSON)
-            		.header("Cookie", AccountProperties.COOKIE)
-            		.body(BodyInserters.fromValue(AccountProperties.ALLACCOUNTS))
+            		.header("Cookie", COOKIE)
+            		.body(BodyInserters.fromValue(ALLACCOUNTS))
                     .retrieve()					// HTTP 요청을 보내고 응답을 받아온다.
                     .bodyToMono(String.class)	// 응답 바디를 Mono<String> 형태로 변환
                     // Mono가 발행하는 데이터를 구독하여 최종 데이터를 반환, Mono를 블로킹하여 스트림의 처리를 동기적으로 수행
@@ -63,6 +70,7 @@ public class AccountClient {
         }
 	}
 	
+	// vo필드 하나하나 검사해서 null이거나 비어있다면 기본값 넣어주기
 	public AccountApiVO valCheck(AccountApiVO vo) {
 		if(StringUtils.isBlank(vo.getAcctNo())) vo.setAcctNo("123123");
 		if(StringUtils.isBlank(vo.getBankCd())) vo.setBankCd("001");

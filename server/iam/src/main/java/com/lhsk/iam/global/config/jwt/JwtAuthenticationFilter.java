@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	private final AuthenticationManager authenticationManager;
 	
+	@Value("${jwt.secret}")
+	private String SECRET;
+	@Value("${jwt.expirationTime}")
+	private String EXPIRATION_TIME;
+	@Value("${jwt.tokenPrefix}")
+	private String TOKEN_PREFIX;
+	@Value("${jwt.headerString}")
+	private String HEADER_STRING;
 	
 	// Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
 	// 인증 요청시에 실행되는 함수 => /login
@@ -94,15 +103,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+				.withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
 				.withClaim("id", principalDetailis.getUserVO().getId())
 				.withClaim("name", principalDetailis.getUserVO().getName())
-				.withClaim("expirationTime", new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+				.withClaim("expirationTime", new Date(System.currentTimeMillis()+EXPIRATION_TIME))
 				.withClaim("userCode", principalDetailis.getUserVO().getUserCodeList())
 				.withClaim("userNo", principalDetailis.getUserVO().getUserNo())
-				.sign(Algorithm.HMAC512(JwtProperties.SECRET));
+				.sign(Algorithm.HMAC512(SECRET));
 		System.out.println("principalDetailis.getUsername() : " + principalDetailis.getUsername());
-		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
+		response.addHeader(HEADER_STRING, TOKEN_PREFIX+jwtToken);
 	}
 	
 	// 로그인 실패시 상태코드와 응답 메시지를 담아준다.
