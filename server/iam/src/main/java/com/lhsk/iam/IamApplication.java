@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.lhsk.iam.global.config.LogbackConfig;
-
 @SpringBootApplication
 @MapperScan(basePackages = {"com.lhsk.iam.domain.user.model.mapper","com.lhsk.iam.domain.account.model.mapper"})
 @EnableScheduling
