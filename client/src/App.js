@@ -6,6 +6,7 @@ import LogIn from "./pages/LogIn/Index";
 import Inquiry from "./pages/Inquiry/Index";
 import NotFound from "./pages/404/Index";
 import Index from "./pages/Index/Index";
+import Footer from "./commons/Footer";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/inquiry" element={<Inquiry/>}/>
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer />
         </Router>
       </div>
     </div>
