@@ -8,33 +8,73 @@
 	</select>
 	
 	<delete id="deleteAccounts">
-		DELETE * FROM account
+		DELETE FROM account
 	</delete>
 	
-	<insert id="insertAccount" parameterType="AccountApiVO">
-	  INSERT INTO ACCOUNTS (ACCT_NO, BANK_CD, BAL, IB_TYPE, ACCT_DV, LOAN_NM, ACCT_NICK_NM, AGMT_AMT, PYAT_AMT, PYAT_DT, NEW_DT, EXPI_DT, REPAY_WAY, CONT_RT, DPSV_DV, LOAN_KIND, CLTR_CTT, INT_PAYT_DT, CURR_CD, REAL_AMT)
-	  VALUES (
-	    <if test="StringUtils.isNotBlank(acctNo)">#{acctNo},</if>
-	    <if test="StringUtils.isNotBlank(bankCd)">#{bankCd},</if>
-	    <if test="bal != null and bal != 0">#{bal},</if>
-	    <if test="StringUtils.isNotBlank(ibType)">#{ibType},</if>
-	    <if test="StringUtils.isNotBlank(acctDv)">#{acctDv},</if>
-	    <if test="StringUtils.isNotBlank(loanNm)">#{loanNm},</if>
-	    <if test="StringUtils.isNotBlank(acctNickNm)">#{acctNickNm},</if>
-	    <if test="agmtAmt != null and agmtAmt != 0">#{agmtAmt},</if>
-	    <if test="pyatAmt != null and pyatAmt != 0">#{pyatAmy},</if>
-	    <if test="pyatDt != null">#{pyatDt},</if>
-	    <if test="newDt != null">#{newDt},</if>
-	    <if test="expiDt != null">#{expiDt},</if>
-	    <if test="StringUtils.isNotBlank(repayWay)">#{repayWay},</if>
-	    <if test="contRt != null and contRt != 0">#{contRt},</if>
-	    <if test="StringUtils.isNotBlank(dpsvDv)">#{dpsvDv},</if>
-	    <if test="StringUtils.isNotBlank(loanKind)">#{loanKind},</if>
-	    <if test="StringUtils.isNotBlank(cltrCtt)">#{cltrCtt},</if>
-	    <if test="intPaytDt != null">#{intPaytDt},</if>
-	    <if test="StringUtils.isNotBlank(currCd)">#{currCd},</if>
-	    <if test="realAmt != null and realAmt != 0">#{realAmt}</if>
-	  )
+<!-- 	<insert id="insertAccount" parameterType="java.util.List"> -->
+<!-- 		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt) -->
+<!-- 		VALUES -->
+<!-- 		<foreach collection="list" item="account"> -->
+<!-- 			(${account.acctNo}, ${account.bankCd}, ${account.bal}, ${account.ibType}, ${account.acctDv}, -->
+<!-- 			 ${account.loanNm}, 'v', ${account.agmtAmt}, -->
+<!-- 			 ${account.pyatAmt}, '1000-01-01', ${account.newDt}, ${account.expiDt}, '1',  -->
+<!-- 			 ${account.contRt}, ${account.dpsvDv}, ${account.loanKind}, 'a', '1000-01-01',  -->
+<!-- 			 ${account.currCd}, ${account.realAmt}) -->
+<!-- 		</foreach> -->
+<!-- 	</insert> -->
+	
+<!-- 	<insert id="insertAccount" parameterType="AccountApiVO"> -->
+<!-- 		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt) -->
+<!-- 		VALUES -->
+<!-- 			( #{acctNo}, #{bankCd}, #{bal}, #{ibType}, #{acctDv}, -->
+<!-- 			 #{loanNm}, 'v', #{agmtAmt}, -->
+<!-- 			 #{pyatAmt}, '1000-01-01', #{newDt}, #{expiDt}, '1',  -->
+<!-- 			 #{contRt}, #{dpsvDv}, #{loanKind}, 'a', '1000-01-01',  -->
+<!-- 			 #{currCd}, #{realAmt} ) -->
+<!-- 	</insert> -->
+	
+	<insert id="insertAccounts" parameterType="java.util.ArrayList">
+		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt)
+		VALUES
+		<foreach collection="list" item="account" separator=",">
+			(
+			#{account.acctNo}, #{account.bankCd}, #{account.bal}, #{account.ibType}, #{account.acctDv},
+			#{account.loanNm}, #{account.acctNickNm}, #{account.agmtAmt},
+			#{account.pyatAmt}, #{account.pyatDt}, #{account.newDt}, #{account.expiDt}, #{account.repayWay}, 
+			#{account.contRt}, #{account.dpsvDv}, #{account.loanKind}, #{account.cltrCtt}, #{account.intPaytDt}, 
+			#{account.currCd}, #{account.realAmt}
+			)
+		</foreach>
 	</insert>
+	
+	
+<!-- 	<insert id="insertAccount" parameterType="java.util.List"> -->
+<!-- 	  INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt) -->
+<!-- 	  VALUES -->
+<!-- 	  <foreach collection="list" item="account"> -->
+<!-- 	  ( -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.acctNo)">#{account.acctNo},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.bankCd)">#{account.bankCd},</if> -->
+<!-- 	    <if test="account.bal != null and account.bal != 0">#{account.bal},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.ibType)">#{account.ibType},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.acctDv)">#{account.acctDv},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.loanNm)">#{account.loanNm},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.acctNickNm)">#{account.acctNickNm},</if> -->
+<!-- 	    <if test="account.agmtAmt != null and account.agmtAmt != 0">#{account.agmtAmt},</if> -->
+<!-- 	    <if test="account.pyatAmt != null and account.pyatAmt != 0">#{account.pyatAmt},</if> -->
+<!-- 	    <if test="account.pyatDt != null">#{account.pyatDt},</if> -->
+<!-- 	    <if test="account.newDt != null">#{account.newDt},</if> -->
+<!-- 	    <if test="account.expiDt != null">#{account.expiDt},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.repayWay)">#{account.repayWay},</if> -->
+<!-- 	    <if test="account.contRt != null and account.contRt != 0">#{account.contRt},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.dpsvDv)">#{account.dpsvDv},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.loanKind)">#{account.loanKind},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.cltrCtt)">#{account.cltrCtt},</if> -->
+<!-- 	    <if test="account.intPaytDt != null">#{account.intPaytDt},</if> -->
+<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.currCd)">#{account.currCd},</if> -->
+<!-- 	    <if test="account.realAmt != null and account.realAmt != 0">#{account.realAmt}</if> -->
+<!-- 	    ) -->
+<!-- 	  </foreach> -->
+<!-- 	</insert> -->
 	
 </mapper>
