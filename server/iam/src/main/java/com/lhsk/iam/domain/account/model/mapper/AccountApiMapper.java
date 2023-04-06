@@ -11,6 +11,5 @@ public interface AccountApiMapper {
 	
 	public int isEmptyAccountTable();
 	public void insertAccounts(List<AccountApiVO> list);
-//	public void insertAccounts(AccountApiVO list);
 	public void deleteAccounts();
 }

@@ -39,18 +39,5 @@ public class AccountController {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
-//	@GetMapping("/test")
-//	public List<AccountApiVO> getAccountsTest() {
-//		AccountClient accountClient = new AccountClient();
-//		List<AccountApiVO> list = accountClient.getAccounts();
-//		return list;
-//	}
-	
-	@GetMapping("/insert")
-	public void insertAccount() {
-		accountDataImporter.insertAccount();
-	}
-	
-	
 	
 }
