@@ -97,9 +97,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
 				.withClaim("id", principalDetailis.getUserVO().getId())
 				.withClaim("name", principalDetailis.getUserVO().getName())
+				.withClaim("expirationTime", new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+				.withClaim("userCode", principalDetailis.getUserVO().getUserCodeList())
+				.withClaim("userNo", principalDetailis.getUserVO().getUserNo())
 				.sign(Algorithm.HMAC512(JwtProperties.SECRET));
 		System.out.println("principalDetailis.getUsername() : " + principalDetailis.getUsername());
 		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
+	}
+	
+	// 로그인 실패시 상태코드와 응답 메시지를 담아준다.
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+	                                            AuthenticationException failed) throws IOException, ServletException {
+	    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // HTTP 응답 코드 401 Unauthorized 설정
+	    response.setContentType("application/json;charset=UTF-8"); // 응답 데이터 타입 설정
+	    response.getWriter().write("{\"message\":\"아이디 또는 비밀번호가 잘못 입력되었습니다.\"}"); // 실패 메시지 반환
 	}
 	
 }

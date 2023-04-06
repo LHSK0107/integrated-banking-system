@@ -1,20 +1,21 @@
-package com.lhsk.iam.domain.account.model;
+package com.lhsk.iam.domain.account.model.vo;
 
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Builder
+// 수시입출금계좌
 public class AccountVO {
-	private String acctNo;		// 계좌번호
+	private String acctNo;		// 계좌번호	
 	private String bankCd;		// 은행코드
 	private double bal;			// 잔액
 	private String ibType;		// 뱅킹종류
@@ -22,7 +23,7 @@ public class AccountVO {
 	private String loanNm;		// 예금/대출과목명
 	private String acctNickNm;	// 계좌별칭
 	private double agmtAmt;		// 대출한도/가입금액/약정금액
-	private double pyatAmy; 	// 월납입금
+	private double pyatAmt; 	// 월납입금
 	private Date pyatDt;		// 월납입일
 	private Date newDt;			// 신규일자
 	private Date expiDt;		// 만기일자

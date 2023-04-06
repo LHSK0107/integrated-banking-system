@@ -35,7 +35,7 @@ public class UserController {
 	// email 인증 /api/signup/email
 
 	// 회원가입
-	@PostMapping("/api/user")
+	@PostMapping("/api/users")
 	public String signup(@RequestBody UserVO userVO) {
 		log.info("UserController.signup");
 //		log.info("userVO: "+userVO);
@@ -44,7 +44,7 @@ public class UserController {
 	}
 	
 	// 회원정보 수정
-	@PutMapping("/api/user")
+	@PutMapping("/api/users")
 	public String updateUser(@RequestBody UpdateUserVO updateUserVO) {
 		log.info("UserController.update"); 
 //		log.info(updateUserVO.toString());
@@ -53,21 +53,21 @@ public class UserController {
 	}
 
 	// 회원 리스트 (ROLE_ADMIN, ROLE_MANAGER)
-	@GetMapping("/api/user")
+	@GetMapping("/api/users")
 	public List<UserVO> findAllUser() {
 		log.info("UserController.userList");
 		return userService.findAllUser();
 	}
 	  
 	// 회원 상세조회 (ROLE_USER)
-	@GetMapping("/api/user/{userNo}")
+	@GetMapping("/api/users/{userNo}")
 	public WithoutUserCodeUserVO findByUserNo(@PathVariable int userNo) {	// @PathVariable : 경로 상의 값을 가져올 때 사용 
 		log.info("UserController.findByUserNo"); 
 		return userService.findByUserNo(userNo);
 	}
 	
 	// 회원 삭제
-	@DeleteMapping("/api/user/{userNo}")
+	@DeleteMapping("/api/users/{userNo}")
 	public String deleteUser(@PathVariable int userNo) {
 		log.info("UserController.deleteUser"); 
 		userService.deleteUser(userNo);
