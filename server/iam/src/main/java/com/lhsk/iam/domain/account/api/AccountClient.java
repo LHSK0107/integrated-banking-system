@@ -1,10 +1,14 @@
 package com.lhsk.iam.domain.account.api;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -17,6 +21,7 @@ import com.lhsk.iam.domain.account.model.vo.AccountVO;
 import lombok.extern.slf4j.Slf4j;
 
 // 외부 API 호출을 담당하는 클래스
+@Component
 @Slf4j
 public class AccountClient {
 	
@@ -47,7 +52,7 @@ public class AccountClient {
             List<AccountApiVO> accounts = new ArrayList<>();
             for (JsonNode accountNode : recNode) {
                 AccountApiVO account = objectMapper.treeToValue(accountNode, AccountApiVO.class);
-                log.info(account.toString());
+                account = valCheck(account);
                 accounts.add(account);
             }
             return accounts;
@@ -58,4 +63,28 @@ public class AccountClient {
         }
 	}
 	
+	public AccountApiVO valCheck(AccountApiVO vo) {
+		if(StringUtils.isBlank(vo.getAcctNo())) vo.setAcctNo("123123");
+		if(StringUtils.isBlank(vo.getBankCd())) vo.setBankCd("001");
+		if(vo.getBal() == null) vo.setBal(new BigDecimal(0.00));
+		if(StringUtils.isBlank(vo.getIbType())) vo.setIbType("ibtype");
+		if(StringUtils.isBlank(vo.getAcctDv())) vo.setAcctDv("01");
+		if(StringUtils.isBlank(vo.getLoanNm())) vo.setLoanNm("loan");
+		if(StringUtils.isBlank(vo.getAcctNickNm())) vo.setAcctNickNm("nick");
+		if(vo.getAgmtAmt() == null) vo.setAgmtAmt(new BigDecimal(0.00));
+		if(vo.getPyatAmt() == null) vo.setPyatAmt(new BigDecimal(0.00));
+		if(vo.getPyatDt() == null) vo.setPyatDt(new Date(1));
+		if(vo.getNewDt() == null) vo.setNewDt(new Date(1));
+		if(vo.getExpiDt() == null) vo.setExpiDt(new Date(1));
+		if(StringUtils.isBlank(vo.getRepayWay())) vo.setRepayWay("1");
+		if(vo.getContRt() == null) vo.setContRt(new BigDecimal(0.00000));
+		if(StringUtils.isBlank(vo.getDpsvDv())) vo.setDpsvDv("dpsv");
+		if(StringUtils.isBlank(vo.getLoanKind())) vo.setLoanKind("loankind");
+		if(StringUtils.isBlank(vo.getCltrCtt())) vo.setCltrCtt("cl");
+		if(vo.getIntPaytDt() == null) vo.setIntPaytDt(new Date(1));
+		if(StringUtils.isBlank(vo.getCurrCd())) vo.setCurrCd("KRW");
+		if(vo.getRealAmt() == null) vo.setRealAmt(new BigDecimal(0.00));
+		
+		return vo;
+	}
 }
