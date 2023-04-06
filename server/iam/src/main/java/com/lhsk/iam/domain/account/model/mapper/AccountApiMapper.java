@@ -10,6 +10,6 @@ import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 public interface AccountApiMapper {
 	
 	public int isEmptyAccountTable();
-	public void insertAccount(List<AccountApiVO> list);
+	public void insertAccounts(List<AccountApiVO> list);
 	public void deleteAccounts();
 }
