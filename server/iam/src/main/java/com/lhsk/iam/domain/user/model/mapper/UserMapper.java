@@ -3,13 +3,13 @@ package com.lhsk.iam.domain.user.model.mapper;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
 import com.lhsk.iam.domain.user.model.vo.WithoutUserCodeUserVO;
 
-@Repository
+@Mapper
 public interface UserMapper {
 	
 	void signup(UserVO userVO);

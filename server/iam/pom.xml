@@ -74,11 +74,17 @@
 		</dependency>
 
 	    
-	    <!--JWT-->
+	    <!--JWT jjwt로 변경예정-->
 		<dependency>
 		    <groupId>com.auth0</groupId>
 		    <artifactId>java-jwt</artifactId>
 		    <version>3.10.2</version>
+		</dependency>
+		
+		<!--외부 API 호출용-->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
 		
