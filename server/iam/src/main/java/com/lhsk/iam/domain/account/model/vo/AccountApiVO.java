@@ -1,7 +1,7 @@
 package com.lhsk.iam.domain.account.model.vo;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -48,19 +48,22 @@ public class AccountApiVO {
 	private BigDecimal pyatAmt; 	// 월납입금
 	
 	@JsonProperty("PYAT_DT")
-	private Date pyatDt;		// 월납입일
+	private String pyatDtApi;		// 월납입일
+	private LocalDate pyatDt;		// 월납입일
 	
 	@JsonProperty("NEW_DT")
-	private Date newDt;			// 신규일자
+	private String newDtApi;		// 신규일자
+	private LocalDate newDt;			// 신규일자
 	
 	@JsonProperty("EXPI_DT")
-	private Date expiDt;		// 만기일자
+	private String expiDtApi;		// 만기일자
+	private LocalDate expiDt;		// 만기일자
 	
 	@JsonProperty("REPAY_WAY")
 	private String repayWay;	// 상환방법
 	
 	@JsonProperty("CONT_RT")
-	private BigDecimal contRt;		// 이자율
+	private BigDecimal contRt;	// 이자율
 	
 	@JsonProperty("DPSV_DV")
 	private String dpsvDv;		// 예적금구분
@@ -72,7 +75,8 @@ public class AccountApiVO {
 	private String cltrCtt;		// 담보내역
 	
 	@JsonProperty("INT_PAYT_DT")
-	private Date intPaytDt;		// 이자납입예정일자
+	private String intPaytDtApi;		// 이자납입예정일자(문자열)
+	private LocalDate intPaytDt;			// 이자납입예정일자
 	
 	@JsonProperty("CURR_CD")
 	private String currCd;		// 통화코드
