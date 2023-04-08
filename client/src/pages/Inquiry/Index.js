@@ -17,12 +17,14 @@ const Index = () => {
   const [page, setPage] = useState(1);
   const offset=(page-1)*showList;
 
+  let arr = null;
   let stateArr=[];
   let depAInsArr=[];
   let loanArr=[];
 
   // useQuery를 통한 로딩 처리 추가하기
   useEffect(() => {
+    arr=null;
     const url = "http://localhost:3001/api/getAccountList";
       axios.get(url).then((res) => {
       res.data.RESP_DATA.REC===null ? console.log('failed') : console.log("success");
@@ -31,7 +33,7 @@ const Index = () => {
   }, []);
   
   const clearData = (allAccount) => {
-    let arr = allAccount.REC;
+    arr = allAccount.REC;
     arr.map((ele, i) => {
       if (ele.ACCT_DV === "01") {
         stateArr.push(ele);
