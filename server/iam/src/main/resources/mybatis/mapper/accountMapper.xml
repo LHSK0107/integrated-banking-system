@@ -2,13 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lhsk.iam.domain.account.model.mapper.AccountMapper">
-	
 	<select id="findAllAccount" resultType="AccountVO">
-		SELECT * FROM account
+		SELECT	acct_no, bank_cd, bal, ib_type, acct_dv, 
+				loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, 
+				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
+				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
+		FROM account
 	</select>
 	
+<<<<<<< HEAD
 <!-- 	<insert id="">
 		
 	</insert> -->
 	
+=======
+	<select id="findByAcctNo" parameterType="String" resultType="AccountVO">
+		SELECT	acct_no, bank_cd, bal, ib_type, acct_dv, 
+				loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, 
+				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
+				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
+		FROM account
+		WHERE acct_no=#{acctNo}
+	</select>	
+		
+>>>>>>> 316997299d9e6fd9feac42c5e915373a9e2b4f33
 </mapper>
