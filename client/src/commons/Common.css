@@ -149,8 +149,28 @@
 /* --- contents */
 
 /* footer --- */
-.footer {
-  border-top: 1px solid var(--color-lightgray);
+footer {
+  background-color: var(--color-main);
   padding: 30px 0;
+  color: #ffffff;
+}
+footer img {
+  cursor: pointer;
+  object-fit: contain;
+}
+footer h1 {
+  width: 10%;
+}
+footer h1 figure {
+  width: 22px;
+}
+.footer_link_wrap {
+  width: 40%;
+}
+.footer_contact_wrap {
+  width: 10%;
+}
+.footer_contact_wrap figure {
+  width: 30px;
 }
 /* --- footer */

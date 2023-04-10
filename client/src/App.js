@@ -8,6 +8,7 @@ import NotFound from "./pages/404/Index";
 import Index from "./pages/Index/Index";
 import DetailInquiry from "./pages/DetailInquiry/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Footer from "./commons/Footer";
 
 const App = () => {
   const client=new QueryClient({defaultOptions:{
@@ -31,6 +32,7 @@ const App = () => {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer />
         </Router>
         </QueryClientProvider>
       </div>
