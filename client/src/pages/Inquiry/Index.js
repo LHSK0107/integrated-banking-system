@@ -1,17 +1,18 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios, { all } from "axios";
+import axios from "axios";
 import "./index.css";
 import IamIcon from "../../assets/images/account_bg.png";
 // 은행 코드별 이미지 출력 추가하기
 import KakaoIcon from "../../assets/images/icon/bank/kakao_icon.png";
+import Balance from "../../hooks/Balance";
 
 const Index = () => {
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
   const [loanList, setLoanList] = useState([]);
-  
+
   // 페이징 처리 추가하기
   const showList = 10;
   const [page, setPage] = useState(1);
@@ -69,17 +70,20 @@ const Index = () => {
                 <div className="bal">잔액</div>
               </li>
               {statementList.map((ele, i) => {
-                return (
-                  <Link key={i} className="flex align_center" to={`/inquiry?acct_no=${ele.ACCT_NO}`}>
-                    <li className="account_li flex justify_between align_center">
-                      <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                      <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-                      <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                      <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
-                    </li>
-                  </Link>
-                );
-              })}
+              return (
+                <Link key={i} className="flex align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
+                  <li className="account_li flex justify_between align_center">
+                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
+                    <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+                    <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
+                    <div className="bal">
+                      {/* 나중에 hooks 변경 */}
+                      <Balance balance={ele?.BAL}/>
+                    </div>
+                  </li>
+                </Link>
+              );
+            })}
             </ul>
           </div>
         </div>
@@ -101,17 +105,18 @@ const Index = () => {
               </li>
               {depAInsList.map((ele, i) => {
                 return (
-                  <Link key={i} className="flex align_center " to="">
+                  <Link key={i} className="flex align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
                     <li className="account_li flex justify_between align_center">
                       <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
                       <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                       <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                      <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
+                      <div className="bal">
+                        <Balance balance={ele?.BAL}/>
+                      </div>
                     </li>
                   </Link>
                 );
               })}
-              {/* <div className="bal"><ConfigNum number={ele?.BAL.split(".",1)} /></div> */}
             </ul>
           </div>
         </div>
@@ -133,12 +138,14 @@ const Index = () => {
               </li>
               {loanList.map((ele, i) => {
                 return (
-                  <Link key={i} className="flex align_center " to="">
+                  <Link key={i} className="flex align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
                     <li className="account_li flex justify_between align_center">
                       <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
                       <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                       <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                      <div className="bal"><p>{ele?.BAL.split(".",1)}원</p></div>
+                      <div className="bal">
+                        <Balance balance={ele?.BAL}/>
+                      </div>
                     </li>
                   </Link>
                 );
@@ -150,13 +157,23 @@ const Index = () => {
     </div>
   );
 };
+// const StatementListContainer = ({statementList}) =>{
+//   statementList.map((ele, i) => {
+//     const {realMoney} = useBalance(ele?.BAL);
+//     return (
+//       <Link key={i} className="flex align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
+//         <li className="account_li flex justify_between align_center">
+//           <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
+//           <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+//           <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
+//           <div className="bal">
+//             <p>{realMoney}</p>
+//           </div>
+//         </li>
+//       </Link>
+//     );
+//   })
+// };
 
-// const ConfigNum = (number) =>{
-//   return(
-//     <p>
-
-//     </p>
-//   )
-// }
 
 export default Index;
