@@ -10,12 +10,6 @@
 		FROM account
 	</select>
 	
-<<<<<<< HEAD
-<!-- 	<insert id="">
-		
-	</insert> -->
-	
-=======
 	<select id="findByAcctNo" parameterType="String" resultType="AccountVO">
 		SELECT	acct_no, bank_cd, bal, ib_type, acct_dv, 
 				loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, 
@@ -25,5 +19,4 @@
 		WHERE acct_no=#{acctNo}
 	</select>	
 		
->>>>>>> 316997299d9e6fd9feac42c5e915373a9e2b4f33
 </mapper>
