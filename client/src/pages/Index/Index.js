@@ -9,6 +9,12 @@ import NewsSlider from "./component/NewsSlider";
 
 const Index = () => {
 
+  const data = [
+    {id:1, img:StrongImg01, alt:"장점1", content:"한 눈에 자산을\n분석 통합 계좌 관리"},
+    {id:2, img:StrongImg01, alt:"장점2", content:"쉽고 편리하게\n만드는 보고서"},
+    {id:3, img:StrongImg01, alt:"장점3", content:"기존 상품과 비교해\n최적의 상품 정보 제공"},
+  ];
+
   return (
     <div className="index_wrap">
       <section className="main_slider_section">
@@ -22,30 +28,20 @@ const Index = () => {
             why <span>I'AM</span>
           </h2>
           <div className="main_introduce_strong_wrap flex justify_center">
-            <div className="content">
-              <figure>
-                <img src={StrongImg01} alt="장점1"></img>
-              </figure>
-              <div>
-                한 눈에 자산을 분석<br></br>통합 계좌 관리
-              </div>
-            </div>
-            <div className="content">
-              <figure>
-                <img src={StrongImg01} alt="장점2"></img>
-              </figure>
-              <div>
-                쉽고 편리하게 만드는<br></br>보고서
-              </div>
-            </div>
-            <div className="content">
-              <figure>
-                <img src={StrongImg01} alt="장점3"></img>
-              </figure>
-              <div>
-                기존 상품과 비교해<br></br>최적의 상품 정보 제공
-              </div>
-            </div>
+            {data.map(ele => {
+              return (
+                <div key={ele.id} className="content">
+                  <figure>
+                    <img src={ele.img} alt={ele.alt} />
+                  </figure>
+                  <div>
+                    {ele.content.split("\n")[0]}
+                    <br></br>
+                    {ele.content.split("\n")[1]}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>

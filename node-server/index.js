@@ -12,9 +12,13 @@ app.use("/api", inquiryRouter);
 
 const usersRouter = require("./routes/Users");
 app.use("/auth", usersRouter);
-
 const newsRouter = require("./routes/News");
 app.use("/news", newsRouter);
+
+// ok
+app.use("/", (req,res)=>{
+  res.send("<h1>success</h1>");
+})
 
 db.sequelize
   .sync()
