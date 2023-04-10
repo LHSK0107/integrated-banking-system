@@ -64,25 +64,18 @@
     transition: all 0.4s ease-in-out;
 }
 .account_list .idx{
-    width: 10%;
+    /* width: 10%; */
+    flex: 0 0 10%;
 }
 .account_list .idx p {
     text-align: center;
 }
 .account_list .acct_no{
-    width: 30%;
+    /* width: 30%; */
+    flex: 0 0 240px;
 }
-.account_list .loan_nm {
-    width: 40%;
-}
-.account_list .loan_nm p {
-    text-align: center;
-}
-.account_list .bal{
-    width: 20%;
-}
-.account_list .bal p {
-    text-align: right;
+.account_list .acct_no span {
+    flex: 0 0 120px;
 }
 .account_list figure{
     display: inline-block;
@@ -90,4 +83,18 @@
     height: 40px;
     margin: 0;
     padding:0;
+}
+.account_list .loan_nm {
+    /* width: 40%; */
+    flex: 0 0 40%;
+}
+.account_list .loan_nm p {
+    text-align: center;
+}
+.account_list .bal{
+    /* width: 20%; */
+    flex: 0 0 20%;
+}
+.account_list .bal p {
+    text-align: right;
 }
