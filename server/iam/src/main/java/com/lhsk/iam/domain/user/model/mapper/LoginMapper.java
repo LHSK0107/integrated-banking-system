@@ -1,11 +1,10 @@
 package com.lhsk.iam.domain.user.model.mapper;
 
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import com.lhsk.iam.domain.user.model.vo.UserVO;
 
-@Repository
+@Mapper
 public interface LoginMapper {
 	
 	

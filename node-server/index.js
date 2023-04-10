@@ -17,6 +17,9 @@ app.use("/", (req,res)=>{
   res.send("<h1>success</h1>");
 })
 
+const newsRouter = require("./routes/News");
+app.use("/news", newsRouter);
+
 db.sequelize
   .sync()
   .then(() => {

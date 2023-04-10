@@ -1,11 +1,14 @@
 import "./index.css";
 import React from "react";
+
 import MainSliderImg from "../../assets/images/index_main.jpg";
 import StrongImg01 from "../../assets/images/index_strong_01.jpg";
 import SeperateImg from "../../assets/images/bg_seperate.png";
 import NewsBgImg from "../../assets/images/index_news.png";
+import NewsSlider from "./component/NewsSlider";
 
 const Index = () => {
+
   return (
     <div className="index_wrap">
       <section className="main_slider_section">
@@ -65,8 +68,12 @@ const Index = () => {
             <div className="main_notice_detail">
               <h3>Lorem ipsum dolor sit amet,</h3>
               <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus efficitur metus sit amet tincidunt. Donec aliquet varius nunc, quis consequat tortor ultrices eu.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus efficitur metus sit amet tincidunt. Donec aliquet varius nunc, quis consequat tortor ultrices eu.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+                tempus efficitur metus sit amet tincidunt. Donec aliquet varius
+                nunc, quis consequat tortor ultrices eu. Lorem ipsum dolor sit
+                amet, consectetur adipiscing elit. Proin tempus efficitur metus
+                sit amet tincidunt. Donec aliquet varius nunc, quis consequat
+                tortor ultrices eu.
               </div>
               <button className="more_btn">더 알아보기</button>
             </div>
@@ -77,15 +84,15 @@ const Index = () => {
       <section className="main_news_section">
         <div className="inner">
           <div>
-            <figure><img src={NewsBgImg} alt="뉴스 구분 따옴표 이미지"></img></figure>
+            <figure>
+              <img src={NewsBgImg} alt="뉴스 구분 따옴표 이미지"></img>
+            </figure>
           </div>
-          <div className="main_news_wrap flex justify_between">
-            <div className="main_news_cont content"></div>
-            <div className="main_news_cont content"></div>
-            <div className="main_news_cont content"></div>
-          </div>
+          <NewsSlider />
           <div className="flex justify_end">
-            <figure><img src={NewsBgImg} alt="뉴스 구분 따옴표 이미지"></img></figure>
+            <figure>
+              <img src={NewsBgImg} alt="뉴스 구분 따옴표 이미지"></img>
+            </figure>
           </div>
         </div>
       </section>

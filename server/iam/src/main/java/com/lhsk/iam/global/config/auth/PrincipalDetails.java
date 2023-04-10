@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.lhsk.iam.domain.user.model.vo.UserVO;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class PrincipalDetails implements UserDetails {
 
 	private UserVO userVO;
@@ -23,7 +23,7 @@ public class PrincipalDetails implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		userVO.getUserCode().forEach(r->{
+		userVO.getUserCodeList().forEach(r->{
 			authorities.add(()->r);
 		});
 		return authorities;
