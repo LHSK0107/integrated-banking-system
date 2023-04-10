@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 const Balance = ({balance}) => {
-  // const arr = balance.split("원",1);
-  // const realMoney = arr.toString()
+  // 변수명 수정은 후에
   const [realMoney, setRealMoney]=useState("");
   const splitBalance = balance.split(".",1);
   const money = splitBalance.reverse().toString();
@@ -12,7 +11,6 @@ const Balance = ({balance}) => {
     const addUnit = () => {
       let count = 0;
       let arr = [];
-      let imsi = "";
       for(let i=balLength; i>0; i--){
         if(count!==0 && count%3===0){
           arr.unshift(",");
@@ -20,16 +18,12 @@ const Balance = ({balance}) => {
         arr.unshift(balance[i-1]);
         count++;
       }
-      for(let value of arr){
-        imsi = imsi+value;
-      }
-      setRealMoney(imsi+"원");
+      setRealMoney(arr.join('')+"원");
     }
     addUnit();
   },[balance,balLength]);
-  return (
-    <p>{realMoney==="" ? "null" : realMoney}</p>
-  )
+  return <p>{realMoney==="" ? "null" : realMoney}</p>
+
 };
 
 export default Balance;
