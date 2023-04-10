@@ -3,38 +3,14 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lhsk.iam.domain.account.model.mapper.AccountApiMapper">
 	
-	<select id="isEmptyAccountTable" resultType="Integer">
-	  SELECT COUNT(*) FROM account
-	</select>
-	
 	<delete id="deleteAccounts">
 		DELETE FROM account
 	</delete>
 	
-<!-- 	<insert id="insertAccount" parameterType="java.util.List"> -->
-<!-- 		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt) -->
-<!-- 		VALUES -->
-<!-- 		<foreach collection="list" item="account"> -->
-<!-- 			(${account.acctNo}, ${account.bankCd}, ${account.bal}, ${account.ibType}, ${account.acctDv}, -->
-<!-- 			 ${account.loanNm}, 'v', ${account.agmtAmt}, -->
-<!-- 			 ${account.pyatAmt}, '1000-01-01', ${account.newDt}, ${account.expiDt}, '1',  -->
-<!-- 			 ${account.contRt}, ${account.dpsvDv}, ${account.loanKind}, 'a', '1000-01-01',  -->
-<!-- 			 ${account.currCd}, ${account.realAmt}) -->
-<!-- 		</foreach> -->
-<!-- 	</insert> -->
-	
-<!-- 	<insert id="insertAccount" parameterType="AccountApiVO"> -->
-<!-- 		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt) -->
-<!-- 		VALUES -->
-<!-- 			( #{acctNo}, #{bankCd}, #{bal}, #{ibType}, #{acctDv}, -->
-<!-- 			 #{loanNm}, 'v', #{agmtAmt}, -->
-<!-- 			 #{pyatAmt}, '1000-01-01', #{newDt}, #{expiDt}, '1',  -->
-<!-- 			 #{contRt}, #{dpsvDv}, #{loanKind}, 'a', '1000-01-01',  -->
-<!-- 			 #{currCd}, #{realAmt} ) -->
-<!-- 	</insert> -->
-	
-	<insert id="insertAccounts" parameterType="java.util.ArrayList">
-		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt)
+	<insert id="insertAccounts" parameterType="java.util.List">
+		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, 
+		acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, 
+		cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt)
 		VALUES
 		<foreach collection="list" item="account" separator=",">
 			(
@@ -47,34 +23,27 @@
 		</foreach>
 	</insert>
 	
-	
-<!-- 	<insert id="insertAccount" parameterType="java.util.List"> -->
-<!-- 	  INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt) -->
-<!-- 	  VALUES -->
-<!-- 	  <foreach collection="list" item="account"> -->
-<!-- 	  ( -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.acctNo)">#{account.acctNo},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.bankCd)">#{account.bankCd},</if> -->
-<!-- 	    <if test="account.bal != null and account.bal != 0">#{account.bal},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.ibType)">#{account.ibType},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.acctDv)">#{account.acctDv},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.loanNm)">#{account.loanNm},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.acctNickNm)">#{account.acctNickNm},</if> -->
-<!-- 	    <if test="account.agmtAmt != null and account.agmtAmt != 0">#{account.agmtAmt},</if> -->
-<!-- 	    <if test="account.pyatAmt != null and account.pyatAmt != 0">#{account.pyatAmt},</if> -->
-<!-- 	    <if test="account.pyatDt != null">#{account.pyatDt},</if> -->
-<!-- 	    <if test="account.newDt != null">#{account.newDt},</if> -->
-<!-- 	    <if test="account.expiDt != null">#{account.expiDt},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.repayWay)">#{account.repayWay},</if> -->
-<!-- 	    <if test="account.contRt != null and account.contRt != 0">#{account.contRt},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.dpsvDv)">#{account.dpsvDv},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.loanKind)">#{account.loanKind},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.cltrCtt)">#{account.cltrCtt},</if> -->
-<!-- 	    <if test="account.intPaytDt != null">#{account.intPaytDt},</if> -->
-<!-- 	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(account.currCd)">#{account.currCd},</if> -->
-<!-- 	    <if test="account.realAmt != null and account.realAmt != 0">#{account.realAmt}</if> -->
-<!-- 	    ) -->
-<!-- 	  </foreach> -->
+<!-- 	<insert id="insertInoutToday" parameterType="com.lhsk.iam.domain.account.model.vo.InoutApiVO"> -->
+<!-- 		INSERT INTO inout_today(acct_no, bank_cd, inout_dv,  -->
+<!-- 		trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd)  -->
+<!-- 		VALUES(#{acctNo},#{bankCd},#{inoutDv},#{trscDt},#{trscTm},#{bal},#{rmrk1],#{trscAmt},#{currCd}) -->
 <!-- 	</insert> -->
+
+	<delete id="deleteInoutPast">
+		DELETE FROM inout_past
+	</delete>
+	
+	
+	<insert id="insertInoutPast" parameterType="java.util.ArrayList">
+		INSERT INTO inout_past(acct_no, bank_cd, inout_dv, 
+		trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd) 
+		VALUES
+		<foreach collection="list" item="inout" separator=",">
+			(
+			#{inout.acctNo},#{inout.bankCd},#{inout.inoutDv},#{inout.trscDt}
+			,#{inout.trscTm},#{inout.bal},#{inout.rmrk1},#{inout.trscAmt},#{inout.currCd}
+			)
+		</foreach>
+	</insert>
 	
 </mapper>
