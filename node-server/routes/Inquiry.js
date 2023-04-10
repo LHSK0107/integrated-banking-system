@@ -5,10 +5,10 @@ require('dotenv').config();
 
 const url="https://scloudadmin.appplay.co.kr/gw/ErpGateWay";
 const data={
-    API_ID: "2410",
-    API_KEY: "5e46561fa40f43a6b3ba",
+    API_ID: process.env.ACCOUNT_LIST_CODE,
+    API_KEY: process.env.API_KEY,
     ORG_NO: "BUSAN",
-    BIZ_NO: "1078783749",
+    BIZ_NO: process.env.BIZ_NO,
     REQ_DATA: {
       ACCT_NO: ""
     }
@@ -38,7 +38,6 @@ router.get("/getDetailAccountHistory/:acctNo",(req, res)=>{
 // 계좌 거래내역 상세 조회
 router.get("/getDate/:detailNo/:strDate/:endDate",(req, res)=>{
   const {detailNo, strDate, endDate} = req.params;
-  console.log(`detailNo:${detailNo}, strDate:${strDate}, endDate:${endDate}`);
   axios.post(url,{
     API_ID: process.env.ACCOUNT_TRANSACTION_CODE,
     API_KEY: process.env.API_KEY,
