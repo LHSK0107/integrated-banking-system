@@ -48,7 +48,6 @@
 }
 .account_list li .acct_no{
     flex: 0 0 240px;
-    width: 100%;
 }
 .account_list li .acct_no span{
     flex: 0 0 120px;
