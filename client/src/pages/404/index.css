@@ -46,19 +46,17 @@
     font-family: 'SBAggroL';
     font-weight: lighter;
     font-size: 1.5rem;
-    color: #232323;
     line-height: 2.2rem;
 }
 
 .notFound_btn_wrap .more_btn {
     font-family: 'SBAggroM';
     font-size: 1.5rem;
-    color: #232323;
     margin: 0 10px;
     border: 3px solid var(--color-main);
     border-radius: 0px;
 }
 
 .notFound_btn_wrap .more_btn:hover {
-    color: #ffffff;
+    color: var(--color-white);
 }
