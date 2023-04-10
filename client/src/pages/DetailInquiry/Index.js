@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import './index.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -75,6 +75,7 @@ const Index = () => {
           .then((res) => res.data);
       }
   };
+  // useQuery api 조회
   const {
     data: recData,
     isError,
@@ -85,6 +86,13 @@ const Index = () => {
   if (isError) {
     console.log("error");
   }
+  
+  const {strInputRef, endInputRef} = useRef();
+  useEffect(()=>{
+    const date = new Date();
+    
+
+  },[]);
   
   return (
     <div className="detail_page_wra">
@@ -108,8 +116,8 @@ const Index = () => {
           <h2>Detail</h2>
           <div className="detail_search_wrap flex justify_between">
             <div className="detail_search_form flex align_center">
-              <input type="date" name="strDate" value={inputValueList.strDate} onChange={onChange}/>
-              <input type="date" name="endDate" value={inputValueList.endDate} onChange={onChange}/>
+              <input ref={strInputRef} type="date" name="strDate" value={inputValueList.strDate} onChange={onChange}/>
+              <input ref={endInputRef} type="date" name="endDate" value={inputValueList.endDate} onChange={onChange}/>
               <button className="detail_search_btn" onClick={refetch}>
                 <figure>
                   <img src={MagnifierImg} alt="magnifier 이미지" />
