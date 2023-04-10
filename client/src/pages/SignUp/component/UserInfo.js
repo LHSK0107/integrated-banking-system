@@ -59,7 +59,7 @@ const UserInfo = () => {
     });
   }, []);
   return (
-    <div>
+    <div className="form_container">
       <form className="userInfo_form" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <input
