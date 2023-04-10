@@ -9,6 +9,6 @@ import com.lhsk.iam.domain.account.model.vo.AccountVO;
 @Mapper
 public interface AccountMapper {
 	
-	List<AccountVO> findAllAccount();
-	AccountVO findByAcctNo(String acctNo);
+//	List<AccountVO> findAllAccount();
+//	AccountVO findByAcctNo(String acctNo);
 }
