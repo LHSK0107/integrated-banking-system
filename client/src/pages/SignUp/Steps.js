@@ -53,12 +53,12 @@ const Steps = () => {
 const ProgressBar = (props) => {
   const progressBarRef = useRef();
   const progressWrapRef = useRef();
-
   // 추후 progress wrap 이용해서 전부 처리
   useEffect(() => {
     const progressWidth = progressWrapRef.current.offsetWidth;
     const progressCountImg = progressWrapRef.current.childNodes.length;
     const progressChildList = progressWrapRef.current.children;
+
     // list 내 항목 attribute로 ref 추가가 안 됨
     // item.setAttribute("ref",{progressItem});
 

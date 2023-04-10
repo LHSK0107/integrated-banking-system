@@ -46,7 +46,8 @@
   align-items: center;
   width: 100%;
 }
-.signup_form_wrap .signup_form div{
+/* 수정 */
+.signup_form_wrap .signup_form .form_container{
   width: 100%;
 }
 .signup_form_wrap .signup_form form div {
