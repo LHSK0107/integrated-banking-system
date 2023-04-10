@@ -24,20 +24,20 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("api/accounts")
 public class AccountController {
 	
-	private final AccountService accountService;
-	private final AccountDataImporter accountDataImporter;
+//	private final AccountService accountService;
+//	private final AccountDataImporter accountDataImporter;
 	
-	@GetMapping
-	public ResponseEntity<List<AccountVO>> getAccountList() {
-		List<AccountVO> list;
-		list = accountService.findAllAccount();
-		
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
-		
-		return new ResponseEntity<>(list, HttpStatus.OK);
-	}
+//	@GetMapping
+//	public ResponseEntity<List<AccountVO>> getAccountList() {
+//		List<AccountVO> list;
+//		list = accountService.findAllAccount();
+//		
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
+//		
+//		return new ResponseEntity<>(list, HttpStatus.OK);
+//	}
 	
 	
 }

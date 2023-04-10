@@ -7,8 +7,8 @@
 		SELECT * FROM account
 	</select>
 	
-	<insert id="">
+<!-- 	<insert id="">
 		
-	</insert>
+	</insert> -->
 	
 </mapper>
