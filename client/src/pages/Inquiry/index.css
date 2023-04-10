@@ -2,92 +2,92 @@
     width: 100%;
     height: 100%;
 }
-.contents_inner{
-    margin-top: 50px;
-    max-width: 1200px;
-    width: 100%;
-}
-.contents_inner .contents_title{
+.contents_title{
     font-size: 2.5em;
+    margin: 50px 0;
 }
 .content_left{
     width: 30%;
     position: relative;
 }
+.content_left h3{
+    z-index: 9997;
+    color: var(--color-main);
+    font-size: 1.5rem;
+}
+.content_left figure{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+}
+.content_left figure img {
+    height: auto;
+}
 .content_right{
     width: 70%;
 }
 .account_list{
-    width: 100%;
+    position: relative;
 }
-.account_list li{
+.account_list li {
     width: 100%;
-    text-align: center;
+    border-bottom: 2px solid var(--color-lightgray);
 }
 .account_list>li:first-child{
-    border-bottom: 6px solid #b8b7b7;
-    padding-bottom: 10px;
-    font-size: 1.3em;
+    padding-bottom: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
+    text-align: center;
+    border: none;
 }
-.account_list a{
+.account_list>li:first-child::after {
+    position: absolute;
+    top: 40px;
     display: block;
-    background-color: #fff;
-    transition: all 0.4s ease-in-out;
-}
-.account_list a:hover{
-    background-color: #e6e5e5;
-    transition: all 0.4s ease-in-out;
-}
-.account_list a li{
-    border-bottom: 2px solid #e6e5e5;
-    padding: 5px 0;
-}
-.account_list li .idx{
-    flex: 0 0 10%;
-}
-.account_list li .acct_no{
-    flex: 0 0 35%;
+    content: "";
     width: 100%;
+    height: 6px;
+    background-color: var(--color-lightgray);
+    border-radius: 10px;
 }
-.account_list li .loan_nm{
-    flex: 0 0 35%;
+.account_list .account_li {
+    width: 100%;
+    padding: 5px;
+    background-color: var(--color-white);
+    transition: all 0.4s ease-in-out;
 }
-.account_list li .bal{
-    flex: 0 0 20%;
+.account_list .account_li:hover{
+    background-color: var(--color-lightgray);
+    transition: all 0.4s ease-in-out;
 }
-.account_list li .bal p{
-    text-align:right;
+.account_list .idx{
+    width: 10%;
 }
-.account_li{
+.account_list .idx p {
+    text-align: center;
 }
-.account_li figure{
+.account_list .acct_no{
+    width: 30%;
+}
+.account_list .loan_nm {
+    width: 40%;
+}
+.account_list .loan_nm p {
+    text-align: center;
+}
+.account_list .bal{
+    width: 20%;
+}
+.account_list .bal p {
+    text-align: right;
+}
+.account_list figure{
     display: inline-block;
     width: 40px;
     height: 40px;
     margin: 0;
     padding:0;
-}
-.account_li figure img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.content_left h3{
-    z-index: 9997;
-    color: #fff;
-    font-size: 1.5em;
-}
-.content_left figure{
-    position: absolute;
-    top: 50%;
-    left: 50;
-    width: 200px;
-    height: 200px;
-    transform: translate(0, -50%);
-}
-.content_left figure .account_img{
-    width: 100%;
-    height: auto;
-    object-fit: cover;
 }
