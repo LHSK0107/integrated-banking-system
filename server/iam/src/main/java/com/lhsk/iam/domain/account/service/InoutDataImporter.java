@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+//import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class InoutDataImporter {
 	
 	// 과거 내역테이블을 초기화 시켜주는 메소드 (스프링이 켜질 때 딱 한번만 실행되는 메소드)
 	// 과거부터 어제까지의 입출금 내역을 조회하여 DB에 추가
-	@PostConstruct
+//	@PostConstruct
 	@Transactional
 	public void inoutPastTableInit() {
 		
