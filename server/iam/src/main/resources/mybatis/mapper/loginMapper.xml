@@ -4,11 +4,8 @@
         
 <mapper namespace="com.lhsk.iam.domain.user.model.mapper.LoginMapper">
 	
-	<select id="findUserById" parameterType="String" resultType="UserVO">
-		SELECT id,password,user_code FROM user WHERE id = #{id}
+	<select id="findUserByEmail" parameterType="String" resultType="UserVO">
+		SELECT email,password,user_code FROM user WHERE email = #{email}
 	</select>
 	
-
-	
-
 </mapper>
