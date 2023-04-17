@@ -12,8 +12,8 @@ import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 @Mapper
 public interface UserMapper {
 	
-	// id 중복체크
-	int checkDuplicateId(String id);
+	// email 중복체크
+	int checkDuplicateEmail(String email);
 	// 최초 가입 유무 체크
 	int checkExistsUser();
 	// 회원가입
