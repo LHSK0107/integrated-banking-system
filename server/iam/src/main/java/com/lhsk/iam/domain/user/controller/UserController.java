@@ -30,12 +30,12 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	// id 중복 체크
+	// email 중복 체크
 	@GetMapping("/api/signup")
-	public String checkDuplicateId(@RequestBody UserVO userVO) {
-		log.info("UserController.CheckDuplicateId");
-//		log.info(userVO.getId());
-		return "{\"status\":\""+userService.checkDuplicateId(userVO.getId())+"\"}";
+	public String checkDuplicateEmail(@RequestBody UserVO userVO) {
+		log.info("UserController.CheckDuplicateEmail");
+//		log.info(userVO.getEmail());
+		return "{\"status\":\""+userService.checkDuplicateEmail(userVO.getEmail())+"\"}";
 	}
 	
 	// email 인증 /api/signup/email

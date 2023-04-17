@@ -3,38 +3,47 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lhsk.iam.domain.account.model.mapper.AccountApiMapper">
 	
-	<select id="isEmptyAccountTable" resultType="Integer">
-	  SELECT COUNT(*) FROM account
-	</select>
-	
 	<delete id="deleteAccounts">
-		DELETE * FROM account
+		DELETE FROM account
 	</delete>
 	
-	<insert id="insertAccount" parameterType="AccountApiVO">
-	  INSERT INTO ACCOUNTS (ACCT_NO, BANK_CD, BAL, IB_TYPE, ACCT_DV, LOAN_NM, ACCT_NICK_NM, AGMT_AMT, PYAT_AMT, PYAT_DT, NEW_DT, EXPI_DT, REPAY_WAY, CONT_RT, DPSV_DV, LOAN_KIND, CLTR_CTT, INT_PAYT_DT, CURR_CD, REAL_AMT)
-	  VALUES (
-	    <if test="StringUtils.isNotBlank(acctNo)">#{acctNo},</if>
-	    <if test="StringUtils.isNotBlank(bankCd)">#{bankCd},</if>
-	    <if test="bal != null and bal != 0">#{bal},</if>
-	    <if test="StringUtils.isNotBlank(ibType)">#{ibType},</if>
-	    <if test="StringUtils.isNotBlank(acctDv)">#{acctDv},</if>
-	    <if test="StringUtils.isNotBlank(loanNm)">#{loanNm},</if>
-	    <if test="StringUtils.isNotBlank(acctNickNm)">#{acctNickNm},</if>
-	    <if test="agmtAmt != null and agmtAmt != 0">#{agmtAmt},</if>
-	    <if test="pyatAmt != null and pyatAmt != 0">#{pyatAmy},</if>
-	    <if test="pyatDt != null">#{pyatDt},</if>
-	    <if test="newDt != null">#{newDt},</if>
-	    <if test="expiDt != null">#{expiDt},</if>
-	    <if test="StringUtils.isNotBlank(repayWay)">#{repayWay},</if>
-	    <if test="contRt != null and contRt != 0">#{contRt},</if>
-	    <if test="StringUtils.isNotBlank(dpsvDv)">#{dpsvDv},</if>
-	    <if test="StringUtils.isNotBlank(loanKind)">#{loanKind},</if>
-	    <if test="StringUtils.isNotBlank(cltrCtt)">#{cltrCtt},</if>
-	    <if test="intPaytDt != null">#{intPaytDt},</if>
-	    <if test="StringUtils.isNotBlank(currCd)">#{currCd},</if>
-	    <if test="realAmt != null and realAmt != 0">#{realAmt}</if>
-	  )
+	<insert id="insertAccounts" parameterType="java.util.List">
+		INSERT INTO account (acct_no, bank_cd, bal, ib_type, acct_dv, loan_nm, 
+		acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, new_dt, expi_dt, repay_way, 
+		cont_rt, dpsv_dv, loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt)
+		VALUES
+		<foreach collection="list" item="account" separator=",">
+			(
+			#{account.acctNo}, #{account.bankCd}, #{account.bal}, #{account.ibType}, #{account.acctDv},
+			#{account.loanNm}, #{account.acctNickNm}, #{account.agmtAmt},
+			#{account.pyatAmt}, #{account.pyatDt}, #{account.newDt}, #{account.expiDt}, #{account.repayWay}, 
+			#{account.contRt}, #{account.dpsvDv}, #{account.loanKind}, #{account.cltrCtt}, #{account.intPaytDt}, 
+			#{account.currCd}, #{account.realAmt}
+			)
+		</foreach>
+	</insert>
+	
+<!-- 	<insert id="insertInoutToday" parameterType="com.lhsk.iam.domain.account.model.vo.InoutApiVO"> -->
+<!-- 		INSERT INTO inout_today(acct_no, bank_cd, inout_dv,  -->
+<!-- 		trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd)  -->
+<!-- 		VALUES(#{acctNo},#{bankCd},#{inoutDv},#{trscDt},#{trscTm},#{bal},#{rmrk1],#{trscAmt},#{currCd}) -->
+<!-- 	</insert> -->
+
+	<delete id="deleteInoutPast">
+		DELETE FROM inout_past
+	</delete>
+	
+	
+	<insert id="insertInoutPast" parameterType="java.util.ArrayList">
+		INSERT INTO inout_past(acct_no, bank_cd, inout_dv, 
+		trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd) 
+		VALUES
+		<foreach collection="list" item="inout" separator=",">
+			(
+			#{inout.acctNo},#{inout.bankCd},#{inout.inoutDv},#{inout.trscDt}
+			,#{inout.trscTm},#{inout.bal},#{inout.rmrk1},#{inout.trscAmt},#{inout.currCd}
+			)
+		</foreach>
 	</insert>
 	
 </mapper>

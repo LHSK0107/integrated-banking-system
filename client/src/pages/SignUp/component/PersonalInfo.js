@@ -44,7 +44,7 @@ const PersonalInfo = () => {
         });
     },[]);
   return (
-    <div>
+    <div className="form_container">
        <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <input type="text" placeholder="이름을 입력하세요." {...register("name")} value={personalInputValue?.name} onChange={onChange} />

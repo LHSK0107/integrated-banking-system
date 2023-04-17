@@ -1,6 +1,7 @@
 package com.lhsk.iam.domain.account.model.vo;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,12 +10,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 // 수시입출금계좌
 public class AccountApiVO {
 	@JsonProperty("ACCT_NO")
@@ -24,7 +27,7 @@ public class AccountApiVO {
 	private String bankCd;		// 은행코드
 	
 	@JsonProperty("BAL")
-	private double bal;			// 잔액
+	private BigDecimal bal;		// 잔액
 	
 	@JsonProperty("IB_TYPE")
 	private String ibType;		// 뱅킹종류
@@ -39,25 +42,28 @@ public class AccountApiVO {
 	private String acctNickNm;	// 계좌별칭
 	
 	@JsonProperty("AGMT_AMT")
-	private double agmtAmt;		// 대출한도/가입금액/약정금액
+	private BigDecimal agmtAmt;		// 대출한도/가입금액/약정금액
 	
 	@JsonProperty("PYAT_AMT")
-	private double pyatAmt; 	// 월납입금
+	private BigDecimal pyatAmt; 	// 월납입금
 	
 	@JsonProperty("PYAT_DT")
-	private Date pyatDt;		// 월납입일
+	private String pyatDtApi;		// 월납입일
+	private LocalDate pyatDt;		// 월납입일
 	
 	@JsonProperty("NEW_DT")
-	private Date newDt;			// 신규일자
+	private String newDtApi;		// 신규일자
+	private LocalDate newDt;			// 신규일자
 	
 	@JsonProperty("EXPI_DT")
-	private Date expiDt;		// 만기일자
+	private String expiDtApi;		// 만기일자
+	private LocalDate expiDt;		// 만기일자
 	
 	@JsonProperty("REPAY_WAY")
 	private String repayWay;	// 상환방법
 	
 	@JsonProperty("CONT_RT")
-	private double contRt;		// 이자율
+	private BigDecimal contRt;	// 이자율
 	
 	@JsonProperty("DPSV_DV")
 	private String dpsvDv;		// 예적금구분
@@ -69,13 +75,14 @@ public class AccountApiVO {
 	private String cltrCtt;		// 담보내역
 	
 	@JsonProperty("INT_PAYT_DT")
-	private Date intPaytDt;		// 이자납입예정일자
+	private String intPaytDtApi;		// 이자납입예정일자(문자열)
+	private LocalDate intPaytDt;			// 이자납입예정일자
 	
 	@JsonProperty("CURR_CD")
 	private String currCd;		// 통화코드
 	
 	@JsonProperty("REAL_AMT")
-	private double realAmt;		// 출금가능잔액
+	private BigDecimal realAmt;		// 출금가능잔액
 	
 
 }
