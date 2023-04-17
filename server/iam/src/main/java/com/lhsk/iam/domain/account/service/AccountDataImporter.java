@@ -2,6 +2,8 @@ package com.lhsk.iam.domain.account.service;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,9 +25,9 @@ public class AccountDataImporter {
 	private final AccountClient accountClient;
 	private final AccountApiMapper accountApiMapper;
 	
-	// 주기적으로 account table의 데이터를 delete하고 새로 insert 진행
+	// 처음 프로그램이 실행되면 account table의 데이터를 delete하고 새로 insert 진행
 	@Transactional
-//	@Scheduled(fixedDelay = 1000)
+//	@PostConstruct
 	public void insertAccount() {
 //		log.info("insertAccount @Scheduled");
 		// API요청으로 얻은 계좌 목록 JSON

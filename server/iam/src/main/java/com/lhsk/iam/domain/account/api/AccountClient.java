@@ -37,8 +37,6 @@ public class AccountClient {
 	@Value("${webCashApi.allAccounts}")
 	private String ALLACCOUNTS;
 	
-	
-	
 	// 생성자를 통해 baseUrl을 지정해준다.
 	@Autowired
 	public AccountClient(@Value("${webCashApi.url}") String apiUrl, 
@@ -79,37 +77,6 @@ public class AccountClient {
         }
 	}
 	
-	
-	// 과거의 거래내역을 가져오는 메소드
-	// 2000년 1월 1일부터 어제까지의 입출금 내역을 조회
-	// 한번에 1000건의 데이터만 조회가능
-//	public Flux<InoutApiVO> fetchTransactionsFromApi(int page, int pageSize) {
-//			String startDate = "10000101";
-//			String endDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.BASIC_ISO_DATE);
-//			
-//			Map<String, Object> reqData = new HashMap<>();
-//			reqData.put("INQ_STR_DT", startDate);
-//			reqData.put("INQ_END_DT", endDate);
-//			reqData.put("PAGE_CNT", pageSize);
-//			reqData.put("INQ_PAGE_NO", page);
-//			
-//		    Map<String, Object> requestBody = new HashMap<>();
-//		    requestBody.put("API_KEY", secret.get("apiKey"));
-//		    requestBody.put("API_ID", secret.get("apiId"));
-//		    requestBody.put("ORG_NO", secret.get("orgNo"));
-//		    requestBody.put("BIZ_NO", secret.get("bizNo"));
-//		    requestBody.put("REQ_DATA", reqData);
-//        Flux<InoutApiVO> list = webClient.post()
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(requestBody.toString())
-//                .retrieve()
-//                .bodyToFlux(InoutApiVO.class);
-//        
-//        list.subscribe(value -> System.out.println("value : " + value));
-//        
-//        return list;
-//    }
-	
 	public List<InoutApiVO> getPastInouts(int page, int pageSize, Map<String, String> secret) {
 		
 		// ReqeustBody 생성하는 과정
@@ -141,6 +108,46 @@ public class AccountClient {
                     // Mono가 발행하는 데이터를 구독하여 최종 데이터를 반환, Mono를 블로킹하여 스트림의 처리를 동기적으로 수행
                     .block();
             JsonNode jsonNode = objectMapper.readTree(response);	// JsonNode로 파싱
+            JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
+            List<InoutApiVO> list = new ArrayList<>();
+            for (JsonNode inoutNode : recNode) {
+            	InoutApiVO inout = objectMapper.treeToValue(inoutNode, InoutApiVO.class);
+            	inout = dataProcessor.valCheck(inout);
+            	list.add(inout);
+            }
+            return list;
+        } catch (WebClientResponseException e) {
+            throw new RuntimeException("Failed to get accounts", e);                                                    
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse response", e);
+        }
+	}
+	
+	public List<InoutApiVO> getTodayInouts(int page, int pageSize, Map<String, String> secret) {
+		
+		String date = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+		Map<String, Object> reqData = new HashMap<>();
+		reqData.put("INQ_STR_DT", date);
+		reqData.put("INQ_END_DT", date);
+		reqData.put("PAGE_CNT", pageSize);
+		reqData.put("INQ_PAGE_NO", page);
+		
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("API_KEY", secret.get("apiKey"));
+        requestBody.put("API_ID", secret.get("apiId"));
+        requestBody.put("ORG_NO", secret.get("orgNo"));
+        requestBody.put("BIZ_NO", secret.get("bizNo"));
+        requestBody.put("REQ_DATA", reqData);
+        
+		try {
+			String jsonRequest = objectMapper.writeValueAsString(requestBody);
+            String response = webClient.post()
+            		.contentType(MediaType.APPLICATION_JSON)
+            		.body(BodyInserters.fromValue(jsonRequest))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            JsonNode jsonNode = objectMapper.readTree(response);
             JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
             List<InoutApiVO> list = new ArrayList<>();
             for (JsonNode inoutNode : recNode) {

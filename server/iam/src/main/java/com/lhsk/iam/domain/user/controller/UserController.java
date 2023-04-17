@@ -35,7 +35,7 @@ public class UserController {
 	public String checkDuplicateId(@RequestBody UserVO userVO) {
 		log.info("UserController.CheckDuplicateId");
 //		log.info(userVO.getId());
-		return "{\"status\":\""+userService.checkDuplicateId(userVO.getId())+"\"}";
+		return "{\"status\":\""+userService.checkDuplicateId(userVO.getEmail())+"\"}";
 	}
 	
 	// email 인증 /api/signup/email
