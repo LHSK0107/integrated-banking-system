@@ -1,5 +1,7 @@
 package com.lhsk.iam.global.config.jwt;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,18 +23,17 @@ public class JwtTokenProvider {
 	private String HEADER_STRING;
 	
 	public String generateToken(Authentication authentication) {
-    	PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
 
-    	String jwtToken = JWT.create()
-				.withSubject(principalDetailis.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
-				.withClaim("id", principalDetailis.getUserVO().getId())
-				.withClaim("name", principalDetailis.getUserVO().getName())
-				.sign(Algorithm.HMAC512(SECRET));
-    	
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
-        
+        Instant expirationTime = Instant.now().plus(Duration.ofMillis(Long.parseLong(EXPIRATION_TIME)));
+
+        String jwtToken = JWT.create()
+                .withSubject(principalDetailis.getUsername())
+                .withExpiresAt(Date.from(expirationTime))
+                .withClaim("id", principalDetailis.getUserVO().getEmail())
+                .withClaim("name", principalDetailis.getUserVO().getName())
+                .sign(Algorithm.HMAC512(SECRET));
+
         return jwtToken;
         
 //        return Jwts.builder()
