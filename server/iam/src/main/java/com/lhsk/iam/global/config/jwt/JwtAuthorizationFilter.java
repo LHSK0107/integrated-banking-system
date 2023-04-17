@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private LoginMapper loginMapper;
 	
+	@Value("${jwt.secret}")
+	private String SECRET;
+	@Value("${jwt.expirationTime}")
+	private String EXPIRATION_TIME;
+	@Value("${jwt.tokenPrefix}")
+	private String TOKEN_PREFIX;
+	@Value("${jwt.headerString}")
+	private String HEADER_STRING;
+	
+	
 	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, LoginMapper loginMapper) {
 		super(authenticationManager);
 		this.loginMapper = loginMapper;
@@ -35,7 +46,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		String jwtHeader = request.getHeader("Authorization");
 		
 		// header가 있는지 확인
-		if(jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
+		if(jwtHeader == null || !jwtHeader.startsWith(TOKEN_PREFIX)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -45,15 +56,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
 		// 내가 SecurityContext에 집적접근해서 세션을 만들때 자동으로 UserDetailsService에 있는
 		// loadByUsername이 호출됨.
-		String jwtToken = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX, "");
+		String jwtToken = request.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
 		System.out.println("jwtToken : "+jwtToken);
-		String id = 
-				JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("id").asString();
-		System.out.println("id : "+id);
+		String email = 
+				JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("email").asString();
+		System.out.println("email : "+email);
 		// 서명이 정상적으로 됨
-		if(id != null) {
+		if(email != null) {
 			
-			UserVO userEntity = loginMapper.findUserById(id);
+			UserVO userEntity = loginMapper.findUserByEmail(email);
 			
 			PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
 			

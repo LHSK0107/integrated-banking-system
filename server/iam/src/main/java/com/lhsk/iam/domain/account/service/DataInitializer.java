@@ -12,17 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lhsk.iam.domain.account.api.AccountClient;
 import com.lhsk.iam.domain.account.model.mapper.AccountApiMapper;
+import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// 외부 API를 호출하여 받아온 입출금내역을 DB에 저장하는 클래스
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class InoutDataImporter {
-
+public class DataInitializer {
+   
    private final AccountClient accountClient;
    private final AccountApiMapper accountApiMapper;
    @Value(value = "${webCashApi.key}") 
@@ -34,11 +34,10 @@ public class InoutDataImporter {
    @Value(value = "${webCashApi.bizNo}") 
    String bizNo;
    
-   
-   // 과거 내역테이블을 초기화 시켜주는 메소드 (스프링이 켜질 때 딱 한번만 실행되는 메소드)
-   // 과거부터 어제까지의 입출금 내역을 조회하여 DB에 추가
+   // 프로그램이 처음 시작되면 딱 한 번만 실행되는 메소드
+   @PostConstruct
    @Transactional
-   public void inoutPastTableInit() {
+   public void dataInit() {
       
       Map<String, String> secret = new HashMap<>();
       secret.put("apiKey", apiKey);
@@ -48,23 +47,26 @@ public class InoutDataImporter {
       
       final int PAGE_SIZE = 1000;
         int page = 0;
+        
+        
+        
+        // 거래내역 삭제
         accountApiMapper.deleteInoutPast();
+        // 계좌목록 삭제
+        accountApiMapper.deleteAccounts();
+        // 계좌목록 추가
+        List<AccountApiVO> accountList = accountClient.getAccounts();
+        accountApiMapper.insertAccounts(accountList);
+        // 과거 거래내역 추가
         while (true) {
            log.info("page : "+page);
-//            List<InoutApiVO> list = accountClient.fetchTransactionsFromApi(page, PAGE_SIZE).collectList().block();
-           List<InoutApiVO> list = accountClient.getPastInouts(page,PAGE_SIZE, secret);
-            if (list.isEmpty()) {
+           List<InoutApiVO> inoutPastList = accountClient.getPastInouts(page,PAGE_SIZE, secret);   // API요청으로 얻은 계좌 목록 JSON
+            if (inoutPastList.isEmpty()) {
                 break;
             }
-            accountApiMapper.insertInoutPast(list);
+            accountApiMapper.insertInoutPast(inoutPastList);
             
             page++;
         }
    }
-   
-   // inout_today 테이블을 주기적으로 갱신시켜주는 메소드
-   public void insertTodayInout() {
-      
-   }
-   
 }

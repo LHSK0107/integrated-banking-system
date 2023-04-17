@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const schema = yup.object({
@@ -59,44 +60,53 @@ const Index = () => {
   console.log(watch("example")); // watch input value by passing the name of it
 
   return (
-    <div className="login_section flex justify_center align_center">
-      <div className="login_image_section flex justify_center align_center">
-        <figure>
-          <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
-        </figure>
-      </div>
+    <div className="login_section">
+      <div className="inner">
+        <div className="content flex align_center">
+          <div className="content_right_container flex justify_center align_center">
+            <figure>
+              <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
+            </figure>
+          </div>
 
-      <div className="login_form_section">
-        <h1>로그인</h1>
-        <div>
-          <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
-            <div className="flex">
-              <input
-                type="text"
-                placeholder="아이디를 입력하세요."
-                {...register("id")}
-                value={userInputValue.id}
-                onChange={onChange}
-              />
-              {/* {errors.id && <p>This field is required</p>} */}
-              <p>{errors.id?.message}</p>
+          <div className="content_right_container">
+            <h2>로그인</h2>
+            <div>
+              <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
+                <div className="flex">
+                  <input
+                    type="text"
+                    placeholder="아이디를 입력하세요."
+                    {...register("id")}
+                    value={userInputValue.id}
+                    onChange={onChange}
+                  />
+                  {/* {errors.id && <p>This field is required</p>} */}
+                  <p>{errors.id?.message}</p>
+                </div>
+                <div className="flex">
+                  <input
+                    type="password"
+                    placeholder="패스워드를 입력하세요."
+                    {...register("password")}
+                    value={userInputValue.password}
+                    onChange={onChange}
+                  />
+                  <p>{errors.password?.message}</p>
+                </div>
+                <div className="login_btn_wrap flex justify_center align_center">
+                  <button className="more_btn" type="button">뒤로</button>
+                  <button className="more_btn" type="reset">취소</button>
+                  <button className="more_btn" type="submit">로그인</button>
+                </div>
+              </form>
             </div>
-            <div className="flex">
-              <input
-                type="password"
-                placeholder="패스워드를 입력하세요."
-                {...register("password")}
-                value={userInputValue.password}
-                onChange={onChange}
-              />
-              <p>{errors.password?.message}</p>
+            <div className="form_bottom flex justify_center align_center">
+              <Link to="">아이디 찾기</Link>
+              <Link to="">비밀번호 찾기</Link>
+              <Link to="">회원가입</Link>
             </div>
-            <div className="login_btn_wrap flex justify_center align_center">
-              <button className="more_btn" type="button">뒤로</button>
-              <button className="more_btn" type="reset">취소</button>
-              <button className="more_btn" type="submit">로그인</button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

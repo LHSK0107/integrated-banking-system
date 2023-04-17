@@ -39,7 +39,7 @@ const UserInfo = () => {
     setPageNum(pageNum+1);
   };
   return (
-    <div>
+    <div className="form_container">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="email_verify_wrap" >
           <div>

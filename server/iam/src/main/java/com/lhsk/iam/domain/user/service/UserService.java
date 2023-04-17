@@ -19,10 +19,10 @@ public class UserService {
 	// 생성자 주입
 	private final UserMapper userMapper;
 	
-	// id 중복체크
-	public boolean checkDuplicateId(String id) {
-		log.info("Duplicate id count: "+userMapper.checkDuplicateId(id));
-		if(userMapper.checkDuplicateId(id) > 0) return true;
+	// email 중복체크
+	public boolean checkDuplicateEmail(String email) {
+		log.info("Duplicate Email count: "+userMapper.checkDuplicateEmail(email));
+		if(userMapper.checkDuplicateEmail(email) > 0) return true;
 		else return false;
 	}
 	
