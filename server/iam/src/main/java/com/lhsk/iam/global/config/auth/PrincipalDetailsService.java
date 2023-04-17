@@ -22,15 +22,15 @@ public class PrincipalDetailsService implements UserDetailsService{
 	// 여기서 말하는 username은 ID이다.
 	// 시큐리티가 기본으로 로그인 진행시킬때 id 파라미터 이름이 username이기 때문
 	@Override
-	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
 		System.out.println("PrincipalDetailsService : 진입(findUserById 전)");
-		UserVO userEntity =  loginMapper.findUserById(id);
+		UserVO userEntity =  loginMapper.findUserByEmail(email);
 		System.out.println("PrincipalDetailsService : 진입(findUserById 후)");
 		
 		System.out.println("PrincipalDetails 생성 : " + new PrincipalDetails(userEntity));
 		if(userEntity == null) {
-			throw new UsernameNotFoundException("id " + id + " not found");
+			throw new UsernameNotFoundException("email " + email + " not found");
 		}
 		return new PrincipalDetails(userEntity);
 	}
