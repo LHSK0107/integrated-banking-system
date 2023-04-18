@@ -45,6 +45,7 @@ public class UserController {
 	public String signup(@RequestBody UserVO userVO) {
 		log.info("UserController.signup");
 		userVO.setPassword(bCryptPasswordEncoder.encode(userVO.getPassword()));
+		log.info(userVO.getPassword());
 //		log.info("userVO: "+userVO);
 		return "{\"status\":\""+userService.signup(userVO)+"\"}";
 	}
