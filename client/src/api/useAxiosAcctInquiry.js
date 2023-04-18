@@ -1,8 +1,8 @@
-import useState, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useInquiryAllAcct = ( url ) => {
-  const [apiData, setApiData]=useState([]);
+function useAxiosAcctInquiry ( url ) {
+  const [apiData, setApiData]=useState(null);
   const [isLoading, setIsLoading]=useState(false);
   const [error, setError]=useState(null);
 
@@ -10,13 +10,13 @@ const useInquiryAllAcct = ( url ) => {
     setIsLoading(true);
     axios.get(url)
     .then((res)=>{
-      setApiData(res.data.RESP_DATA.REC);
+      setApiData(res.data.RESP_DATA);
     })
     .catch((err)=>setError(`에러 발생 ${err}`))
     .finally(()=>{
       setIsLoading(false);
     })
   },[url]);
-  return {apiData, isLoading, error};
-};
-export default useInquiryAllAcct;
+  return { apiData, isLoading, error };
+}; 
+export default useAxiosAcctInquiry;
