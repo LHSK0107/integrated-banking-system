@@ -1,14 +1,11 @@
 import "./index.css";
 import React from "react";
-
 import MainSliderImg from "../../assets/images/index_main.jpg";
 import StrongImg01 from "../../assets/images/index_strong_01.jpg";
 import SeperateImg from "../../assets/images/bg_seperate.png";
 import NewsBgImg from "../../assets/images/index_news.png";
 import NewsSlider from "./component/NewsSlider";
-
 const Index = () => {
-
   return (
     <div className="index_wrap">
       <section className="main_slider_section">
