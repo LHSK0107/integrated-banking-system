@@ -4,7 +4,6 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
-import { ReqSignUp } from "../../../api/ReqSignUp";
 import axios from 'axios';
 const UserInfo = () => {
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
