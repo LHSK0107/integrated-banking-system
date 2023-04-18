@@ -3,10 +3,13 @@
 
 /* reset --- */
 :root {
+  --color-black: #232323;
+  --color-white: #ffffff;
   --color-main: #005bac;
+  --color-gray: #898989;
+  --color-lightgray: #efefef;
   --color-bg: #f6f9fc;
   --color-point: #ee7713;
-  --color-lightgray: #efefef;
 }
 * {
   margin: 0;
@@ -15,10 +18,14 @@
   -webkit-box-sizing: border-box;
 }
 html {
-  color: #232323;
+  color: var(--color-black);
   font-family: "Noto Sans KR", sans-serif;
   font-size: 14px;
   background-color: var(--color-bg);
+  background-image: url(../src/assets/images/bg_line.png);
+  background-repeat: repeat-y;
+  background-position: center;
+  background-size: contain;
 }
 body {
 }
@@ -32,14 +39,16 @@ li {
   list-style: none;
 }
 input {
-  border: none;
-  border-radius: 10px;
+  border: 2px solid var(--color-lightgray);
+  outline: none;
+  border-radius: 5px;
   background-color: var(--color-lightgray);
   padding: 15px 10px;
 }
-input:focus {
-  border: 1px solid var(--color-lightgray);
-  background-color: #ffffff;
+input:focus,
+input:active {
+  border: 2px solid var(--color-lightgray);
+  background-color: var(--color-white);
 }
 img {
   width: 100%;
@@ -50,6 +59,11 @@ img {
 /* --- reset */
 
 /* 공통 속성 class --- */
+.inner {
+  width: 1280px;
+  margin: auto;
+  padding: 0 30px;
+}
 .input_search_wrap {
   position: relative;
 }
@@ -65,7 +79,7 @@ img {
 .content_category {
   font-size: 28px;
   font-weight: 700;
-  color: #005bac;
+  color: var(--color-main);
   margin-bottom: 30px;
 }
 .content_title {
@@ -106,22 +120,20 @@ img {
 .more_btn {
   display: block;
   padding: 12px 20px;
-  color: var(--color-main);
-  background-color: #ffffff;
+  color: var(--color-black);
+  background-color: var(--color-lightgray);
+  border: none;
   font-size: 1.1rem;
   font-weight: 300;
-  border-radius: 10px;
+  border-radius: 3px;
   text-align: center;
-  transition: all 0.4s;
-  -webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 .more_btn:hover {
-  color: #ffffff;
+  color: var(--color-white);
   background-color: var(--color-main);
-  transition: all 0.4s;
-  -webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
 }
 /* --- 공통 속성 class */
 
@@ -162,13 +174,12 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
 }
-.flex content_left_container,
-.flex content_right_container {
+.flex .content_left_container,
+.flex .content_right_container {
   width: 50%;
   padding: 10px;
 }
 /* --- flex */
-
 
 /* cover --- */
 /* 각 페이지 별 배너 */
@@ -216,8 +227,8 @@ img {
   margin: 100px 0;
   padding: 40px;
   background-color: #ffffff;
-  box-shadow: 14px 14px 60px -18px rgba(0, 0, 0, 0.4);
-  -webkit-box-shadow: 14px 14px 60px -18px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 14px 14px 60px -18px rgba(0, 0, 0, 0.4);
+  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
 }
 /* --- contents */

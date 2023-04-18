@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,9 @@ import com.lhsk.iam.domain.account.service.AccountDataImporter;
 import com.lhsk.iam.domain.account.service.AccountService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/accounts")
@@ -28,16 +31,23 @@ public class AccountController {
 	private final AccountDataImporter accountDataImporter;
 	
 	@GetMapping
-	public ResponseEntity<List<AccountVO>> getAccountList() {
-		List<AccountVO> list;
-		list = accountService.findAllAccount();
-		
-		
+	public ResponseEntity<List<AccountVO>> findAllAccount() {
+		log.info("AccountController.AccountList");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
 		
-		return new ResponseEntity<>(list, HttpStatus.OK);
+		return new ResponseEntity<>(accountService.findAllAccount(), HttpStatus.OK);
 	}
+	
+	@GetMapping("/{acctNo}")
+	public ResponseEntity<AccountVO> findByAcctNo(@PathVariable String acctNo) {
+		log.info("AccountController.findByAcctNo");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
+		
+		return new ResponseEntity<>(accountService.findByAcctNo(acctNo), HttpStatus.OK);
+	}
+
 	
 	
 }
