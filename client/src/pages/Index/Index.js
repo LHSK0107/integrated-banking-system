@@ -1,20 +1,16 @@
 import "./index.css";
 import React from "react";
-
 import MainSliderImg from "../../assets/images/index_main.jpg";
 import StrongImg01 from "../../assets/images/index_strong_01.jpg";
 import SeperateImg from "../../assets/images/bg_seperate.png";
 import NewsBgImg from "../../assets/images/index_news.png";
 import NewsSlider from "./component/NewsSlider";
-
 const Index = () => {
-
   const data = [
     {id:1, img:StrongImg01, alt:"장점1", content:"한 눈에 자산을\n분석 통합 계좌 관리"},
     {id:2, img:StrongImg01, alt:"장점2", content:"쉽고 편리하게\n만드는 보고서"},
     {id:3, img:StrongImg01, alt:"장점3", content:"기존 상품과 비교해\n최적의 상품 정보 제공"},
   ];
-
   return (
     <div className="index_wrap">
       <section className="main_slider_section">
