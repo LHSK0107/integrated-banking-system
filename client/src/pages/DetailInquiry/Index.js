@@ -35,6 +35,7 @@ const Index = () => {
       setExptDate(ele.EXPI_DT);
     })
   };
+
   // 날짜 input value 관리
   const [inputValueList, setInputValueList]=useState({
     strDate: "",
@@ -43,19 +44,37 @@ const Index = () => {
   const onChange = (e) => {
     const {name, value}=e.target;
     setInputValueList({...inputValueList,[name]:value});
+    name==="endDate" && setLimitInputValue(value);
   };
-
   // 초기 기본 값으로 오늘 날짜로부터 30일간격의 날짜를 input value로 지정
   const initialDate = () =>{
     const date = new Date();
+    const currentYear = date.getFullYear();
+    const currentMonth = date.getMonth()+1;
+    const currentDay = date.getDate();
     const currentStr = `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
     const setCurrentDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
     date.setDate(date.getDate()-29);
     const pastStr = `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
     const setpastDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
     setInputValueList({...inputValueList, strDate:setpastDate, endDate:setCurrentDate});
+    setLimitInputValue(setCurrentDate);
     return {currentStr, pastStr};
   };
+  // 날짜 범위에 따른 달력 제한 부여
+  const strInputRef = useRef();
+  const endInputRef = useRef();
+  const setLimitInputValue = useCallback((end) => {
+    const arr = end.split("-");
+    const imsiDate = new Date();
+    imsiDate.setFullYear(parseInt(arr[0]),parseInt(arr[1]),parseInt(arr[2]));
+    imsiDate.setDate(imsiDate.getDate()-29);
+    console.log(end);
+    const pastStr = `${imsiDate.getFullYear()}-${('0' + (imsiDate.getMonth())).slice(-2)}-${('0' + imsiDate.getDate()).slice(-2)}`;
+    strInputRef.current.setAttribute("min", pastStr);
+    endInputRef.current.getAttribute("max")===null && endInputRef.current.setAttribute("max", end);
+    strInputRef.current.setAttribute("max", end);
+  },[inputValueList.strDate, inputValueList.endDate]);
 
   // 기간에 따른 데이터 조회
   const getDetailData = async () => {
@@ -86,13 +105,6 @@ const Index = () => {
   if (isError) {
     console.log("error");
   }
-  
-  const {strInputRef, endInputRef} = useRef();
-  useEffect(()=>{
-    const date = new Date();
-    
-
-  },[]);
   
   return (
     <div className="detail_page_wra">
