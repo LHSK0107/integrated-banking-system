@@ -48,7 +48,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		String jwtHeader = request.getHeader("Authorization");
 		
 		// header가 있는지 확인
-		if(jwtHeader == null || !jwtHeader.startsWith(JWTProperties.TOKEN_PREFIX)) {
+		if(jwtHeader == null || !jwtHeader.startsWith(TOKEN_PREFIX)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -58,10 +58,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
 		// 내가 SecurityContext에 집적접근해서 세션을 만들때 자동으로 UserDetailsService에 있는
 		// loadByUsername이 호출됨.
-		String jwtToken = request.getHeader(JWTProperties.HEADER_STRING).replace(JWTProperties.TOKEN_PREFIX, "");
+		String jwtToken = request.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
 		System.out.println("jwtToken : "+jwtToken);
 		String email = 
-				JWT.require(Algorithm.HMAC512(JWTProperties.SECRET)).build().verify(jwtToken).getClaim("email").asString();
+				JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("email").asString();
 		System.out.println("email : "+email);
 		// 서명이 정상적으로 됨
 		if(email != null) {
