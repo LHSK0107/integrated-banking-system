@@ -17,11 +17,7 @@ const NewsSlider = () => {
     axios
       .get(url)
       .then((response) => {
-        response.data.items === null
-          ? console.log("fail")
-          : console.log("success");
         clearData(response.data.items);
-        // pushElement(response.data.items);
       })
       .catch((err) => console.log(err));
   }, []);
