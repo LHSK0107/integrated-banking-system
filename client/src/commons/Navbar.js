@@ -1,8 +1,6 @@
 import "./Common.css";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import brandLogo from "../assets/brand/webcash_logo.png";
-import userImg from "../assets/images/icon/user.png";
 import logo from "../assets/brand/logo.png";
 
 const Navbar = () => {
@@ -10,11 +8,29 @@ const Navbar = () => {
   const [isAuth, setIsAuth] = useState(false);
 
   const navigate=useNavigate();
+  const [scrollData, setScrollData] = useState(0);
+  const navInfoRef = useRef();
+  const navMenuRef = useRef();
 
+  const scrollFunc = useCallback((scrollYData) => {
+    if(scrollYData>20){
+      navMenuRef.current.style.transition="0.2s all ease";
+      navMenuRef.current.style.padding="5px 0";
+    } else {
+      navMenuRef.current.style.transition="0.2s all ease";
+      navMenuRef.current.style.padding="17px 0";
+    }
+  },[]);
+  useEffect(()=>{
+    window.addEventListener('scroll',()=>{
+      setScrollData(window.scrollY);
+      scrollFunc(scrollData);
+    })
+  },[scrollData,scrollFunc]);
   return (
     <header id="header">
       <nav id="nav">
-        <div className="nav_info_section">
+        <div ref={navInfoRef} className="nav_info_section">
           <div className="inner flex justify_between align_center">
             <div className="family_site_wrap">
               <ul className="family_site flex">
@@ -48,7 +64,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="nav_menu_section">
+        <div ref={navMenuRef} className="nav_menu_section">
           <div className="inner flex justify_between align_center">
             <Link to="/">
               <figure>
@@ -57,19 +73,16 @@ const Navbar = () => {
             </Link>
             <ul className="menu_list flex">
               <li>
-                <span onClick={()=>navigate("/")}>메인</span>
-              </li>
-              <li>
                 <span onClick={()=>navigate("/")}>소개</span>
               </li>
               <li>
                 <span onClick={()=>navigate("/inquiry")}>조회</span>
               </li>
               <li>
-                <span onClick={()=>navigate("/inquiry")}>금융상품</span>
+                <span onClick={()=>navigate("/inquiry")}>보고서</span>
               </li>
               <li>
-                <span onClick={()=>navigate("/inquiry")}>금융정보</span>
+                <span onClick={()=>navigate("/inquiry")}>대시보드</span>
               </li>
             </ul>
           </div>
@@ -82,17 +95,11 @@ const Navbar = () => {
 const LoginSection = () => {
   return (
     <div className="login flex align_center">
-      {/* <figure>
-                <img src={userImg} alt="user 이미지"/>
-            </figure> */}
       <p>
         <Link to="./signup">회원가입</Link>
       </p>
       <p>
         <Link to="./login">로그인</Link>
-      </p>
-      <p>
-        <Link to="./help">공지사항</Link>
       </p>
     </div>
   );
