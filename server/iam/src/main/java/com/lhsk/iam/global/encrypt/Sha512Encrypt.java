@@ -27,7 +27,7 @@ public class Sha512Encrypt {
 		return Base64.getEncoder().encodeToString(salt);
 	}
 	
-	// Client로부터 받은 password를 hashing (해당 알고리즘이 지원되지 않는 환경에서 exception 발생)
+	// 회원가입 시, password를 암호화 해주는 메서드 (해당 알고리즘이 지원되지 않는 환경에서 exception 발생)
 	public static String hash(String password) throws NoSuchAlgorithmException {
 		// MessageDigest 클래스를 이용해 SHA512 알고리즘 인스턴스를 호출
 	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
@@ -51,6 +51,24 @@ public class Sha512Encrypt {
 	    }
 	    return hexString.toString();	// 문자열 반환
 	}
+	
+	// 로그인 시 유효성 검사를 위해 쓰이는 암호화 메서드
+	public static String hashForLogin(String saltString, String password) throws NoSuchAlgorithmException {
+	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
+	    String saltedPassword = saltString+password;
+	    byte[] hash = messageDigest.digest(saltedPassword.getBytes(StandardCharsets.UTF_8));
+	    StringBuilder hexString = new StringBuilder(2 * hash.length);
+	    hexString.append(saltString);
+	    for (byte b : hash) {
+	    	String hex = Integer.toHexString(0xff & b);
+	    	if (hex.length() == 1) {
+	    		hexString.append('0');
+	        }
+	    	hexString.append(hex);
+	    }
+	    return hexString.toString();
+	}
+
 
 //	public static void main(String[] args) {
 //		String password = "I_can_do_it";
