@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +28,8 @@ public class UserController {
 	// 생성자 주입
 	private final UserService userService;
 	
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	private PasswordEncoder bCryptPasswordEncoder;
 	
 	// email 중복 체크
 	@GetMapping("/api/signup")

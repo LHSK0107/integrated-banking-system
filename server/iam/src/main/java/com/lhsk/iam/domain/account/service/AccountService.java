@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.lhsk.iam.domain.account.model.mapper.AccountMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
+import com.lhsk.iam.domain.account.model.vo.InoutVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,4 +33,10 @@ public class AccountService {
 	
 	// 계좌 상세정보
 	
+	
+	// 거래내역 조회
+	public List<InoutVO> findInouts() {
+		
+		return null;
+	}
 }
