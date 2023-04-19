@@ -47,7 +47,7 @@ router.get("/getDate/:detailNo/:strDate/:endDate",(req, res)=>{
       ACCT_NO: detailNo,
       INQ_STR_DT : strDate,
       INQ_END_DT : endDate,
-      PAGE_CNT : "10"
+      PAGE_CNT : "1000"
     }
   })
   .then((response)=>{
