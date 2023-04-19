@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import "../index.css";
 import Balance from "../../../hooks/useBalance";
+import useDate from "../../../hooks/useDate";
 
 const DetailTrscList = ({ recData, status }) => {
   return <>{status === "success" ? <List recData={recData} /> : <h1>조회할 데이터가 없습니다.</h1>}</>;
@@ -26,7 +27,7 @@ const List = (props) => {
             <li key={i} className="flex justify_between">
               <div className="idx">{i<10 ? i===9 ? <p>{i+1}</p>:<p>{`0${i+1}`}</p> : <p>{i+1}</p>}</div>
               <div className="inout_dv">{ele?.INOUT_DV === "1" ? <p>입금</p> : <p>출금</p> }</div>
-              <div className="trsc_tm">{ele?.TRSC_DT}</div>
+              <div className="trsc_tm"><GetDate trscDT={ele?.TRSC_DT} trscTM={ele?.TRSC_TM}/></div>
               <div className="desc">{ele?.RMRK1}</div>
               <div className="trsc_amt">
                 <Balance balance={ele?.TRSC_AMT}/>
@@ -40,6 +41,15 @@ const List = (props) => {
       }
     </>
   );
+};
+// date 정제를 위한 함수
+const GetDate = ({trscDT,trscTM}) =>{
+  const date = useDate(trscDT,trscTM);
+  return(
+    <>
+      <p>{date}</p>
+    </>
+  )
 };
 
 export default DetailTrscList;
