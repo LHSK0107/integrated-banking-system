@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const Balance = ({balance}) => {
+const useBalance = ({balance}) => {
   // 변수명 수정은 후에
   const [realMoney, setRealMoney]=useState("");
   const splitBalance = balance.split(".",1);
@@ -22,8 +22,8 @@ const Balance = ({balance}) => {
     }
     addUnit();
   },[balance,balLength]);
-  return <p>{realMoney==="" ? "null" : realMoney}</p>
+  return realMoney;
 
 };
 
-export default Balance;
+export default useBalance;
