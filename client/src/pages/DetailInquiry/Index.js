@@ -6,6 +6,7 @@ import AccountCard from './component/AccountCard';
 import MagnifierImg from "../../assets/images/icon/magnifier.png";
 import DetailTrscList from './component/DetailTrscList';
 import { useQuery } from "@tanstack/react-query";
+import useCurrentTime from "../../hooks/useCurrentTime";
 const Index = () => {
   const { acctNo } = useParams();
   const [title, setTitle] = useState("");
@@ -24,6 +25,7 @@ const Index = () => {
 
   useEffect(()=>{
     getAccountInfo();
+    
   },[getAccountInfo]);
 
   // 데이터 정제
@@ -46,19 +48,17 @@ const Index = () => {
     setInputValueList({...inputValueList,[name]:value});
     name==="endDate" && setLimitInputValue(value);
   };
+
+  // 현재 date와 date 형식 가져오기
+  const {nowDate, currentTime} = useCurrentTime(0);
   // 초기 기본 값으로 오늘 날짜로부터 30일간격의 날짜를 input value로 지정
   const initialDate = () =>{
-    const date = new Date();
-    const currentYear = date.getFullYear();
-    const currentMonth = date.getMonth()+1;
-    const currentDay = date.getDate();
-    const currentStr = `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
-    const setCurrentDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
-    date.setDate(date.getDate()-29);
-    const pastStr = `${date.getFullYear()}${('0' + (date.getMonth() + 1)).slice(-2)}${('0' + date.getDate()).slice(-2)}`;
-    const setpastDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
-    setInputValueList({...inputValueList, strDate:setpastDate, endDate:setCurrentDate});
-    setLimitInputValue(setCurrentDate);
+    const currentStr = `${nowDate.getFullYear()}${('0' + (nowDate.getMonth() + 1)).slice(-2)}${('0' + nowDate.getDate()).slice(-2)}`;
+    nowDate.setDate(nowDate.getDate()-29);
+    const pastStr = `${nowDate.getFullYear()}${('0' + (nowDate.getMonth() + 1)).slice(-2)}${('0' + nowDate.getDate()).slice(-2)}`;
+    const setpastDate = `${nowDate.getFullYear()}-${('0' + (nowDate.getMonth() + 1)).slice(-2)}-${('0' + nowDate.getDate()).slice(-2)}`;
+    setInputValueList({...inputValueList, strDate:setpastDate, endDate:currentTime});
+    setLimitInputValue(currentTime);
     return {currentStr, pastStr};
   };
   // 날짜 범위에 따른 달력 제한 부여
