@@ -3,7 +3,6 @@ package com.lhsk.iam.domain.user.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
-import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class UserController {
 	// 생성자 주입
 	private final UserService userService;
 	
-
+	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
 	
 	// email 중복 체크
@@ -46,6 +45,7 @@ public class UserController {
 	public String signup(@RequestBody UserVO userVO) {
 		log.info("UserController.signup");
 		userVO.setPassword(bCryptPasswordEncoder.encode(userVO.getPassword()));
+		log.info(userVO.getPassword());
 //		log.info("userVO: "+userVO);
 		return "{\"status\":\""+userService.signup(userVO)+"\"}";
 	}
