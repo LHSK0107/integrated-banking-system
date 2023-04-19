@@ -2,9 +2,7 @@ package com.lhsk.iam.global.config.jwt;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,38 +10,42 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhsk.iam.domain.user.model.vo.LoginRequestVO;
-import com.lhsk.iam.domain.user.model.vo.UserVO;
 import com.lhsk.iam.global.config.auth.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
-
-	private final AuthenticationManager authenticationManager;
 	
-	@Value("${jwt.secret}")
+	private AuthenticationManager authenticationManager;
+	
+	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, 
+									Environment env) {
+	    this.authenticationManager = authenticationManager;
+	    this.SECRET = env.getProperty("jwt.secret");
+	    this.EXPIRATION_TIME = Long.parseLong(env.getProperty("jwt.expirationTime"));
+	    this.TOKEN_PREFIX = env.getProperty("jwt.tokenPrefix");
+	    this.HEADER_STRING = env.getProperty("jwt.headerString");
+	}
+	
+	
 	private String SECRET;
-	@Value("${jwt.expirationTime}")
-	private String EXPIRATION_TIME;
-	@Value("${jwt.tokenPrefix}")
+	private long EXPIRATION_TIME;
 	private String TOKEN_PREFIX;
-	@Value("${jwt.headerString}")
 	private String HEADER_STRING;
 	
 	// Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
@@ -51,6 +53,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
+		
+		
 		
 		// request에 있는 username과 password를 파싱해서 자바 Object로 받기
 		ObjectMapper om = new ObjectMapper();
@@ -61,6 +65,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			e.printStackTrace();
 		}
 		
+		System.out.println("입력받은 password : "+loginRequestDto.getPassword());
 		
 		// 유저네임패스워드 토큰 생성
 		UsernamePasswordAuthenticationToken authenticationToken = 
@@ -81,6 +86,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				authenticationManager.authenticate(authenticationToken);
 		
 		PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+		
 		return authentication;
 	}
 
@@ -90,6 +96,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
+		
+		System.out.println("SECRET : " + SECRET);
+		System.out.println("EXPIRATION_TIME : " + EXPIRATION_TIME);
 		
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername())

@@ -1,22 +1,23 @@
 package com.lhsk.iam.domain.account.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lhsk.iam.domain.account.api.AccountClient;
-import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
-import com.lhsk.iam.domain.account.service.AccountDataImporter;
+import com.lhsk.iam.domain.account.model.vo.InoutVO;
+import com.lhsk.iam.domain.account.service.AccountApiService;
 import com.lhsk.iam.domain.account.service.AccountService;
+import com.lhsk.iam.domain.account.service.InoutProcessingService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountController {
 	
 	private final AccountService accountService;
-	private final AccountDataImporter accountDataImporter;
+	private final AccountApiService accountApiService;
+	private final InoutProcessingService inoutProcessingService;
 	
 	@GetMapping
 	public ResponseEntity<List<AccountVO>> findAllAccount() {
@@ -46,6 +48,31 @@ public class AccountController {
 		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
 		
 		return new ResponseEntity<>(accountService.findByAcctNo(acctNo), HttpStatus.OK);
+	}
+	
+	/*
+	 * 하나의 계좌를 조회할 때
+	 */
+	@GetMapping("/inout/{acctNo}")
+	public ResponseEntity<List<InoutVO>> getInout(
+			@PathVariable String acctNo,
+			@RequestParam LocalDate startDate,
+			@RequestParam LocalDate endDate,
+			@RequestParam String inoutDv,
+			@RequestParam String sort
+			) {
+		
+		// 오늘이 포함되었는지 boolean값 반환
+		boolean istoday = inoutProcessingService.isTodayBetweenDates(startDate, endDate);
+		
+		
+		if(istoday) {
+			// 오늘이 포함되었을 경우 -> OpenApi를 통해 갱신을 해준다.
+			accountApiService.updateInoutToday(acctNo,startDate,endDate,inoutDv,sort);
+		}
+		
+		
+		return new ResponseEntity<>(accountService.findInouts(), HttpStatus.OK);
 	}
 
 	

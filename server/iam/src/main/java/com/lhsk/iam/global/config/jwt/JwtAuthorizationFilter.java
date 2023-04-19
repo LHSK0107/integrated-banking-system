@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -24,19 +26,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private LoginMapper loginMapper;
 	
-	@Value("${jwt.secret}")
 	private String SECRET;
-	@Value("${jwt.expirationTime}")
-	private String EXPIRATION_TIME;
-	@Value("${jwt.tokenPrefix}")
+	private long EXPIRATION_TIME;
 	private String TOKEN_PREFIX;
-	@Value("${jwt.headerString}")
 	private String HEADER_STRING;
 	
 	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, LoginMapper loginMapper) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, LoginMapper loginMapper, Environment env) {
 		super(authenticationManager);
 		this.loginMapper = loginMapper;
+		this.SECRET = env.getProperty("jwt.secret");
+	    this.EXPIRATION_TIME = Long.parseLong(env.getProperty("jwt.expirationTime"));
+	    this.TOKEN_PREFIX = env.getProperty("jwt.tokenPrefix");
+	    this.HEADER_STRING = env.getProperty("jwt.headerString");
 	}
 	
 	@Override
