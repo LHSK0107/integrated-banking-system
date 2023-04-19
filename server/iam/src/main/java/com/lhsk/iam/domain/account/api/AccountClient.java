@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
+import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -77,6 +78,7 @@ public class AccountClient {
         }
 	}
 	
+	// 과거의 입출내역을 조회
 	public List<InoutApiVO> getPastInouts(int page, int pageSize, Map<String, String> secret) {
 		
 		// ReqeustBody 생성하는 과정
@@ -123,14 +125,17 @@ public class AccountClient {
         }
 	}
 	
-	public List<InoutApiVO> getTodayInouts(int page, int pageSize, Map<String, String> secret) {
+	// 금일 입출내역을 조회
+	public List<InoutApiVO> getTodayInouts(InoutRequestVO vo, int total) {
+		
+		Map<String, String> secret = vo.getSecret();
 		
 		String date = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 		Map<String, Object> reqData = new HashMap<>();
-		reqData.put("INQ_STR_DT", date);
-		reqData.put("INQ_END_DT", date);
-		reqData.put("PAGE_CNT", pageSize);
-		reqData.put("INQ_PAGE_NO", page);
+		reqData.put("INQ_STR_DT", vo.getStartDt());
+		reqData.put("INQ_END_DT", vo.getEndDt());
+		reqData.put("PAGE_CNT", vo.getPageSize());
+		reqData.put("INQ_PAGE_NO", vo.getPage());
 		
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("API_KEY", secret.get("apiKey"));
@@ -148,13 +153,21 @@ public class AccountClient {
                     .bodyToMono(String.class)
                     .block();
             JsonNode jsonNode = objectMapper.readTree(response);
-            JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
+            
+            // 토탈 카운트를 뽑아낸다.
+            JsonNode totalCnt = jsonNode.get("RESP_DATA").get("TOT_CNT");
+            
+            System.out.println("total : " + total);
+            System.out.println("totalCnt : " + totalCnt);
+            
+            
+//            JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
             List<InoutApiVO> list = new ArrayList<>();
-            for (JsonNode inoutNode : recNode) {
-            	InoutApiVO inout = objectMapper.treeToValue(inoutNode, InoutApiVO.class);
-            	inout = dataProcessor.valCheck(inout);
-            	list.add(inout);
-            }
+//            for (JsonNode inoutNode : recNode) {
+//            	InoutApiVO inout = objectMapper.treeToValue(inoutNode, InoutApiVO.class);
+//            	inout = dataProcessor.valCheck(inout);
+//            	list.add(inout);
+//            }
             return list;
         } catch (WebClientResponseException e) {
             throw new RuntimeException("Failed to get accounts", e);                                                    

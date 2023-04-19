@@ -1,5 +1,6 @@
 package com.lhsk.iam.domain.account.model.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -20,5 +21,6 @@ public interface AccountApiMapper {
 	public void insertInoutPast(List<InoutApiVO> list);
 	// 금일 발생한 입출금내역 추가
 //	public void insertInoutToday(InoutApiVO inout);
-	
+	// 현재상황의 total을 반환
+	public int getTotal(LocalDate date);
 }

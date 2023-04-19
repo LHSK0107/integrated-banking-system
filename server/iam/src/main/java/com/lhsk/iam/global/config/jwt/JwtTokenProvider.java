@@ -16,7 +16,7 @@ public class JwtTokenProvider {
 	@Value("${jwt.secret}")
 	private String SECRET;
 	@Value("${jwt.expirationTime}")
-	private String EXPIRATION_TIME;
+	private long EXPIRATION_TIME;
 	@Value("${jwt.tokenPrefix}")
 	private String TOKEN_PREFIX;
 	@Value("${jwt.headerString}")
@@ -25,7 +25,7 @@ public class JwtTokenProvider {
 	public String generateToken(Authentication authentication) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
 
-        Instant expirationTime = Instant.now().plus(Duration.ofMillis(Long.parseLong(EXPIRATION_TIME)));
+        Instant expirationTime = Instant.now().plus(Duration.ofMillis(EXPIRATION_TIME));
 
         String jwtToken = JWT.create()
                 .withSubject(principalDetailis.getUsername())
