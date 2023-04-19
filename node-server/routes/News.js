@@ -6,8 +6,8 @@ require("dotenv").config();
 const url =
   "https://openapi.naver.com/v1/search/news.json?query=웹케시&display=10&start=1&sort=date";
 const data = {
-  "X-Naver-Client-Id": "rAF1c8HVUr_An8Uo9H_T",
-  "X-Naver-Client-Secret": "Zuvtj9HilF",
+  "X-Naver-Client-Id": NAVER_API_CLIENT_ID,
+  "X-Naver-Client-Secret": NAVER_API_CLIENT_SECRET,
 };
 router.get("/getNews", (req, res) => {
   axios
