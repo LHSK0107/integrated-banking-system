@@ -1,14 +1,10 @@
 package com.lhsk.iam.global.config;
 
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,17 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
-import com.lhsk.iam.global.config.jwt.CustomAuthenticationProvider;
 import com.lhsk.iam.global.config.jwt.JwtAuthenticationFilter;
 import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
-
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
 //@RequiredArgsConstructor
-public class SecurityConfig {
-	
+public class SecurityConfig {	
 //	private final CustomAuthenticationProvider customAuthenticationProvider;
 	
 	@Autowired

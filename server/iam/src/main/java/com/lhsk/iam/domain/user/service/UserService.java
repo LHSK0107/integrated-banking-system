@@ -1,5 +1,6 @@
 package com.lhsk.iam.domain.user.service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.lhsk.iam.domain.user.model.mapper.UserMapper;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
+import com.lhsk.iam.global.encrypt.Sha512Encrypt;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 
 import lombok.RequiredArgsConstructor;
@@ -35,12 +37,22 @@ public class UserService {
 	// 회원가입
 	public String signup(UserVO userVO) {
 		try {
+		// userCode
 			// existUser 값이 0이면 userCode를 ROLE_ADMIN으로 세팅
 			String userCode = checkExistsUser() == 0 ? "ROLE_ADMIN" : "ROLE_USER";
 			userVO.setUserCode(userCode);
 			log.info(userVO.getUserCode());
+		// password
+			// userVO 객체에 있는 password를 꺼내어 hash 수행
+			String password = userVO.getPassword();
+		    userVO.setPassword(Sha512Encrypt.hash(password));
+		    log.info(userVO.getPassword());
 			// mapper의 signup메서드 호출 (조건 : VO객체를 넘겨줘야 함)
 			userMapper.signup(userVO);			
+
+		} catch (NoSuchAlgorithmException e) {
+			log.error("Error: " + e.getMessage());
+			return "fail";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "fail";
