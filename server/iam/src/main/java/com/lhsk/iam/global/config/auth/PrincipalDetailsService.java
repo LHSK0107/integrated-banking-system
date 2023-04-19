@@ -19,7 +19,7 @@ public class PrincipalDetailsService implements UserDetailsService{
 	private final LoginMapper loginMapper;
 	
 	// MyBatis 버전 커스텀해야함
-	// 여기서 말하는 username은 ID이다.
+	// 여기서 말하는 username은 email이다.
 	// 시큐리티가 기본으로 로그인 진행시킬때 id 파라미터 이름이 username이기 때문
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
