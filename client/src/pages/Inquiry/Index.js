@@ -6,7 +6,7 @@ import "./index.css";
 import IamIcon from "../../assets/images/notfound_bg.png";
 // 은행 코드별 이미지 출력 추가하기
 import KakaoIcon from "../../assets/images/icon/bank/kakao_icon.png";
-import Balance from "../../hooks/Balance";
+import Balance from "../../hooks/useBalance";
 
 const Index = () => {
   const [statementList, setStatementList] = useState([]);
@@ -74,11 +74,16 @@ const Index = () => {
                 <li key={i} className="flex align_center">
                   <Link className="account_li flex justify_between align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
                     <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                    <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+                    <div className="acct_no flex align_center justify_center">
+                      <figure>
+                        <img src={require(`../../assets/images/icon/bank/${ele?.BANK_CD}.png`)} alt="은행 아이콘 이미지"/>
+                      </figure>
+                      <span>&nbsp;&nbsp;{ele?.ACCT_NO}</span>
+                    </div>
                     <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
                     <div className="bal">
                       {/* 나중에 hooks 변경 */}
-                      <Balance balance={ele?.BAL}/>
+                      <p><Balance balance={ele?.BAL}/></p>
                     </div>
                   </Link>
                 </li>
@@ -108,10 +113,14 @@ const Index = () => {
                   <li key={i} className="flex align_center">
                     <Link className="account_li flex justify_between align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
                       <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                      <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
+                      <div className="acct_no flex align_center justify_center">
+                        <figure>
+                          <img src={require(`../../assets/images/icon/bank/${ele?.BANK_CD}.png`)} alt=""/>
+                        </figure>
+                        <span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                       <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
                       <div className="bal">
-                        <Balance balance={ele?.BAL}/>
+                        <p><Balance balance={ele?.BAL}/></p>
                       </div>
                     </Link>
                   </li>
@@ -144,7 +153,7 @@ const Index = () => {
                       <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
                       <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
                       <div className="bal">
-                        <Balance balance={ele?.BAL}/>
+                        <p><Balance balance={ele?.BAL}/></p>
                       </div>
                     </Link>
                   </li>
