@@ -12,26 +12,26 @@ const Navbar = () => {
   const navInfoRef = useRef();
   const navMenuRef = useRef();
 
-  const scrollFunc = useCallback((scrollYData) => {
-    if(scrollYData>20){
-      navMenuRef.current.style.transition="0.2s all ease";
-      navMenuRef.current.style.padding="5px 0";
-    } else {
-      navMenuRef.current.style.transition="0.2s all ease";
-      navMenuRef.current.style.padding="17px 0";
-    }
-  },[]);
-  useEffect(()=>{
-    window.addEventListener('scroll',()=>{
-      setScrollData(window.scrollY);
-      scrollFunc(scrollData);
-    })
-  },[scrollData,scrollFunc]);
+  // const scrollFunc = useCallback((scrollYData) => {
+  //   if(scrollYData>20){
+  //     navMenuRef.current.style.transition="0.2s all ease";
+  //     navMenuRef.current.style.padding="5px 0";
+  //   } else {
+  //     navMenuRef.current.style.transition="0.2s all ease";
+  //     navMenuRef.current.style.padding="17px 0";
+  //   }
+  // },[]);
+  // useEffect(()=>{
+  //   window.addEventListener('scroll',()=>{
+  //     setScrollData(window.scrollY);
+  //     scrollFunc(scrollData);
+  //   })
+  // },[scrollData,scrollFunc]);
   return (
     <header id="header">
       <nav id="nav">
-        <div ref={navInfoRef} className="nav_info_section">
-          <div className="inner flex justify_between align_center">
+        <div ref={navInfoRef} className="nav_info_section flex justify_center">
+          <div className="nav_inner flex justify_between align_center">
             <div className="family_site_wrap">
               <ul className="family_site flex">
                 <li>

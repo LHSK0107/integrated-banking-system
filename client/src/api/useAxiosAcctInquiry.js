@@ -10,7 +10,7 @@ function useAxiosAcctInquiry ( url ) {
     setIsLoading(true);
     axios.get(url)
     .then((res)=>{
-      setApiData(res.data.RESP_DATA);
+      setApiData(res.data.RESP_DATA.REC);
     })
     .catch((err)=>setError(`에러 발생 ${err}`))
     .finally(()=>{

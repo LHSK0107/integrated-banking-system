@@ -1,41 +1,28 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
 import "./index.css";
-import IamIcon from "../../assets/images/notfound_bg.png";
-// 은행 코드별 이미지 출력 추가하기
-import KakaoIcon from "../../assets/images/icon/bank/kakao_icon.png";
 import Balance from "../../hooks/useBalance";
-
+import useCurrentTime from "../../hooks/useCurrentTime";
+import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
+import {AcctList} from "./component/AcctList";
+import {Link} from "react-router-dom";
 const Index = () => {
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
   const [loanList, setLoanList] = useState([]);
 
-  // 페이징 처리 추가하기
-  const showList = 10;
-  const [page, setPage] = useState(1);
-  const offset=(page-1)*showList;
-
-  let arr = null;
   let stateArr=[];
   let depAInsArr=[];
   let loanArr=[];
 
-  // useQuery를 통한 로딩 처리 추가하기
+  const {apiData, isLoading, error} = useAxiosAcctInquiry("http://localhost:3001/api/getAccountList");
   useEffect(() => {
-    arr=null;
-    const url = "http://localhost:3001/api/getAccountList";
-      axios.get(url).then((res) => {
-      res.data.RESP_DATA.REC===null ? console.log('failed') : console.log("success");
-      clearData(res.data.RESP_DATA);
-    }).catch((err)=>console.log(err));
-  }, []);
+    apiData && clearData(apiData);
+  }, [apiData]);
   
-  const clearData = (allAccount) => {
-    arr = allAccount.REC;
-    arr.map((ele, i) => {
+  // api 요소 중, 계좌 구분에 따라 분리
+  const clearData = (apiData) => {
+    apiData.map((ele)=>{
       if (ele.ACCT_DV === "01") {
         stateArr.push(ele);
         setStatementList(stateArr);
@@ -48,141 +35,138 @@ const Index = () => {
       };
     });
   }
-
-  // 금액 단위 , 정규화 필요
+  // 현재 시간 조회
+  const currentTime = useCurrentTime();
+  // 잔액 합산
+  const calcTotalBal = useCallback(() =>{
+    let [stateBal, depInsBal, loanBal] = [0,0,0];
+    statementList.map((ele)=>{
+      stateBal += Number(ele?.BAL);
+    });
+    depAInsList.map((ele)=>{
+      depInsBal += Number(ele?.BAL);
+    });
+    loanList.map((ele)=>{
+      loanBal += Number(ele?.BAL);
+    });
+    return {stateBal, depInsBal, loanBal};
+  },[loanList]);
+  
   return (
-    <div className="contents flex justify_center align_center">
+    <div id="wrap">
       <div className="inner">
-        <h2 className="contents_title">계좌조회</h2>
-        <div className="content flex justify_between">
-          <div className="content_left flex justify_center align_center">
-            <h3>수시입출금</h3>
+        <div className="nav_depth flex justify_end align_center">
+          <Link
+            className="flex justify_end align_center"
+            href="../Index/index.html"
+          >
             <figure>
-              <img src={IamIcon} alt="lam icon"/>
+              <img
+                src={require(`../../assets/images/icon/arrow_b.png`)}
+                alt=""
+              />
             </figure>
-          </div>
-          <div className="content_right">
-            <ul className="account_list flex flex_column justify_between">
-              <li className="flex justify_between">
-                <div className="idx">번호</div>
-                <div className="acct_no">계좌번호</div>
-                <div className="loan_nm">상품명</div>
-                <div className="bal">잔액</div>
-              </li>
-              {statementList.map((ele, i) => {
-              return (
-                <li key={i} className="flex align_center">
-                  <Link className="account_li flex justify_between align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
-                    <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                    <div className="acct_no flex align_center justify_center">
-                      <figure>
-                        <img src={require(`../../assets/images/icon/bank/${ele?.BANK_CD}.png`)} alt="은행 아이콘 이미지"/>
-                      </figure>
-                      <span>&nbsp;&nbsp;{ele?.ACCT_NO}</span>
-                    </div>
-                    <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                    <div className="bal">
-                      {/* 나중에 hooks 변경 */}
-                      <p><Balance balance={ele?.BAL}/></p>
-                    </div>
-                  </Link>
+            홈
+          </Link>
+          <figure>
+            <img src={require(`../../assets/images/icon/arrow_b.png`)} alt="" />
+          </figure>
+          <p>조회</p>
+          <figure>
+            <img src={require(`../../assets/images/icon/arrow_b.png`)} alt="" />
+          </figure>
+          <p>
+            <span>전체계좌조회</span>
+          </p>
+        </div>
+        <div className="flex">
+          <aside>
+            <div className="aside_wrap">
+              <h2>조회</h2>
+              <ul className="aside_nav">
+                <li className="aside_active">
+                  <a href="./">전체계좌조회</a>
                 </li>
-              );
-            })}
-            </ul>
-          </div>
-        </div>
-
-        <div className="content flex justify_between">
-          <div className="content_left flex justify_center align_center">
-            <h3>예적금</h3>
-            <figure>
-              <img src={IamIcon} alt="lam icon"/>
-            </figure>
-          </div>
-          <div className="content_right">
-            <ul className="account_list flex flex_column justify_between">
-              <li className="flex justify_between">
-                <div className="idx">번호</div>
-                <div className="acct_no">계좌번호</div>
-                <div className="loan_nm">상품명</div>
-                <div className="bal">잔액</div>
-              </li>
-              {depAInsList.map((ele, i) => {
-                return (
-                  <li key={i} className="flex align_center">
-                    <Link className="account_li flex justify_between align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
-                      <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                      <div className="acct_no flex align_center justify_center">
-                        <figure>
-                          <img src={require(`../../assets/images/icon/bank/${ele?.BANK_CD}.png`)} alt=""/>
-                        </figure>
-                        <span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-                      <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                      <div className="bal">
-                        <p><Balance balance={ele?.BAL}/></p>
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-
-        <div className="content flex justify_between">
-          <div className="content_left flex justify_center align_center">
-            <h3>대출</h3>
-            <figure>
-              <img src={IamIcon} alt="lam icon"/>
-            </figure>
-          </div>
-          <div className="content_right">
-            <ul className="account_list flex flex_column justify_between">
-              <li className="flex justify_between">
-                <div className="idx">번호</div>
-                <div className="acct_no">계좌번호</div>
-                <div className="loan_nm">상품명</div>
-                <div className="bal">잔액</div>
-              </li>
-              {loanList.map((ele, i) => {
-                return (
-                  <li key={i} className="flex align_center">
-                    <Link className="account_li flex justify_between align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
-                      <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-                      <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-                      <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-                      <div className="bal">
-                        <p><Balance balance={ele?.BAL}/></p>
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                <li>
+                  <a href="../InOut/index.html">입출내역조회</a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+          <section>
+            <h3>전체계좌조회</h3>
+            <div className="description">
+              <p> · 보고자 하는 계좌분류를 클릭합니다.</p>
+              <p>
+                {" "}
+                · 크게 예금과 대출 탭을 클릭하여 총 잔액과 계좌별 잔액을
+                확인합니다.
+              </p>
+              <p>
+                {" "}
+                · 각 계좌를 클릭하면 계좌의 상세 정보와 거래 내역을 확인할 수
+                있습니다.
+              </p>
+            </div>
+            <div className="content_wrap">
+              <ul className="tab flex">
+                <li>예금</li>
+                <li className="active">대출</li>
+              </ul>
+              <div className="content">
+                <p style={{ textAlign: "right", marginBottom: "10px" }}>
+                  조회일시 {currentTime}
+                </p>
+                <div>
+                  <div className="accordian_btn flex justify_between align_center">
+                    <div>
+                      <p>
+                        입출금<span></span>
+                      </p>
+                    </div>
+                    <div className="flex align_center">
+                      <h4>
+                        <Balance balance={calcTotalBal().stateBal} />
+                      </h4>
+                      <p></p>
+                      <figure>
+                        <img
+                          src={require(`../../assets/images/icon/arrow_down_b.png`)}
+                          alt=""
+                        />
+                      </figure>
+                    </div>
+                  </div>
+                  <ul>{AcctList(statementList)}</ul>
+                  <div className="accordian_btn flex justify_between align_center">
+                    <div>
+                      <p>
+                        예적금 <span>2</span>
+                      </p>
+                    </div>
+                    <div className="flex align_center">
+                      <h4>
+                        <Balance balance={calcTotalBal().depInsBal} />
+                      </h4>
+                      <figure>
+                        <img
+                          src={require(`../../assets/images/icon/bank/003.png`)}
+                          alt=""
+                        />
+                      </figure>
+                    </div>
+                  </div>
+                  <ul>{AcctList(depAInsList)}</ul>
+                </div>
+                <div></div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>
   );
 };
-// const StatementListContainer = ({statementList}) =>{
-//   statementList.map((ele, i) => {
-//     const {realMoney} = useBalance(ele?.BAL);
-//     return (
-//       <Link key={i} className="flex align_center" to={`/inquiry/acct_no=${ele.ACCT_NO}`}>
-//         <li className="account_li flex justify_between align_center">
-//           <div className="idx">{i<10 ? i<9 ? <p>0{i+1}</p> : <p>{i+1}</p> : <p>{i+1}</p>}</div>
-//           <div className="acct_no flex align_center justify_center"><figure><img src={KakaoIcon} alt=""/></figure><span>&nbsp;&nbsp;{ele?.ACCT_NO}</span></div>
-//           <div className="loan_nm"><p>{ele?.LOAN_NM.trim()}</p></div>
-//           <div className="bal">
-//             <p>{realMoney}</p>
-//           </div>
-//         </li>
-//       </Link>
-//     );
-//   })
-// };
-
-
 export default Index;
+
+
