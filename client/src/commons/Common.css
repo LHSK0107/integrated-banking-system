@@ -63,7 +63,10 @@
 #header #nav .user_info_wrap .login p:not(:last-child) {
   margin-right: 15px;
 }
-
+#nav .nav_inner{
+  width: 1280px;
+  padding: 0 20px;
+}
 /* menu */
 #header #nav .nav_menu_section {
   position: relative;
