@@ -1,100 +1,109 @@
-.contents{
+@charset "utf-8";
+
+section .description {
+    margin-bottom: 50px;
+}
+
+.tab{
+    color: var(--color-darkgray);
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.tab li {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 32px;
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-lightgray);
+    border-left: 1px solid var(--color-lightgray);
+    border-right: 1px solid var(--color-lightgray);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+.tab li.active {
+    background-color: var(--color-white);
+}
+.tab li.active::after {
+    position: absolute;
+    content: "";
+    display: block;
+    bottom: -2px;
+    left: 0;
     width: 100%;
+    height: 4px;
+    background-color: var(--color-white);
+}
+
+.content_wrap > p {
+    font-size: .8rem;
+    font-weight: 300;
+    text-align: right;
+    margin: 18px 0;
+}
+.content .accordian_btn {
+    border: 1px solid var(--color-darkgray);
+    border-radius: 7px 7px 0 0;
+    background-color: var(--color-darkgray);
+    color: var(--color-white);
+    padding: 18px;
+    cursor: pointer;
+}
+.content .accordian_btn p {
+    font-size: 1.125rem;
+}
+.content .accordian_btn p span {
+    font-weight: 700;
+    color: var(--color-point);
+    margin-left: 8px;
+}
+.content .accordian_btn h4 {
+    font-size: 1.25rem;
+    margin-right: 10px;
+}
+.content ul {
+    border: 1px solid var(--color-darkgray);
+    border-radius: 0 0 7px 7px;
+    margin-bottom: 50px;
+}
+.content li > a {
+    padding: 20px;
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.accordian_account {
+    flex: 0 0 56%;
+}
+.accordian_account figure {
+    width: 16px;
+    height: 16px;
+    margin-right: 18px;
+}
+.accordian_account figure img {
     height: 100%;
 }
-.contents_title{
-    font-size: 2.5em;
-    margin: 50px 0;
-}
-.content_left{
-    width: 30%;
-    position: relative;
-}
-.content_left h3{
-    z-index: 9997;
-    color: var(--color-main);
-    font-size: 1.5rem;
-}
-.content_left figure{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    transform: translate(-50%, -50%);
-}
-.content_left figure img {
-    height: auto;
-}
-.content_right{
-    width: 70%;
-}
-.account_list{
-    position: relative;
-}
-.account_list li {
-    width: 100%;
-    border-bottom: 2px solid var(--color-lightgray);
-}
-.account_list>li:first-child{
-    padding-bottom: 1.4rem;
-    font-size: 1.3rem;
-    font-weight: 700;
-    text-align: center;
-    border: none;
-}
-.account_list>li:first-child::after {
-    position: absolute;
-    top: 40px;
-    display: block;
-    content: "";
-    width: 100%;
-    height: 6px;
-    background-color: var(--color-lightgray);
-    border-radius: 10px;
-}
-.account_list .account_li {
-    width: 100%;
-    padding: 5px;
-    background-color: var(--color-white);
-    transition: all 0.4s ease-in-out;
-}
-.account_list .account_li:hover{
-    background-color: var(--color-lightgray);
-    transition: all 0.4s ease-in-out;
-}
-.account_list .idx{
-    /* width: 10%; */
-    flex: 0 0 10%;
-}
-.account_list .idx p {
-    text-align: center;
-}
-.account_list .acct_no{
-    /* width: 30%; */
-    flex: 0 0 240px;
-}
-.account_list .acct_no span {
-    flex: 0 0 120px;
-}
-.account_list figure{
-    display: inline-block;
-    width: 40px;
-    height: 40px;
+.accordian_account div h4 {
     margin: 0;
-    padding:0;
 }
-.account_list .loan_nm {
-    /* width: 40%; */
-    flex: 0 0 40%;
+.accordian_account p {
+    font-size: .8rem;
+    font-weight: 300;
 }
-.account_list .loan_nm p {
-    text-align: center;
+.accordian_account_bank span {
+    margin-left: 18px;
+    padding-left: 8px;
+    border-left: 1px solid var(--color-lightgray);
 }
-.account_list .bal{
-    /* width: 20%; */
-    flex: 0 0 20%;
-}
-.account_list .bal p {
+.accordian_account_bal {
+    font-size: 1.25rem;
+    font-weight: 700;
     text-align: right;
+    flex: 0 0 20%;
+    margin-right: 18px;
+    font-weight: 700;
+}
+.accordian_detail_btn {
+    font-weight: 500;
+    color: var(--color-main);
+    flex: 0 0 14%;
+    padding: 8px 28px 8px 18px;
+    border: 1px solid var(--color-main);
 }
