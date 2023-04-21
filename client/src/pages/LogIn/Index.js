@@ -38,8 +38,6 @@ const Index = () => {
   });
 
   const onSubmit = (data) => {
-    console.log("data", data);
-
     // json 보내기
     axios
       .post("/user", {

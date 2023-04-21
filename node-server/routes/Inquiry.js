@@ -47,7 +47,7 @@ router.get("/getDate/:detailNo/:strDate/:endDate",(req, res)=>{
       ACCT_NO: detailNo,
       INQ_STR_DT : strDate,
       INQ_END_DT : endDate,
-      PAGE_CNT : "10"
+      PAGE_CNT : "1000"
     }
   })
   .then((response)=>{
@@ -55,4 +55,22 @@ router.get("/getDate/:detailNo/:strDate/:endDate",(req, res)=>{
     res.json(response.data);
   })
 });
+router.get("/getDates/:strDate/:endDate", (req, res) => {
+  const {strDate, endDate} = req.params;
+  axios.post(url, {
+    API_ID: process.env.ACCOUNT_TRANSACTION_CODE,
+    API_KEY: process.env.API_KEY,
+    ORG_NO: "BUSAN",
+    BIZ_NO: process.env.BIZ_NO,
+    REQ_DATA: {
+      ACCT_NO: "",
+      INQ_STR_DT : strDate,
+      INQ_END_DT : endDate,
+      PAGE_CNT : "1000"
+    }
+  })
+  .then((response)=>{
+    res.json(response.data);
+  })
+})
 module.exports = router;
