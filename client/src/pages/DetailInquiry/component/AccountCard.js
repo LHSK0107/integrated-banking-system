@@ -1,6 +1,6 @@
 import React from 'react'
 import KakaoIcon from "../../../assets/images/icon/bank/kakao_icon.png";
-import Balance from '../../../hooks/Balance';
+import Balance from '../../../hooks/useBalance';
 
 const AccountCard = (props) =>{
 
