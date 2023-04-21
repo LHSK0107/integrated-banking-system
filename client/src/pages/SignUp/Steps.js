@@ -13,7 +13,7 @@ const Steps = () => {
       return (
         <>
           <ProgressBar pageNum={pageNum} />
-          <FormTitle pageNum={pageNum} />
+          {/* <FormTitle pageNum={pageNum} /> */}
           <UserInfo />
         </>
       );
@@ -21,7 +21,7 @@ const Steps = () => {
       return (
         <>
           <ProgressBar pageNum={pageNum} />
-          <FormTitle pageNum={pageNum} />
+          {/* <FormTitle pageNum={pageNum} /> */}
           <PersonalInfo />
         </>
       );
@@ -29,18 +29,18 @@ const Steps = () => {
       return (
         <>
           <ProgressBar pageNum={pageNum} />
-          <FormTitle pageNum={pageNum} />
+          {/* <FormTitle pageNum={pageNum} /> */}
           <EmailConfirm />
         </>
       );
-    case 3:
-      return (
-        <>
-          <ProgressBar pageNum={pageNum} />
-          <FormTitle pageNum={pageNum} />
-          <Result />
-        </>
-      );
+    // case 3:
+    //   return (
+    //     <>
+    //       <ProgressBar pageNum={pageNum} />
+    //       <FormTitle pageNum={pageNum} />
+    //       <Result />
+    //     </>
+    //   );
     default:
       return (
         <>
@@ -81,33 +81,28 @@ const ProgressBar = (props) => {
     progressBarRef.current.style.width = `${(width / count) * pageNum}px`;
   };
   return (
-    <div ref={progressWrapRef} className="progress_wrap">
+    <div ref={progressWrapRef} className="progress_wrap flex justify_between">
       <div ref={progressBarRef} className="progress_bar"></div>
-      <p className="step active" src={UserIcon} alt="icon">
-        1
-      </p>
-      <p className="step" src={UserIcon} alt="icon">
-        2
-      </p>
-      <p className="step" src={UserIcon} alt="icon">
-        3
-      </p>
-      <p className="step" src={UserIcon} alt="icon">
-        4
-      </p>
+      <div className="step flex flex_column justify_between align_center active">
+        <span></span>
+        <p>기본정보</p>
+      </div>
+      <div className="step flex flex_column justify_between align_center">
+        <span></span>
+        <p>이메일 인증</p>
+      </div>
+      <div className="step flex flex_column justify_between align_center">
+        <span></span>
+        <p>회원정보</p>
+      </div>
     </div>
   );
 };
 
-const FormTitle = (props) => {
-  // 페이지별 title
-  const formTitles = [
-    "Hello, We are I'am! Create Account",
-    "Please check your email",
-    "Almost there..",
-    "It's Done!",
-  ];
-  return <h1>{formTitles[props.pageNum]}</h1>;
-};
+// const FormTitle = (props) => {
+//   // 페이지별 title
+//   const formTitles = ["기본정보", "이메일 인증", "회원정보"];
+//   return <h1>{formTitles[props.pageNum]}</h1>;
+// };
 
 export default Steps;
