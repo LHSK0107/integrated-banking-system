@@ -2,6 +2,7 @@
 
 .banner {
     width: 100%;
+    height: auto;
     padding: 50px 0;
     color: var(--color-darkgray);
     background-color: var(--color-background);
