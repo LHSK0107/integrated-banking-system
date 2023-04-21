@@ -15,14 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
+import com.lhsk.iam.global.config.jwt.BCryptSha512PasswordEncoder;
 import com.lhsk.iam.global.config.jwt.JwtAuthenticationFilter;
 import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
-//@RequiredArgsConstructor
 public class SecurityConfig {	
-//	private final CustomAuthenticationProvider customAuthenticationProvider;
 	
 	@Autowired
 	private LoginMapper loginMapper;	
@@ -34,18 +33,19 @@ public class SecurityConfig {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 	
-//	@Bean
-//    public AuthenticationManager authenticationManager() {
-//        return new ProviderManager(Collections.singletonList(customAuthenticationProvider));
-//    }
 
 	@Autowired
 	private CorsConfig corsConfig;
 	
+//	@Bean
+//    PasswordEncoder passwordEncoder() {
+//        return new BCryptSha512PasswordEncoder();
+//    }
+	
 	@Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 
 	@Bean
