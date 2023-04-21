@@ -136,12 +136,13 @@ const NewsSlider = () => {
               <Link className="" to={`${ele.link}`} target={"_blank"}>
                 <div className="main_news_cont content flex justify_between flex_column">
                   <h3>
-                    {ele.title.replace(/<[^>]+>/g, "").replace(/&apos;/g, "'")}
+                    {ele.title.replace(/<[^>]+>/g, "").replace(/&apos;/g, "'").replace(/&quot;/g,"'")}
                   </h3>
                   <p>
                     {ele.description
                       .replace(/<[^>]+>/g, "")
-                      .replace(/&apos;/g, "'")}
+                      .replace(/&apos;/g, "'")
+                      .replace(/&quot;/g,"'")}
                   </p>
                   <h4>{ele.pubDate}</h4>
                 </div>
