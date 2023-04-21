@@ -2,6 +2,10 @@ package com.lhsk.iam.global.config.jwt;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -49,18 +53,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		
-		
-		
+				
 		// request에 있는 username과 password를 파싱해서 자바 Object로 받기
 		ObjectMapper om = new ObjectMapper();
 		LoginRequestVO loginRequestDto = null;
 		try {
 			loginRequestDto = om.readValue(request.getInputStream(), LoginRequestVO.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
-		
+
+		System.out.println("입력받은 username : "+loginRequestDto.getUsername());
 		System.out.println("입력받은 password : "+loginRequestDto.getPassword());
+
 		
 		// 유저네임패스워드 토큰 생성
 		UsernamePasswordAuthenticationToken authenticationToken = 
@@ -98,7 +103,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
-				.withClaim("email", principalDetailis.getUserVO().getEmail())
+				.withClaim("id", principalDetailis.getUserVO().getId())
 				.withClaim("name", principalDetailis.getUserVO().getName())
 				.withClaim("expirationTime", new Date(System.currentTimeMillis()+EXPIRATION_TIME))
 				.withClaim("userCode", principalDetailis.getUserVO().getUserCodeList())

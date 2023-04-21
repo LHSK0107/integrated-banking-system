@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   const schema = yup.object({
-    id: yup.string().required("아이디를 다시 입력해주세요."),
+    username: yup.string().required("아이디를 다시 입력해주세요."),
     password: yup
       .string()
       .min(8, "최소 8자 이상 입력해주세요.")
@@ -28,7 +28,7 @@ const Index = () => {
 
   // input value 관리를 위한 state
   const [userInputValue, setUserInputValue] = useState({
-    id:"",
+    username:"",
     password:""
   });
   // input name별 onChange 관리
@@ -38,15 +38,14 @@ const Index = () => {
   });
 
   const onSubmit = (data) => {
-    // json 보내기
+    console.log(data);
     axios
-      .post("/user", {
-        id: data.id,
+      .post("http://localhost:8080/login", {
+        username: data.username,
         password: data.password,
       })
       .then((response) => {
-        console.log(response, response.status, response.data.token);
-        if(response.status === 200) {
+        if (response.status === 200) {
           // 로그인 성공 시
         }
       })
@@ -55,7 +54,7 @@ const Index = () => {
       });
   };
 
-  console.log(watch("example")); // watch input value by passing the name of it
+  // console.log(watch("example")); // watch input value by passing the name of it
 
   return (
     <div className="login_section">
@@ -75,12 +74,12 @@ const Index = () => {
                   <input
                     type="text"
                     placeholder="아이디를 입력하세요."
-                    {...register("id")}
-                    value={userInputValue.id}
+                    {...register("username")}
+                    value={userInputValue.username}
                     onChange={onChange}
                   />
-                  {/* {errors.id && <p>This field is required</p>} */}
-                  <p>{errors.id?.message}</p>
+                  {/* {errors.username && <p>This field is required</p>} */}
+                  <p>{errors.username?.message}</p>
                 </div>
                 <div className="flex">
                   <input
