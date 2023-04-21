@@ -36,30 +36,11 @@ public class AccountService {
 	// 계좌 상세정보
 	
 	
-	// 거래내역 조회
+	// 한 계좌의 거래내역 조회
 	public List<InoutVO> findOneInout(InoutRequestVO vo) {
-		System.out.println("acctNo : "+vo.getAcctNo());
-		System.out.println("startDt : "+vo.getStartDt());
-		System.out.println("endDt : "+vo.getEndDt());
-		System.out.println("inoutDv : "+vo.getInoutDv());
-		System.out.println("sort : "+vo.getSort());
-		System.out.println("page : "+vo.getPage());
-		System.out.println("pageSize : "+vo.getPageSize());
-		System.out.println("isLoan : "+vo.isLoan());
-		
 		vo.setStart((vo.getPage()-1)*vo.getPageSize());
 		List<InoutVO> list = accountMapper.findOneInout(vo);
-		
-//		InoutVO vo = InoutVO.builder()
-//				.acctNo("08205223404013")
-//				.bankNm("지우은행")
-//				.build();
-//		list.add(vo);
-//		InoutVO vo1 = InoutVO.builder()
-//				.acctNo("08205223404013")
-//				.bankNm("지우은행2")
-//				.build();
-//		list.add(vo1);
+
 		return list;
 	}
 }

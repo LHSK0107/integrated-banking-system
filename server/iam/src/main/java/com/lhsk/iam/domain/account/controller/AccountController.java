@@ -70,15 +70,6 @@ public class AccountController {
 		 *  "isLoan" : boolean	대출계좌 여부 true/false
 		 * }
 		 */
-		System.out.println("acctNo : "+vo.getAcctNo());
-		System.out.println("startDt : "+vo.getStartDt());
-		System.out.println("endDt : "+vo.getEndDt());
-		System.out.println("inoutDv : "+vo.getInoutDv());
-		System.out.println("sort : "+vo.getSort());
-		System.out.println("page : "+vo.getPage());
-		System.out.println("pageSize : "+vo.getPageSize());
-		System.out.println("isLoan : "+vo.isLoan());
-		
 		
 		// 오늘이 포함되었는지 boolean값 반환
 		boolean istoday = inoutProcessingService.isTodayBetweenDates(vo.getStartDt(), vo.getEndDt());
@@ -89,7 +80,7 @@ public class AccountController {
 			accountApiService.updateInoutToday(vo);
 		}
 		
-		
+		// 대출일때와 예금일때를 구분해서 return을 해줘야함 -> 추후 작업 필요
 		return new ResponseEntity<>(accountService.findOneInout(vo), HttpStatus.OK);
 	}
 
