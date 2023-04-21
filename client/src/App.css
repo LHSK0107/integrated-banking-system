@@ -15,7 +15,6 @@
   --color-point: #ffa800;
   --color-light-point: #ffe894;
   --color-red: #d93946;
-  accent-color: #898989;
 }
 * {
   margin: 0;
@@ -28,11 +27,7 @@ html {
   font-family: "Noto Sans KR", sans-serif;
   font-size: 16px;
   font-weight: 400;
-  background-color: var(--color-bg);
-  /* background-image: url(../src/assets/images/bg_line.png); */
-  background-repeat: repeat-y;
-  background-position: center;
-  background-size: contain;
+  background-color: var(--color-white);
 }
 body {
 }
@@ -46,7 +41,7 @@ li {
   list-style: none;
 }
 img {
-  width: 100%;
+  width: auto;
   height: auto;
   -o-object-fit: cover;
   object-fit: cover;
@@ -109,6 +104,7 @@ select option:hover {
 /* 공통 속성 class --- */
 #wrap {
     position: relative;
+    /* top: 50px; */
 }
 .inner > div {
   padding: 50px 0;
@@ -216,11 +212,8 @@ select option:hover {
     font-size: .8rem;
 }
 .nav_depth figure{
-  width: 50px;
-  height: 50px;
-}
-.nav_depth img {
-    margin: 0 10px;
+  width: 15px;
+  margin: 0 5px;
 }
 .nav_depth a img {
     width: 15px;
@@ -270,10 +263,6 @@ section h3 {
     border: 1px solid var(--color-lightgray);
 }
 /* --- aside 옆 section */
-
-/* contents --- */
-/* 카드모양 */
-/* --- contents */
 
 /* form --- */
 .form_wrap form ul {

@@ -38,7 +38,7 @@ section .description {
     font-size: .8rem;
     font-weight: 300;
     text-align: right;
-    margin: 18px 0;
+    margin: 18px 0 8px;
 }
 .content .accordian_btn {
     border: 1px solid var(--color-darkgray);
@@ -60,10 +60,20 @@ section .description {
     font-size: 1.25rem;
     margin-right: 10px;
 }
+.content .on ul {
+    height: 0;
+    overflow: hidden;
+    transition: all .2s;
+}
 .content ul {
     border: 1px solid var(--color-darkgray);
     border-radius: 0 0 7px 7px;
     margin-bottom: 50px;
+    height: auto;
+    transition: all .2s;
+}
+.content .on figure {
+    transform: rotate(180deg);
 }
 .content li > a {
     padding: 20px;
