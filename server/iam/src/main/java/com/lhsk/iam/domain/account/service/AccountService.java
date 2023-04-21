@@ -1,11 +1,13 @@
 package com.lhsk.iam.domain.account.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.lhsk.iam.domain.account.model.mapper.AccountMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
+import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
 import com.lhsk.iam.domain.account.model.vo.InoutVO;
 
 import lombok.RequiredArgsConstructor;
@@ -34,9 +36,11 @@ public class AccountService {
 	// 계좌 상세정보
 	
 	
-	// 거래내역 조회
-	public List<InoutVO> findInouts() {
-		
-		return null;
+	// 한 계좌의 거래내역 조회
+	public List<InoutVO> findOneInout(InoutRequestVO vo) {
+		vo.setStart((vo.getPage()-1)*vo.getPageSize());
+		List<InoutVO> list = accountMapper.findOneInout(vo);
+
+		return list;
 	}
 }

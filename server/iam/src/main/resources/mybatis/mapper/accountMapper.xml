@@ -17,6 +17,57 @@
 				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
 		FROM account
 		WHERE acct_no=#{acctNo}
+	</select>
+	
+	<select id="findAvailableAcct" parameterType="int" resultType="java.util.ArrayList">
+		select acct_no from user_account where user_no = #{userNo};
 	</select>	
-		
+	
+	<select id="findOneInout" resultType="InoutVO">
+		SELECT a.*, b.acct_dv FROM inout_past a 
+		LEFT JOIN account b
+		ON a.acct_no = b.acct_no 
+		where (a.trsc_dt between #{startDt} and #{endDt}) and a.acct_no = #{acctNo}
+		<if test='inoutDv != null and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			and (inout_dv = #{inoutDv})
+		</if>
+		union
+		SELECT c.*, b.acct_dv FROM inout_today c 
+		INNER JOIN account b
+		ON c.acct_no = b.acct_no 
+		where c.acct_no = #{acctNo}
+		<if test='inoutDv != null and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			and (inout_dv = #{inoutDv})
+		</if>
+		order by trsc_dt ${sort} limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="findAllInout" resultType="java.util.ArrayList">
+		SELECT a.*, b.acct_dv FROM inout_past a 
+		LEFT JOIN account b
+		ON a.acct_no = b.acct_no 
+		where (a.trsc_dt between #{startDt} and #{endDt}) 
+		union
+		SELECT c.*, b.acct_dv FROM inout_today c 
+		INNER JOIN account b
+		ON c.acct_no = b.acct_no 
+		where (c.trsc_dt = now()) 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				and (b.acct_dv="01" or b.acct_dv="02")
+			</when>
+			<otherwise>
+				and (b.acct_dv="03")
+			</otherwise>
+		</choose>
+		order by trsc_dt ${sort} limit #{start}, #{pageSize};
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
