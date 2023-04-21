@@ -6,6 +6,7 @@ import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
 import { AcctList } from "./component/AcctList";
 import { Link } from "react-router-dom";
+
 const Index = () => {
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
@@ -78,7 +79,7 @@ const Index = () => {
           <div className="accordian_btn flex justify_between align_center" onClick={() => {stateOn? setStateOn(false) : setStateOn(true)}}>
             <div>
               <p>
-                입출금<span>총계좌수</span>
+                입출금<span>{statementList.length}</span>
               </p>
             </div>
             <div className="flex align_center">
@@ -100,7 +101,7 @@ const Index = () => {
         <div className="accordian_btn flex justify_between align_center" onClick={() => {delInsOn? setDelInsOn(false) : setDelInsOn(true)}}>
           <div>
             <p>
-              예적금<span>총계좌수</span>
+              예적금<span>{depAInsList.length}</span>
             </p>
           </div>
           <div className="flex align_center">
@@ -135,12 +136,12 @@ const Index = () => {
           <div className="accordian_btn flex justify_between align_center" onClick={() => {loanOn? setLoanOn(false) : setLoanOn(true)}}>
             <div>
               <p>
-                대출금<span>총계좌수</span>
+                대출금<span>{loanList.length}</span>
               </p>
             </div>
             <div className="flex align_center">
               <h4>
-                <Balance balance={calcTotalBal().depInsBal} />
+                <Balance balance={calcTotalBal().loanBal} />
               </h4>
               <figure className="flex align_center">
                 <img
