@@ -19,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
@@ -48,7 +49,9 @@ public class AccountClient {
                 .defaultCookie(cookieKey, cookieValue)
                 .build();
         this.objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         this.dataProcessor = new DataProcessor();
+        
     }
 	
 	// 계좌목록을 가져오는 메소드
@@ -155,19 +158,33 @@ public class AccountClient {
             JsonNode jsonNode = objectMapper.readTree(response);
             
             // 토탈 카운트를 뽑아낸다.
-            JsonNode totalCnt = jsonNode.get("RESP_DATA").get("TOT_CNT");
-            
+            JsonNode totalCntJson = jsonNode.get("RESP_DATA").get("TOT_CNT");
+//            int totalCnt = Integer.parseInt(totalCntJson.toString());
+            int totalCnt = totalCntJson.asInt();
             System.out.println("total : " + total);
             System.out.println("totalCnt : " + totalCnt);
             
-            
-//            JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
             List<InoutApiVO> list = new ArrayList<>();
-//            for (JsonNode inoutNode : recNode) {
-//            	InoutApiVO inout = objectMapper.treeToValue(inoutNode, InoutApiVO.class);
-//            	inout = dataProcessor.valCheck(inout);
-//            	list.add(inout);
-//            }
+            if(total!=totalCnt) {
+            	int cnt = totalCnt - total;	// 반복문을 돌려야하는 횟수
+            	JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
+            	if(cnt > 1000) {
+            		// Api조회시 최대 1천개만 가능하기 때문에 차이가 1000이 넘어가면 1천개만 넣는다.
+            		for(int i = 0; i < 1000; i++) {
+            			InoutApiVO inout = objectMapper.treeToValue(recNode.get(i), InoutApiVO.class);
+            			inout = dataProcessor.valCheck(inout);
+            			list.add(inout);
+            		}
+            	} else {
+            		// 1000 이하라면 total의 차이만큼만 넣어주면 된다.
+            		for(int i = 0; i < cnt; i++) {
+            			InoutApiVO inout = objectMapper.treeToValue(recNode.get(i), InoutApiVO.class);
+            			inout = dataProcessor.valCheck(inout);
+            			list.add(inout);
+            		}
+            	}
+            }
+            
             return list;
         } catch (WebClientResponseException e) {
             throw new RuntimeException("Failed to get accounts", e);                                                    

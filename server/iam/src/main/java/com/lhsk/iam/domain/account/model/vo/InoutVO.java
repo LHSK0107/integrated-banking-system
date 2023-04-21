@@ -20,7 +20,7 @@ import lombok.Setter;
 @Builder
 public class InoutVO {
 	private String acctNo;			// 계좌번호
-	private String bankNm;			// 은행이름
+	private String bankCd;			// 은행이름
 	private String inoutDv;			// 입,출 구분
 	private LocalDate trscDt;		// 거래일자
 	private LocalTime trscTm;		// 거래시간
@@ -28,4 +28,5 @@ public class InoutVO {
 	private BigDecimal bal;			// 잔액
 	private String currCd;			// 통화코드
 	private String rmrk1;			// 적요
+	private String acctDv;			// 해당 계좌의 구분
 }

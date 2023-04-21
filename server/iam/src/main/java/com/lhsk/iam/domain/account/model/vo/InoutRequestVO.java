@@ -22,7 +22,12 @@ public class InoutRequestVO {
 	private LocalDate endDt;						// 끝날짜
 	private String inoutDv;							// 입출구분
 	private String sort;							// 정렬타입
+	private boolean isLoan;							// 대출계좌 여부
 	Map<String, String> secret = new HashMap<>();	// API키
-	private int pageSize;							// 페이지당 건수
-	private int page;								// 조회페이지
+	private int ApiPageSize;						// api 페이지당 건수
+	private int ApiPage;							// api 조회페이지
+	private int pageSize;							// DB 페이지당 건수
+	private int page;								// DB 조회페이지
+	private int start;
+	
 }
