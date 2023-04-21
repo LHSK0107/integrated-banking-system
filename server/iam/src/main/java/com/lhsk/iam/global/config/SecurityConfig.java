@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
-import com.lhsk.iam.global.config.jwt.BCryptSha512PasswordEncoder;
 import com.lhsk.iam.global.config.jwt.JwtAuthenticationFilter;
 import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
 
@@ -37,10 +36,6 @@ public class SecurityConfig {
 	@Autowired
 	private CorsConfig corsConfig;
 	
-//	@Bean
-//    PasswordEncoder passwordEncoder() {
-//        return new BCryptSha512PasswordEncoder();
-//    }
 	
 	@Bean
 	PasswordEncoder passwordEncoder() {
