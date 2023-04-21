@@ -3,8 +3,12 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lhsk.iam.domain.user.model.mapper.UserMapper">
-	<select id="checkDuplicateEmail" parameterType="String" resultType="int">
-		SELECT EXISTS (SELECT email FROM user WHERE email=#{email}) AS flag
+	<select id="checkDuplicateId" parameterType="String" resultType="int">
+		SELECT EXISTS (SELECT id FROM user WHERE id=#{id}) AS flag
+	</select>
+	
+	<select id="findAllEmail" resultType="String">
+		SELECT email FROM user
 	</select>
 	
 	<select id="checkExistsUser" resultType="int">
@@ -12,8 +16,8 @@
 	</select>
 	
 	<insert id="signup" parameterType="UserVO" useGeneratedKeys="true" keyProperty="userNo">
-		INSERT INTO user (user_code, password, name, dept, email, phone) 
-		VALUES (#{userCode}, #{password}, #{name}, #{dept}, #{email}, #{phone})
+		INSERT INTO user (user_code, id, password, name, dept, email, phone) 
+		VALUES (#{userCode}, #{id}, #{password}, #{name}, #{dept}, #{email}, #{phone})
 	</insert>
 	
 	<update id="updateUser" parameterType="UpdateUserVO">
@@ -43,13 +47,13 @@
 	</delete>
 	
 	<select id="findByUserNo" parameterType="int" resultType="DetailUserVO">
-		SELECT user_no, user_code, name, dept, email, phone 
+		SELECT user_no, user_code, id, name, dept, email, phone 
 		FROM user 
 		WHERE user_no=#{userNo}
 	</select>
 	
 	<select id="findAllUser" resultType="DetailUserVO">
-		SELECT user_no, user_code, name, dept, email, phone
+		SELECT user_no, user_code, id, name, dept, email, phone
 		FROM user
 		ORDER BY user_no ASC;
 	</select>
