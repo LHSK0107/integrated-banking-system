@@ -19,8 +19,8 @@ public interface AccountApiMapper {
 	public void deleteInoutPast();
 	// 어제까지의 입출금내역 추가
 	public void insertInoutPast(List<InoutApiVO> list);
-	// 금일 발생한 입출금내역 추가
-//	public void insertInoutToday(InoutApiVO inout);
 	// 현재상황의 total을 반환
 	public int getTotal(LocalDate date);
+	// 금일 발생한 입출금내역 추가
+	public void insertTodayPast(List<InoutApiVO> list);
 }

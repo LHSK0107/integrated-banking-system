@@ -61,12 +61,12 @@ public class DataInitializer {
         while (true) {
            log.info("page : "+page);
            List<InoutApiVO> inoutPastList = accountClient.getPastInouts(page,PAGE_SIZE, secret);   // API요청으로 얻은 계좌 목록 JSON
-            if (inoutPastList.isEmpty()) {
-                break;
-            }
-            accountApiMapper.insertInoutPast(inoutPastList);
+           if (inoutPastList.isEmpty()) {
+               break;
+           }
+           accountApiMapper.insertInoutPast(inoutPastList);
             
-            page++;
+           page++;
         }
-   }
+    }
 }
