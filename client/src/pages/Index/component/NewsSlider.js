@@ -134,7 +134,7 @@ const NewsSlider = () => {
           return (
             <SwiperSlide key={idx}>
               <Link className="" to={`${ele.link}`} target={"_blank"}>
-                <div className="main_news_cont content flex justify_between flex_column">
+                <div className="main_news_cont card flex justify_between flex_column">
                   <h3>
                     {ele.title.replace(/<[^>]+>/g, "").replace(/&apos;/g, "'").replace(/&quot;/g,"'")}
                   </h3>
