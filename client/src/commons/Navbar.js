@@ -82,7 +82,7 @@ const Navbar = () => {
                 <span onClick={()=>navigate("/inquiry")}>보고서</span>
               </li>
               <li>
-                <span onClick={()=>navigate("/inquiry")}>대시보드</span>
+                <span onClick={()=>navigate("/dashboard")}>대시보드</span>
               </li>
             </ul>
           </div>
