@@ -73,19 +73,19 @@ const Index = () => {
 
   return (
     <div className="login_section">
-      <div className="inner">
-        <div className="content flex align_center">
-          <div className="content_right_container flex justify_center align_center">
+      <div className="inner flex justify_center">
+          <div className="login flex justify_center align_center">
             <figure>
               <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
             </figure>
           </div>
 
-          <div className="content_right_container">
+          <div className="login_form_section">
             <h2>로그인</h2>
             <div>
               <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
-                <div className="flex">
+                <div className="flex flex_column">
+                  <span>id</span>
                   <input
                     type="text"
                     placeholder="아이디를 입력하세요."
@@ -96,7 +96,8 @@ const Index = () => {
                   {/* {errors.id && <p>This field is required</p>} */}
                   <p>{errors.username?.message}</p>
                 </div>
-                <div className="flex">
+                <div className="flex flex_column">
+                  <span>pw</span>
                   <input
                     type="password"
                     placeholder="패스워드를 입력하세요."
@@ -119,7 +120,6 @@ const Index = () => {
               <Link to="">회원가입</Link>
             </div>
           </div>
-        </div>
       </div>
     </div>
   );
