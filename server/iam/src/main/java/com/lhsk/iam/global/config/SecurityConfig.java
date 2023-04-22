@@ -53,14 +53,12 @@ public class SecurityConfig {
 				.httpBasic().disable()
 				.apply(new MyCustomDsl()) // 커스텀 필터 등록
 				.and()
-				.authorizeRequests(authroize -> authroize.antMatchers("/users/**")
+				.authorizeRequests(authroize -> authroize.antMatchers("/users/**", "/api/accounts/**") 
 						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/manager/**")
 						.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/admin/**")
 						.access("hasRole('ROLE_ADMIN')")
-						.antMatchers("/accounts/**")
-						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.anyRequest().permitAll());
 
 		return http.build();
