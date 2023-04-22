@@ -8,7 +8,7 @@ import com.lhsk.iam.domain.user.model.vo.UserVO;
 public interface LoginMapper {
 	
 	
-	UserVO findUserByEmail(String email);
+	UserVO findUserById(String id);
 	
 	
 }
