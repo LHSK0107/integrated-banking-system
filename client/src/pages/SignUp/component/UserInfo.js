@@ -101,7 +101,6 @@ const UserInfo = () => {
           />
           <p>{errors.email?.message}</p>
         </div>
-        <hr />
         <input type="submit" value="다음" />
       </form>
     </div>
