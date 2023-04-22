@@ -1,0 +1,127 @@
+@charset "utf-8";
+
+section .form_wrap {
+    margin-bottom: 50px;
+}
+
+section .description {
+    margin-bottom: 50px;
+}
+
+.tab{
+    color: var(--color-darkgray);
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-lightgray);
+    margin-bottom: 50px;
+}
+.tab li {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 32px;
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-lightgray);
+    border-left: 1px solid var(--color-lightgray);
+    border-right: 1px solid var(--color-lightgray);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+.tab li.active {
+    background-color: var(--color-white);
+}
+.tab li.active::after {
+    position: absolute;
+    content: "";
+    display: block;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--color-white);
+}
+
+section form button {
+    padding: 8px 38px;
+}
+
+.account_info {
+    margin-bottom: 50px;
+    font-size: .88rem;
+}
+.account_info  ul {
+    border-top: 1px solid var(--color-lightgray);
+}
+.account_info li div {
+    width: calc((100% - 360px) / 2);
+    padding: 18px;
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.account_info .title {
+    width: 180px;
+    background-color: var(--color-background);
+}
+
+.btn_info {
+    margin-bottom: 30px;
+}
+.btn_info button {
+    font-size: .8rem;
+    padding: 5px 28px;
+}
+.btn_info p {
+    font-size: .8rem;
+    font-weight: 300;
+}
+.result_data .column {
+    width: 100%;
+    padding: 0 18px;
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-gray);
+    text-align: center;
+}
+.result_data .column li {
+    padding: 18px 8px;
+}
+.result_data .column li:not(:last-child) {
+    border-right: 1px solid var(--color-lightgray);
+}
+.result_data .account {
+    flex: 0 0 25%;
+}
+.result_data .date {
+    flex: 0 0 16%;
+}
+.result_data .memo {
+    flex: 0 0 25%;
+}
+.result_data .withdraw {
+    flex: 0 0 10%;
+}
+.result_data .credit {
+    flex: 0 0 10%;
+}
+.result_data .balance {
+    flex: 0 0 14%;
+}
+.result_data .data {
+    padding: 0 18px;
+    font-size: .88rem;
+    text-align: center;
+}
+.result_data .data li {
+    padding: 8px;
+}
+.result_data .data li:not(:last-child) {
+    border-right: 1px solid var(--color-lightgray);
+}
+.result_data .data:last-child {
+    border-bottom: 1px solid var(--color-gray);
+}
+.result_data .data .account div {
+    height: 36px;
+}
+.result_data .data .withdraw {
+    color: var(--color-red);
+}
+.result_data .data .credit {
+    color: var(--color-main);
+}
