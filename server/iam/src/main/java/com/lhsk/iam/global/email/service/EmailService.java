@@ -12,6 +12,7 @@ public class EmailService {
 	@Autowired
     private JavaMailSender javaMailSender;
 	
+	// 이메일 발송
 	public void sendVerificationEmail(String toEmail, String verificationCode) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(toEmail);

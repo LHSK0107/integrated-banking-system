@@ -60,18 +60,32 @@ section .description {
     font-size: 1.25rem;
     margin-right: 10px;
 }
-.content .on ul {
+.content .on ul {    
     height: 0;
     overflow: hidden;
-    transition: all .2s;
+    animation: accordian 1;
 }
 .content ul {
+    height: auto;
     border: 1px solid var(--color-darkgray);
     border-radius: 0 0 7px 7px;
     margin-bottom: 50px;
-    height: auto;
-    transition: all .2s;
 }
+/* @keyframes accordian {
+    0% {
+        opacity: 0;
+        height: 0;
+        transform: translateY(0);
+    }
+    50% {
+
+    }
+    100% {
+        opacity: 1;
+        height: auto;
+        transform: translateY(-4%);
+    }
+} */
 .content .on figure {
     transform: rotate(180deg);
 }
