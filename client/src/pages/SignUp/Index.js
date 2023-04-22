@@ -30,15 +30,18 @@ const Index = () => {
     );
   };
   return (
-    <div className="signup_section flex align_center justify_center">
-      <div className="signup_image_section flex justify_center align_center">
-        <figure>
-          <img src={SignUpBgImg} alt="회원가입 페이지 이미지" />
-        </figure>
-      </div>
-      <div className="signup_form_section flex justify_center align_center">
-        <div className="signup_form_wrap">
-          <div className="signup_form">{showCurrentPage()}</div>
+    <div className="signup_section">
+      <div className="inner flex justify_center">
+        <div className="signup_image_section flex justify_center align_center">
+          <figure>
+            <img src={SignUpBgImg} alt="회원가입 페이지 이미지" />
+          </figure>
+        </div>
+        <div className="signup_form_section">
+          <h2>회원가입</h2>
+          <div className="signup_form_wrap">
+            {showCurrentPage()}
+          </div>
         </div>
       </div>
     </div>

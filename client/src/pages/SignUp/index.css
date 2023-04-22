@@ -1,163 +1,71 @@
 /* signup page start */
 .signup_section {
-  overflow-y: hidden;
-  width: 100vw;
-  height: calc(100vh - 120px);
+  /* overflow-y: hidden; */
+  width: 100%;
+  /* height: calc(100% - 120px); */
   padding: 40px;
 }
 .signup_section .signup_image_section,
 .signup_section .signup_form_section {
   width: 48%;
-  height: 100%;
+  /* height: 100%; */
   padding: 40px;
-  position: relative;
-  background-color: #ffffff;
+  background-color: var(--color-white);
 }
 .signup_section .signup_image_section figure{
   width: 100%;
-  height: 100%;
 }
-.signup_section .signup_form_section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.signup_section .signup_form_section h1 {
-  margin-bottom: 80px;
-}
-.signup_form_wrap {
-  position: relative;
-  width: 80%;
-  height: 90%;
-}
-.signup_form_wrap .signup_form {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  width: 100%;
-  height: 100%;
+.signup_section .signup_form_section h2 {
+  margin-bottom: 30px;
   text-align: center;
 }
-.signup_form_wrap .signup_form form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.signup_form_wrap {
+  /* width: 80%; */
+}
+.signup_form_wrap form {
   width: 100%;
 }
 /* 수정 */
-.signup_form_wrap .signup_form .form_container{
-  width: 100%;
-}
-.signup_form_wrap .signup_form form div {
+.signup_form_wrap form div {
   margin-bottom: 20px;
-}
-.signup_form_wrap .signup_form form div input[type="text"],
-.signup_form_wrap .signup_form form div input[type="password"] {
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 15px 10px;
-  background-color: #efefef;
-}
-.signup_form_wrap .form_btn_wrap {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.signup_form_wrap .form_btn_wrap button {
-  width: 100%;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: lightblue;
-  cursor: pointer;
-  margin-right: 20px;
-}
-
-.signup_form_wrap .signup_form input[type="submit"] {
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 15px 10px;
-  background-color: skyblue;
-  margin-top: 20px;
-}
-.signup_form_wrap .signup_form .form_btn_wrap .prev_btn {
-  width: 100%;
-  margin-top: 20px;
-  border: none;
-  border-radius: 10px;
-  padding: 15px 10px;
-  background-color: skyblue;
 }
 .userInfo_form div{
   width: 100%;
 }
 .progress_wrap {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  top:0;
-  left:0;
-  margin-bottom: 20px;
-  font-weight: 700;
+  position: relative;
+  margin-bottom: 80px
 }
 .progress_wrap::before {
+  display: block;
+  content: "";
   position: absolute;
   width: 100%;
-  height: 5px;
-  background-color: #efefef;
-  content: "";
-  top: 50%;
-  left: 0;
+  height: 2px;
+  top: 1px;
+  background-color: var(--color-lightgray);
 }
 .progress_bar {
-  width: 0;
   position: absolute;
-  top: 50%;
+  top: 1px;
   left: 0;
-  height: 5px;
-  background-color: var(--color-point);
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-gray);
 }
-.progress_wrap figure {
-  z-index: 9990;
-}
-.progress_wrap .step {
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff;
-  border: 3px solid #efefef;
-  line-height: 26px;
-  text-align: center;
-  border: 3px solid var(--color-lightgray);
+.progress_wrap .step span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-darkgray);
+  border: 3px solid var(--color-darkgray);
   border-radius: 50%;
-  z-index: 9997;
+  z-index: 100;
 }
-.progress_wrap .step.active {
-  border: 3px solid var(--color-main);
+.progress_wrap .step.active span {
+  border: 1px solid var(--color-gray);
   transition: 0.8s ease-in-out;
-  background-color: var(--color-point);
-  color: #ffffff;
-}
-.email_verify_wrap {
-  display: flex;
-  flex-direction: row !important;
-  justify-content: space-between;
-  width: 100%;
-}
-.email_verify_wrap div {
-  width: 100%;
-}
-.email_verify_wrap input {
-  width: 50px;
-  height: 50px;
-  border: 1px solid skyblue;
-  border-radius: 10px;
+  background-color: var(--color-gray);
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

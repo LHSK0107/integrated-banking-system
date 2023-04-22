@@ -8,13 +8,18 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const Index = () => {
+  // alert( document.cookie );
   const schema = yup.object({
-    username: yup.string().required("아이디를 다시 입력해주세요."),
+    username: yup
+      .string()
+      .min(6, "최소 6자 이상 입력해주세요.")
+      .max(20, "최대 20자리까지 입력해주세요.")
+      .required("아이디를 입력해주세요."),
     password: yup
       .string()
-      .min(8, "최소 8자 이상 입력해주세요.")
-      .max(14)
-      .required("패스워드를 다시 입력해주세요.")
+      .min(6, "최소 6자 이상 입력해주세요.")
+      .max(20, "최대 20자리까지 입력해주세요.")
+      .required("패스워드를 입력해주세요.")
   }).required();
   const {
     register,
@@ -32,20 +37,30 @@ const Index = () => {
     password:""
   });
   // input name별 onChange 관리
-  const onChange = useCallback((e) => {
+  const onChange = ((e) => {
     const {name, value} = e.target;
+    console.log(e.target.name, e.target.value);
     setUserInputValue({...userInputValue,[name]:value});
   });
 
   const onSubmit = (data) => {
+    // json 보내기
     console.log(data);
     axios
       .post("http://localhost:8080/login", {
         username: data.username,
         password: data.password,
+      },
+      {
+        headers: {
+          // "Access-Control-Allow-Origin": "http://localhost:8080",
+          // "Access-Control-Allow-Credentials": true,
+          // "Access-Control-Allow-Methods": "POST, OPTIONS"
+        }
       })
       .then((response) => {
-        if (response.status === 200) {
+        // console.log(response, response.status, response.data.token);
+        if(response.status === 200) {
           // 로그인 성공 시
         }
       })
@@ -78,7 +93,7 @@ const Index = () => {
                     value={userInputValue.username}
                     onChange={onChange}
                   />
-                  {/* {errors.username && <p>This field is required</p>} */}
+                  {/* {errors.id && <p>This field is required</p>} */}
                   <p>{errors.username?.message}</p>
                 </div>
                 <div className="flex">
