@@ -1,17 +1,29 @@
 package com.lhsk.iam.domain.account.api;
 
 import java.math.BigDecimal;
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
+import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DataProcessor {
+	
+	// Environment를 이용해 property값을 가져옴
+	private Environment env;
+	
+	public DataProcessor(Environment env) {
+		this.env = env;
+	}
 	
 	// 문자열로 받아온 날짜를 LocalDate로 바꿔준다.
 	public LocalDate toLocalDate(String date) {
@@ -64,10 +76,10 @@ public class DataProcessor {
 
 	
 	// vo필드 하나하나 검사해서 null이거나 비어있다면 기본값 넣어주기
-	public AccountApiVO valCheck(AccountApiVO vo) {
+	public AccountApiVO valCheck(AccountApiVO vo) throws GeneralSecurityException {
 		vo = dateTrans(vo);
-		
-		if(StringUtils.isBlank(vo.getAcctNo())) vo.setAcctNo("123123");
+		if(StringUtils.isBlank(vo.getAcctNo())) vo.setAcctNo(encryptAcctNo("123123"));	// 계좌번호 기본값 암호화
+		else vo.setAcctNo(encryptAcctNo(vo.getAcctNo()));								// 계좌번호 암호화
 		if(StringUtils.isBlank(vo.getBankCd())) vo.setBankCd("001");
 		if(vo.getBal() == null) vo.setBal(new BigDecimal(0.00));
 		if(StringUtils.isBlank(vo.getIbType())) vo.setIbType("ibtype");
@@ -91,10 +103,11 @@ public class DataProcessor {
 		return vo;
 	}
 	
-	public InoutApiVO valCheck(InoutApiVO vo) {
+	public InoutApiVO valCheck(InoutApiVO vo) throws GeneralSecurityException {
 		vo = dateTimeTrans(vo);
 		
-		if(StringUtils.isBlank(vo.getAcctNo())) vo.setAcctNo("123123");
+		if(StringUtils.isBlank(vo.getAcctNo())) vo.setAcctNo(encryptAcctNo("123123"));	// 계좌번호 기본값 암호화
+		else vo.setAcctNo(encryptAcctNo(vo.getAcctNo()));								// 계좌번호 암호화
 		if(StringUtils.isBlank(vo.getBankCd())) vo.setBankCd("001");
 		if(StringUtils.isBlank(vo.getInoutDv())) vo.setInoutDv("");
 		if(vo.getTrscDt() == null) vo.setTrscDt(LocalDate.parse("1000-01-01"));
@@ -106,4 +119,26 @@ public class DataProcessor {
 		
 		return vo;
 	}
+
+	
+//	----------------------------------------------------------------------------------------------
+	
+	
+	// 암호화 메서드
+	public String encryptAcctNo(String acctNo) throws GeneralSecurityException {
+		// property값 가져오기
+		String key = env.getProperty("aes.secret");
+		// getProperty는 String으로 반환됨 -> ", " 을 기준으로 split
+		String[] ivStringArray = env.getProperty("aes.iv").split(", ");
+		// String[] -> byte[]로 변환 
+		byte[] iv = new byte[ivStringArray.length];
+		for (int i = 0; i < ivStringArray.length; i++) {
+		    iv[i] = Byte.parseByte(ivStringArray[i]);
+//		    log.info(iv[i]+"");
+		}
+		AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
+		return aesGcmEncrypt.encrypt(acctNo, key, iv);
+	}
+
+	
 }
