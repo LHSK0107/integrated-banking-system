@@ -111,6 +111,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .sign(Algorithm.HMAC512(SECRET));
       System.out.println("principalDetailis.getUsername() : " + principalDetailis.getUsername());
       response.addHeader(HEADER_STRING, TOKEN_PREFIX+jwtToken);
+      response.addHeader("Access-Control-Expose-Headers", HEADER_STRING);
    }
    
    // 로그인 실패시 상태코드와 응답 메시지를 담아준다.
