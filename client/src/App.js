@@ -8,6 +8,7 @@ import NotFound from "./pages/404/Index";
 import Index from "./pages/Index/Index";
 import DetailInquiry from "./pages/DetailInquiry/Index";
 import DashBoard from "./pages/Dashboard/Index";
+import InOut from "./pages/InOut/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./commons/Footer";
 
@@ -32,6 +33,7 @@ const App = () => {
               <Route index element={<Inquiry/>} />
                 <Route path=":acctNo" element={<DetailInquiry />} />
             </Route>
+            <Route path="/inout" element={<InOut />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
