@@ -1,6 +1,7 @@
 package com.lhsk.iam.domain.account.api;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Map;
 import org.apache.ibatis.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -39,18 +41,20 @@ public class AccountClient {
 	@Value("${webCashApi.allAccounts}")
 	private String ALLACCOUNTS;
 	
+	
 	// 생성자를 통해 baseUrl을 지정해준다.
 	@Autowired
 	public AccountClient(@Value("${webCashApi.url}") String apiUrl, 
 						@Value("${webCashApi.cookieKey}") String cookieKey,
-						@Value("${webCashApi.cookieValue}") String cookieValue) {
+						@Value("${webCashApi.cookieValue}") String cookieValue,
+						Environment env) {
         this.webClient = WebClient.builder()
                 .baseUrl(apiUrl)
                 .defaultCookie(cookieKey, cookieValue)
                 .build();
         this.objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        this.dataProcessor = new DataProcessor();
+        this.dataProcessor = new DataProcessor(env);
         
     }
 	
@@ -78,7 +82,9 @@ public class AccountClient {
             throw new RuntimeException("Failed to get accounts", e);                                                    
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse response", e);
-        }
+        } catch (GeneralSecurityException e) {
+        	throw new RuntimeException("Failed to encrypt accounts", e);
+		}
 	}
 	
 	// 과거의 입출내역을 조회
@@ -125,7 +131,9 @@ public class AccountClient {
             throw new RuntimeException("Failed to get accounts", e);                                                    
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse response", e);
-        }
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException("Failed to encrypt accounts", e);
+		}
 	}
 	
 	// 금일 입출내역을 조회
@@ -190,7 +198,9 @@ public class AccountClient {
             throw new RuntimeException("Failed to get accounts", e);                                                    
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse response", e);
-        }
+        } catch (GeneralSecurityException e) {
+        	throw new RuntimeException("Failed to encrypt accounts", e);
+		}
 	}
 	
 }

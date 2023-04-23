@@ -17,19 +17,25 @@ import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 	// 생성자 주입
 	private final UserMapper userMapper;
 	
 	@Autowired
 	private PasswordEncoder bCryptPasswordEncoder;
+	private AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
 	
-	// 양방향 암호화 키
+	// 양방향 암호화 키 & iv(초기 벡터)
 	@Value("${aes.secret}")
 	private String key;
+	@Value("${aes.iv}")
+	private String ivString;
+	
+	// 최종적으로 iv가 저장될 byte[] 변수
+	private byte[] iv = new byte[12];
 	
 	// id 중복체크
 	public boolean checkDuplicateId(String id) {
@@ -44,7 +50,7 @@ public class UserService {
 		List<String> emailList = userMapper.findAllEmail();
 		for (String encryptedEmail : emailList) {
 			try {
-				String decryptedEmail = AesGcmEncrypt.decrypt(encryptedEmail, key);
+				String decryptedEmail = aesGcmEncrypt.decrypt(encryptedEmail, key);
 				log.info(encryptedEmail);
 				log.info(decryptedEmail);
 				if (email.equals(decryptedEmail)) return true;
@@ -109,7 +115,7 @@ public class UserService {
 		// userVO 객체를 userList에 담아서 반환
 		List<DetailUserVO> userList = userMapper.findAllUser();
 		// 리스트에서 하나씩 꺼내서 복호화
-		for (int i=0; i<=userList.size()-1; i++) {
+		for (int i=0; i<userList.size(); i++) {
 			DetailUserVO user = userList.get(i);
 			user = decryptUser(user);
 			log.info(user.toString());
@@ -127,13 +133,26 @@ public class UserService {
 	
 //	------------------------------------------------------------------------------------
 	
+	// iv property를 byte[]로 변환
+	public byte[] ivToByteArray(String ivString) {
+		// property에서 String으로 받아온 ivString을  ", "을 기준으로 split -> String[]에 저장
+		String[] ivStringArray = ivString.split(", ");
+		// String[] -> byte[]로 번환
+		for (int i = 0; i < iv.length; i++) {
+		    iv[i] = Byte.parseByte(ivStringArray[i]);
+//		    log.info(iv[i]+"");
+		}
+		return iv;
+	}
+	
 	// 회원정보 암호화
 	public UserVO encryptUser(UserVO userVO) {
 		try {
+			ivToByteArray(ivString);
 			userVO.setPassword(bCryptPasswordEncoder.encode(userVO.getPassword()));
-			userVO.setName(AesGcmEncrypt.encrypt(userVO.getName(), key));
-			userVO.setEmail(AesGcmEncrypt.encrypt(userVO.getEmail(), key));
-			userVO.setPhone(AesGcmEncrypt.encrypt(userVO.getPhone(), key));
+			userVO.setName(aesGcmEncrypt.encrypt(userVO.getName(), key, iv));
+			userVO.setEmail(aesGcmEncrypt.encrypt(userVO.getEmail(), key, iv));
+			userVO.setPhone(aesGcmEncrypt.encrypt(userVO.getPhone(), key, iv));
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -143,12 +162,14 @@ public class UserService {
 	// 회원정보 수정 시, 암호화 
 	public UpdateUserVO encryptUser(UpdateUserVO updateUserVO) {
 		try {
-			if (updateUserVO.getPassword() != null) {
+			ivToByteArray(ivString);
+			// null이 아니고 공백 값이 아닐 때 암호화
+			if (updateUserVO.getPassword() != null && !updateUserVO.getPassword().equals("")) {
 				updateUserVO.setPassword(bCryptPasswordEncoder.encode(updateUserVO.getPassword())); }
-			if (updateUserVO.getName() != null) {
-				updateUserVO.setName(AesGcmEncrypt.encrypt(updateUserVO.getName(), key)); }
-			if (updateUserVO.getPhone() != null) {
-				updateUserVO.setPhone(AesGcmEncrypt.encrypt(updateUserVO.getPhone(), key)); }
+			if (updateUserVO.getName() != null && !updateUserVO.getName().equals("")) {
+				updateUserVO.setName(aesGcmEncrypt.encrypt(updateUserVO.getName(), key, iv)); }
+			if (updateUserVO.getPhone() != null && !updateUserVO.getPhone().equals("")) {
+				updateUserVO.setPhone(aesGcmEncrypt.encrypt(updateUserVO.getPhone(), key, iv)); }
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -158,13 +179,14 @@ public class UserService {
 	// 회원정보 복호화
 	public DetailUserVO decryptUser(DetailUserVO detailUserVO) {
 		try {
-			detailUserVO.setName(AesGcmEncrypt.decrypt(detailUserVO.getName(), key));
-			detailUserVO.setEmail(AesGcmEncrypt.decrypt(detailUserVO.getEmail(), key));
-			detailUserVO.setPhone(AesGcmEncrypt.decrypt(detailUserVO.getPhone(), key));
+			detailUserVO.setName(aesGcmEncrypt.decrypt(detailUserVO.getName(), key));
+			detailUserVO.setEmail(aesGcmEncrypt.decrypt(detailUserVO.getEmail(), key));
+			detailUserVO.setPhone(aesGcmEncrypt.decrypt(detailUserVO.getPhone(), key));
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
 		return detailUserVO;
+		
 	}
 	
 
