@@ -3,7 +3,6 @@ package com.lhsk.iam.global.encrypt;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -38,8 +37,9 @@ public class AesGcmEncrypt {
     private static final int GCM_IV_LENGTH = 12; 	// IV(초기 벡터) 길이 - byte 단위 (권고 길이가 96bit이므로)
     private static final int GCM_TAG_LENGTH = 16; 	// 인증 태그 길이 - byte 단위
 
-    // 암호화 메서드
-    public static String encrypt(String plaintext, String key) throws GeneralSecurityException {
+    
+	// 암호화 메서드
+    public String encrypt(String plaintext, String key, byte[] iv) throws GeneralSecurityException {
     	// 주어진 비밀키(key)를 바이트 배열로 변환
         byte[] secretKeyBytes = key.getBytes(StandardCharsets.UTF_8);
         // secretKeyBytes로 SecretKeySpec 객체 생성
@@ -47,11 +47,6 @@ public class AesGcmEncrypt {
         
         // AES-GCM으로 Cipher 객체를 초기화
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");		// AES-GCM은 padding이 필요 없음
-        
-        // nonce 생성
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] iv = new byte[GCM_IV_LENGTH];				// 주어진 길이만큼 byte 배열 할당
-        secureRandom.nextBytes(iv);							// 무작위 생성된 값을 iv에 저장
         
         // GCMParameterSpec을 사용하여 IV와 인증 태그 길이를 설정
         GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);	// bit 단위로 변환하기 위해 8을 곱함
@@ -71,7 +66,7 @@ public class AesGcmEncrypt {
     }
 
     // 복호화 메서드
-    public static String decrypt(String cipherTextWithIv, String key) throws GeneralSecurityException {
+    public String decrypt(String cipherTextWithIv, String key) throws GeneralSecurityException {
     	// 비밀키 생성
         byte[] secretKeyBytes = key.getBytes(StandardCharsets.UTF_8);
         SecretKey secretKey = new SecretKeySpec(secretKeyBytes, "AES");
@@ -97,13 +92,7 @@ public class AesGcmEncrypt {
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);			// 복호화 모드, 대칭 키, GCM에 필요한 매개변수 전달
 
         // 복호화 한 평문을 String 형태로 반환 
-        /* 
-        	평문 255byte	→ 암호문 380byte
-        	평문 60byte	→ 암호문 120byte
-        	평문 20byte	→ 암호문 64byte
-        	평문 13byte	→ 암호문 56byte        	
-         */
         return new String(cipher.doFinal(cipherText));
     }
-    
+        
 }
