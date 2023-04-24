@@ -2,8 +2,6 @@ package com.lhsk.iam.domain.account.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +18,6 @@ import com.lhsk.iam.domain.account.model.vo.InoutVO;
 import com.lhsk.iam.domain.account.service.AccountApiService;
 import com.lhsk.iam.domain.account.service.AccountService;
 import com.lhsk.iam.domain.account.service.InoutProcessingService;
-import com.lhsk.iam.global.config.jwt.JwtPermissionVerifier;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +31,13 @@ public class AccountController {
 	private final AccountService accountService;
 	private final AccountApiService accountApiService;
 	private final InoutProcessingService inoutProcessingService;
-	private final JwtPermissionVerifier jwtPermissionVerifier;
+	
 	@GetMapping
-	public ResponseEntity<List<AccountVO>> findAllAccount(HttpServletRequest req) {
-//		log.info("AccountController.AccountList");
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
-		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(req);
-		System.out.println(userCode);
+	public ResponseEntity<List<AccountVO>> findAllAccount() {
+		log.info("AccountController.AccountList");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
+		
 		return new ResponseEntity<>(accountService.findAllAccount(), HttpStatus.OK);
 	}
 	
