@@ -20,9 +20,7 @@ import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
-//@RequiredArgsConstructor
 public class SecurityConfig {	
-//	private final CustomAuthenticationProvider customAuthenticationProvider;
 	
 	@Autowired
 	private LoginMapper loginMapper;	
@@ -34,18 +32,15 @@ public class SecurityConfig {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 	
-//	@Bean
-//    public AuthenticationManager authenticationManager() {
-//        return new ProviderManager(Collections.singletonList(customAuthenticationProvider));
-//    }
 
 	@Autowired
 	private CorsConfig corsConfig;
 	
+	
 	@Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 
 	@Bean
@@ -58,14 +53,12 @@ public class SecurityConfig {
 				.httpBasic().disable()
 				.apply(new MyCustomDsl()) // 커스텀 필터 등록
 				.and()
-				.authorizeRequests(authroize -> authroize.antMatchers("/users/**")
+				.authorizeRequests(authroize -> authroize.antMatchers("/users/**", "/api/accounts/**") 
 						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/manager/**")
 						.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/admin/**")
 						.access("hasRole('ROLE_ADMIN')")
-						.antMatchers("/accounts/**")
-						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.anyRequest().permitAll());
 
 		return http.build();

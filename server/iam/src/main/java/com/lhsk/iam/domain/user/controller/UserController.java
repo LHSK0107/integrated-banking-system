@@ -2,8 +2,6 @@ package com.lhsk.iam.domain.user.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,11 +25,16 @@ public class UserController {
 	// 생성자 주입
 	private final UserService userService;
 	
-	@Autowired
-	private PasswordEncoder bCryptPasswordEncoder;
+	// id 중복 체크
+	@GetMapping("/api/signup/id")
+	public String checkDuplicateId(@RequestBody UserVO userVO) {
+		log.info("UserController.CheckDuplicateId");
+//		log.info(userVO.getId());
+		return "{\"status\":\""+userService.checkDuplicateId(userVO.getId())+"\"}";
+	}
 	
 	// email 중복 체크
-	@GetMapping("/api/signup")
+	@GetMapping("/api/signup/email")
 	public String checkDuplicateEmail(@RequestBody UserVO userVO) {
 		log.info("UserController.CheckDuplicateEmail");
 //		log.info(userVO.getEmail());
@@ -44,8 +47,6 @@ public class UserController {
 	@PostMapping("/api/users")
 	public String signup(@RequestBody UserVO userVO) {
 		log.info("UserController.signup");
-		userVO.setPassword(bCryptPasswordEncoder.encode(userVO.getPassword()));
-		log.info(userVO.getPassword());
 //		log.info("userVO: "+userVO);
 		return "{\"status\":\""+userService.signup(userVO)+"\"}";
 	}
@@ -78,25 +79,5 @@ public class UserController {
 		log.info("UserController.findByUserNo"); 
 		return userService.findByUserNo(userNo);
 	}
-	
-
-// -----------------------------------------------------------------------------------------------
-// @Controller를 이용하는 경우
-
-//	// 회원 상세조회(ROLE_USER)
-//	@PostMapping("/user/{userNo}")
-//	public String findByUserNo(@PathVariable int userNo, Model model) {	
-//		log.info("UserController.findByUserNo"); 
-//		model.addAttribute("user", userService.findByUserNo(userNo));
-//		return "user";
-//	}
-	
-//	// 회원 리스트 출력(ROLE_ADMIN, ROLE_MANAGER)
-//	@GetMapping("/user/list")
-//	public String findAllUser(Model model) {			// Model : html로 가져갈 데이터가 있다면 사용
-//		log.info("UserController.userList - model"); 
-//		model.addAttribute("user", userService.findAllUser());
-//		return "user";
-//	}
-	
+		
 }
