@@ -4,21 +4,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lhsk.iam.domain.report.service.ReportService;
@@ -31,10 +25,10 @@ public class ReportController {
 	
 	@GetMapping("/api/reports/daily")
     public ResponseEntity<Void> dailyReport(HttpServletResponse response, HttpServletRequest request) throws IOException {
+		
         /*
          * 시트 생성
          */
-		
 		Workbook workbook = reportService.createDaily();
 		
 		// 헤더 설정
