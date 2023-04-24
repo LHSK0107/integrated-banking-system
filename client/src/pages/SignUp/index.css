@@ -2,11 +2,10 @@
 .signup_section {
   /* overflow-y: hidden; */
   width: 100%;
-  /* height: calc(100% - 120px); */
+  height: calc(100vh - 120px);
   padding: 40px;
 }
-.signup_section .signup_image_section,
-.signup_section .signup_form_section {
+.signup_section >div > div {
   width: 48%;
   /* height: 100%; */
   padding: 40px;
@@ -14,6 +13,7 @@
 }
 .signup_section .signup_image_section figure{
   width: 100%;
+  overflow: hidden;
 }
 .signup_section .signup_form_section h2 {
   margin-bottom: 30px;
@@ -40,17 +40,20 @@
   display: block;
   content: "";
   position: absolute;
-  width: 100%;
+  width: 90%;
   height: 2px;
   top: 1px;
+  left: 50%;
+  transform: translate(-50%, 0);
   background-color: var(--color-lightgray);
 }
 .progress_bar {
   position: absolute;
-  top: 1px;
-  left: 0;
-  width: 100%;
+  width: 90%;
   height: 2px;
+  top: 1px;
+  left: 50%;
+  transform: translate(-50%, 0);
   background-color: var(--color-gray);
 }
 .progress_wrap .step span {

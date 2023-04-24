@@ -24,7 +24,7 @@ public class EmailController {
     private VerificationCodeService verificationCodeService;
 	
 	// 인증번호 요청
-	@PostMapping("/api/signup/email")
+	@PostMapping("/api/email")
 	public ResponseEntity<?> verifyRequest(@RequestBody Map<String, String> data) {
 	    // 랜덤코드 생성
 	    String code = verificationCodeService.generateVerificationCode();
@@ -41,7 +41,7 @@ public class EmailController {
 	    }
 	}
 	
-	@PostMapping("/api/signup/email/verification")
+	@PostMapping("/api/email/verification")
 	public ResponseEntity<?> verify(@RequestBody Map<String, String> data) {
 	    String email = data.get("email");
 	    String inputCode = data.get("code");

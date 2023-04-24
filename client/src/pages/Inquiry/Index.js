@@ -1,16 +1,25 @@
 /* eslint-disable */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import "./index.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
 import { AcctList } from "./component/AcctList";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import decodeJwt from "../../hooks/decodeJwt";
+import { LogInContext } from "../../commons/LogInContext";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
 
 const Index = () => {
+  const isLogIn = localStorage.getItem("loggedIn");
+  const navigate = useNavigate();
+  
+  if(!isLogIn) {
+    navigate("/login");
+  }
+
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
   const [loanList, setLoanList] = useState([]);
@@ -18,6 +27,14 @@ const Index = () => {
   let stateArr = [];
   let depAInsArr = [];
   let loanArr = [];
+
+  const { loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
+  // console.log("here", loggedUser);
+  // console.log("here", loggedIn);
+
+  // const token = decodeJwt(localStorage.getItem("jwtToken"));
+  // console.log(token);
+  // console.log(isLogIn);
 
   const { apiData, isLoading, error } = useAxiosAcctInquiry(
     "http://localhost:3001/api/getAccountList"
