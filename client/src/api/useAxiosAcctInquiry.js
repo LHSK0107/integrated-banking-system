@@ -7,8 +7,10 @@ function useAxiosAcctInquiry ( url ) {
   const [error, setError]=useState(null);
 
   useEffect(()=>{
+    const fetchController = new AbortController();
+    const signal = fetchController.signal;
     setIsLoading(true);
-    axios.get(url)
+    axios.get(url,{signal: signal})
     .then((res)=>{
       setApiData(res.data.RESP_DATA.REC);
     })
@@ -16,6 +18,9 @@ function useAxiosAcctInquiry ( url ) {
     .finally(()=>{
       setIsLoading(false);
     })
+    return () => {
+      fetchController.abort();
+    }
   },[url]);
   return { apiData, isLoading, error };
 }; 
