@@ -58,7 +58,6 @@ const PersonalInfo = () => {
           <input type="text" value={personalInputValue?.phone} {...register("phone")} onChange={onChange} placeholder="휴대폰 번호를 '-'를 포함하여 입력하세요." />
           <p>{errors.phone?.message}</p>
         </div>
-        <hr/>
         <div className="form_btn_wrap">
           <button type="button" className="prev_btn" onClick={()=>{setPageNum(pageNum-1)}}>이전</button>
           <input type="submit" value="다음"/>
