@@ -31,7 +31,6 @@ public class JwtPermissionVerifier {
 		String jwtToken = request.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
 		String userCode = 
 				JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("userCode").asString();
-		
 		return userCode;
 	}
 }
