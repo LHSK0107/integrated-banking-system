@@ -6,6 +6,9 @@ import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
 import { AcctList } from "./component/AcctList";
 import { Link } from "react-router-dom";
+import { Description } from '../../commons/Description';
+import { SideNav } from '../../commons/SideNav';
+import Breadcrumb from '../../commons/Breadcrumb';
 
 const Index = () => {
   const [statementList, setStatementList] = useState([]);
@@ -160,67 +163,15 @@ const Index = () => {
   return (
     <div id="wrap">
       <div className="inner">
-        <div className="nav_depth flex justify_end align_center">
-          <Link
-            className="flex justify_end align_center"
-            href="../Index/index.html"
-          >
-            <figure className="flex justify_center">
-              <img
-                src={require(`../../assets/images/icon/home.png`)}
-                alt="홈이미지"
-              />
-            </figure>
-            홈
-          </Link>
-          <figure className="flex justify_center">
-            <img
-              src={require(`../../assets/images/icon/arrow_b.png`)}
-              alt="화살표"
-            />
-          </figure>
-          <p>조회</p>
-          <figure className="flex justify_center">
-            <img
-              src={require(`../../assets/images/icon/arrow_b.png`)}
-              alt="화살표"
-            />
-          </figure>
-          <p>
-            <span>전체계좌조회</span>
-          </p>
-        </div>
+        <Breadcrumb/>
         <div className="flex">
-          <aside>
-            <div className="aside_wrap">
-              <h2>조회</h2>
-              <ul className="aside_nav">
-                <li className="aside_active">
-                  <a href="./">전체계좌조회</a>
-                </li>
-                <li>
-                  <a href="../InOut/index.html">입출내역조회</a>
-                </li>
-              </ul>
-            </div>
-          </aside>
+          <SideNav />
           <section>
             <h3>전체계좌조회</h3>
-            <div className="description">
-              <p> · 보고자 하는 계좌분류를 클릭합니다.</p>
-              <p>
-                {" "}
-                · 예금과 대출 탭을 클릭하여 총 잔액과 계좌별 잔액을 확인합니다.
-              </p>
-              <p>
-                {" "}
-                · 각 계좌를 클릭하면 계좌의 상세 정보와 거래 내역을 확인할 수
-                있습니다.
-              </p>
-            </div>
+            <Description/>
             <div className="content_wrap">
               <ul className="tab flex">
-                {tabContArr.map((ele, i) => {
+                {tabContArr.map((ele) => {
                   return ele.tabTitile;
                 })}
               </ul>
