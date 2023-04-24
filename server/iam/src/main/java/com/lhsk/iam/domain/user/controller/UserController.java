@@ -26,7 +26,7 @@ public class UserController {
 	private final UserService userService;
 	
 	// id 중복 체크
-	@GetMapping("/api/signup/id")
+	@PostMapping("/api/signup/id")
 	public String checkDuplicateId(@RequestBody UserVO userVO) {
 		log.info("UserController.CheckDuplicateId");
 //		log.info(userVO.getId());
@@ -34,7 +34,7 @@ public class UserController {
 	}
 	
 	// email 중복 체크
-	@GetMapping("/api/signup/email")
+	@PostMapping("/api/signup/email")
 	public String checkDuplicateEmail(@RequestBody UserVO userVO) {
 		log.info("UserController.CheckDuplicateEmail");
 //		log.info(userVO.getEmail());

@@ -11,36 +11,53 @@ import DashBoard from "./pages/Dashboard/Index";
 import InOut from "./pages/InOut/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./commons/Footer";
+import { LogInContext } from "./commons/LogInContext";
+import { useState } from "react";
 
 const App = () => {
-  const client=new QueryClient({defaultOptions:{
-    queries:{
-      refetchOnWindowFocus: false
-    }
-  }})
+  const [loggedUser, setLoggedUser] = useState({
+    id: "",
+    name: "",
+    exp: "",
+    userCode: "",
+    userNo: "",
+  });
+  const [loggedIn, setLoggedIn] = useState(false);
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
+
   return (
-    <div className="App">
-      <div className="container">
-      <QueryClientProvider client={client}>
-        <Router>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Index/>} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/dashboard" element={<DashBoard />} />
-            <Route path="inquiry">
-              <Route index element={<Inquiry/>} />
-                <Route path=":acctNo" element={<DetailInquiry />} />
-            </Route>
-            <Route path="/inout" element={<InOut />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
-        </Router>
-        </QueryClientProvider>
+    <LogInContext.Provider
+      value={{ loggedUser, setLoggedUser, loggedIn, setLoggedIn }}
+    >
+      <div className="App">
+        <div className="container">
+          <QueryClientProvider client={client}>
+            <Router>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<LogIn />} />
+                <Route path="/dashboard" element={<DashBoard />} />
+                <Route path="inquiry">
+                  <Route index element={<Inquiry />} />
+                  <Route path=":acctNo" element={<DetailInquiry />} />
+                </Route>
+                <Route path="/inout" element={<InOut />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Footer />
+            </Router>
+          </QueryClientProvider>
+        </div>
       </div>
-    </div>
+    </LogInContext.Provider>
   );
 };
 

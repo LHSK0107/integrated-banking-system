@@ -1,11 +1,14 @@
 import "./Common.css";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
+import { LogInContext } from "./LogInContext";
 
 const Navbar = () => {
   // context 처리
-  const [isAuth, setIsAuth] = useState(false);
+  const { loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
+  console.log(loggedIn);
+  console.log(loggedUser.userCode[0]);
 
   const navigate=useNavigate();
   const [scrollData, setScrollData] = useState(0);
@@ -59,7 +62,7 @@ const Navbar = () => {
             </div>
             {/* 로그인 체크 부분 */}
             <div className="user_info_wrap">
-              {isAuth ? <LogoutSection /> : <LoginSection />}
+              {loggedIn ? <LogoutSection value={loggedUser} /> : <LoginSection />}
             </div>
           </div>
         </div>
@@ -105,19 +108,24 @@ const LoginSection = () => {
   );
 };
 
-const LogoutSection = () => {
+const LogoutSection = ({value}) => {
+  const { loggedUser } = value;
   return (
-    <>
+    <div className="login flex align_center">
       <p>
         <Link to="/">로그아웃</Link>
       </p>
       <p>
-        <Link to="/">보고서 만들기</Link>
+        <Link to="/">개인정보수정</Link>
       </p>
+    {loggedUser.userCode[0]==="ROLE_ADMIN" || loggedUser.userCode[0]==="ROLE_MANAGER" ? 
       <p>
-        <Link to="./help">고객센터</Link>
+        <Link to="/">관리자 페이지</Link>
       </p>
-    </>
+      :
+      <></>
+    }
+    </div>
   );
 };
 
