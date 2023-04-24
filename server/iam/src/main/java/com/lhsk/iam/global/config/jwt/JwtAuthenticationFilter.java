@@ -109,7 +109,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .withClaim("userCode", principalDetailis.getUserVO().getUserCodeList())
             .withClaim("userNo", principalDetailis.getUserVO().getUserNo())
             .sign(Algorithm.HMAC512(SECRET));
-      System.out.println("principalDetailis.getUsername() : " + principalDetailis.getUsername());
+      System.out.println("principalDetailis.getUsername() : " + principalDetailis.getUserVO().getName());
       response.addHeader(HEADER_STRING, TOKEN_PREFIX+jwtToken);
       response.addHeader("Access-Control-Expose-Headers", HEADER_STRING);
    }
