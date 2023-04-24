@@ -58,13 +58,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// loadByUsername이 호출됨.
 		String jwtToken = request.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
 		System.out.println("jwtToken : "+jwtToken);
-		String email = 
-				JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("email").asString();
-		System.out.println("email : "+email);
+		String id = 
+				JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("id").asString();
+		System.out.println("id : "+id);
 		// 서명이 정상적으로 됨
-		if(email != null) {
+		if(id != null) {
 			
-			UserVO userEntity = loginMapper.findUserByEmail(email);
+			UserVO userEntity = loginMapper.findUserById(id);
 			
 			PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
 			

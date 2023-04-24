@@ -69,14 +69,4 @@ public class Sha512Encrypt {
 	    return hexString.toString();
 	}
 
-
-//	public static void main(String[] args) {
-//		String password = "I_can_do_it";
-//	    try {
-//	    	String hashed = hash(password);
-//	    	System.out.println(hashed);
-//	    } catch (NoSuchAlgorithmException e) {
-//	    	System.err.println("Error: " + e.getMessage());
-//	    }
-//	}
 }

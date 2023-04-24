@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class UpdateUserVO {
 	
-	// ※ email은 수정 불가
+	// ※ id, email은 수정 불가
 	// 표시 외 필드 값은 관리자(ROLE_MANAGER, ROLE_ADMIN)만이 수정 가능하다.
 	private int userNo;			// 수정 불가
 	private String userCode;	// ROLE_ADMIN만 수정 가능

@@ -16,6 +16,7 @@ public class UserVO {
 
 	private int userNo;
 	private String userCode;
+	private String id;
 	private String password;
 	private String name;
 	private String dept;
@@ -24,6 +25,7 @@ public class UserVO {
 	
 	// 회원번호(userNo)는 setter를 통한 접근을 제한한다.
 	public void setUserCode(String userCode) { this.userCode = userCode; }
+	public void setId(String id) { this.id = id; }
 	public void setPassword(String password) { this.password = password; }
 	public void setName(String name) { this.name = name; }
 	public void setDept(String dept) { this.dept = dept; }
