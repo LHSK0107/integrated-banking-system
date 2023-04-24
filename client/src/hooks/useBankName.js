@@ -1,4 +1,3 @@
-import {useCallback, useEffect, useState} from "react";
 const bankObj = {
     "002": "산업은행",
     "003": "기업은행",
@@ -51,15 +50,9 @@ const bankObj = {
     "280": "유진투자증권",
     "287": "메리츠증권"
 }
-const useBankName = ({bankCD}) => {
-    const [bankNM,setBankNM]=useState("");
-    useEffect(()=>{
-        const getName = () => {Object.entries(bankObj).map(([key, value])=> {
-            if(key===bankCD) setBankNM(value);
-        })};
-        getName();
-    },[bankCD,bankNM]);
-    return bankNM;
-
+const useBankName = ({bankCD, num}) => {
+    const list = Object.entries(bankObj).filter(([key, value])=> key===bankCD && value);
+    if (num===0) return list[0][0];
+    return list[0][1];
 };
 export default useBankName;
