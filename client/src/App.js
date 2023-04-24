@@ -30,7 +30,7 @@ const App = () => {
       },
     },
   });
-  
+
   return (
     <LogInContext.Provider
       value={{ loggedUser, setLoggedUser, loggedIn, setLoggedIn }}
