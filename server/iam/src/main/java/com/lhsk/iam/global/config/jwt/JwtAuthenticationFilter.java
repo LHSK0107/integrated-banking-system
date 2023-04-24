@@ -106,7 +106,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .withClaim("id", principalDetailis.getUserVO().getId())
             .withClaim("name", principalDetailis.getUserVO().getName())
             .withClaim("expirationTime", new Date(System.currentTimeMillis()+EXPIRATION_TIME))
-            .withClaim("userCode", principalDetailis.getUserVO().getUserCodeList())
+            .withClaim("userCode", principalDetailis.getUserVO().getUserCodeList().get(0))
             .withClaim("userNo", principalDetailis.getUserVO().getUserNo())
             .sign(Algorithm.HMAC512(SECRET));
 //      System.out.println("principalDetailis.getId() : " + principalDetailis.getUserVO().getId());

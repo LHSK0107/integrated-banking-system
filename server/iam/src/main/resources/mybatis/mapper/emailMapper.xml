@@ -9,7 +9,7 @@
 	</insert>
 	
 	<delete id="deleteOldVeri">
-		DELETE FROM email_veri WHERE TIMESTAMPDIFF(MINUTE, created_at, NOW()) > 1
+		DELETE FROM email_veri WHERE TIMESTAMPDIFF(MINUTE, created_at, NOW()) > 3
 	</delete>
 	
 	<select id="findEmailByCode" parameterType="String" resultType="String">
