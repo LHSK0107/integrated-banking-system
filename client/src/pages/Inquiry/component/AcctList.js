@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import Balance from "../../../hooks/useBalance";
 import BankName from "../../../hooks/useBankName";
 export const AcctList = (acctList) => {
-  return acctList.map((ele, i) => {
+  return acctList.map((ele) => {
     return (
-      <li key={i}>
+      <li>
         <Link className="flex justify_between align_center" to="">
           <div className="accordian_account flex">
             <figure>
