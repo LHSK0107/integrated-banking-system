@@ -2,6 +2,11 @@ package com.lhsk.iam.domain.user.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,5 +84,15 @@ public class UserController {
 		log.info("UserController.findByUserNo"); 
 		return userService.findByUserNo(userNo);
 	}
+	
+	// 로그아웃
+	@PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // SecurityContextHolder에서 인증 정보를 제거합니다.
+        SecurityContextHolder.clearContext();
+        // 성공적으로 로그아웃 되었다는 응답을 반환합니다.
+        return ResponseEntity.ok().body("로그아웃 되었습니다.");
+    }
+	
 		
 }
