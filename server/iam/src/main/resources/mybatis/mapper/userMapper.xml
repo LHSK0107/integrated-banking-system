@@ -58,4 +58,7 @@
 		ORDER BY user_no ASC;
 	</select>
 	
+	<select id="checkPassword" parameterType="int" resultType="String">
+		SELECT password FROM user WHERE user_no=#{userNo}
+	</select>
 </mapper>
