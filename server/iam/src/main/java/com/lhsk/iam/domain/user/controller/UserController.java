@@ -1,10 +1,12 @@
 package com.lhsk.iam.domain.user.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -93,6 +95,16 @@ public class UserController {
         // 성공적으로 로그아웃 되었다는 응답을 반환합니다.
         return ResponseEntity.ok().body("로그아웃 되었습니다.");
     }
+	
+	// 회원 비밀번호 일치 확인
+	@PostMapping("/api/users/checkPass")
+	public ResponseEntity<?> checkPassword(@RequestBody Map<String, Object> data) {
+		// Map으로 받은 data를 key로 parsing
+		log.info("userNo: "+data.get("userNo").toString()+" password: "+data.get("password"));
+		// true/false 와 함께 200 상태코드 반환
+		boolean flag = userService.checkPassword((int)data.get("userNo"), (String)data.get("password"));
+		return new ResponseEntity<>(flag, HttpStatus.OK);
+	}
 	
 		
 }
