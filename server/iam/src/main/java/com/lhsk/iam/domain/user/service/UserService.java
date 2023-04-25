@@ -129,6 +129,12 @@ public class UserService {
 		// 복호화 후 반환
 		return decryptUser(userMapper.findByUserNo(userNo));
 	}
+	
+	// 비밀번호 일치 확인
+	public boolean checkPassword(int userNo, String password) {
+		// DB에 저장된 password와 Client에서 받아온 password가 일치하는 지 비교 후, true / false 반환 
+		return bCryptPasswordEncoder.matches(password, userMapper.checkPassword(userNo));
+	}
 
 	
 //	------------------------------------------------------------------------------------

@@ -28,7 +28,7 @@ public interface UserMapper {
 	List<DetailUserVO> findAllUser();
 	// 회원 삭제
 	DetailUserVO findByUserNo(int userNo);
-
-
+	// 비밀번호 일치 확인
+	String checkPassword(int userNo);
 	
 }
