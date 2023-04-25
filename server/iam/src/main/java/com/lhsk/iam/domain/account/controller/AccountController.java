@@ -2,6 +2,8 @@ package com.lhsk.iam.domain.account.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import com.lhsk.iam.domain.account.model.vo.InoutVO;
 import com.lhsk.iam.domain.account.service.AccountApiService;
 import com.lhsk.iam.domain.account.service.AccountService;
 import com.lhsk.iam.domain.account.service.InoutProcessingService;
+import com.lhsk.iam.global.config.jwt.JwtPermissionVerifier;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,22 +34,38 @@ public class AccountController {
 	private final AccountService accountService;
 	private final AccountApiService accountApiService;
 	private final InoutProcessingService inoutProcessingService;
+	private final JwtPermissionVerifier jwtPermissionVerifier;	
 	
+	// 전체 계좌정보 조회 메서드(ROLE_MANAGER, ROLE_ADMIN)
 	@GetMapping
-	public ResponseEntity<List<AccountVO>> findAllAccount() {
+	public ResponseEntity<List<AccountVO>> findAllAccount(HttpServletRequest httpServletRequest) {
 		log.info("AccountController.AccountList");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
-		
-		return new ResponseEntity<>(accountService.findAllAccount(), HttpStatus.OK);
+		// JWT에서 userCode를 추출 
+		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(httpServletRequest);
+		// USER는 403, MANAGER & ADMIN은 200, 그 외는 400 HttpStatus 반환
+		if (userCode.equals("ROLE_USER")) 
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		else if (userCode.equals("ROLE_MANAGER") || userCode.equals("ROLE_ADMIN"))
+			return new ResponseEntity<>(accountService.findAllAccount(), HttpStatus.OK);
+		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
+	// 조회 가능 계좌정보 리스트(ROLE_USER)
+	@GetMapping("/available")
+	public ResponseEntity<List<AccountVO>> findAllAvailableAccount(HttpServletRequest httpServletRequest) {
+		log.info("AccountController.AvailableAccountList");
+		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(httpServletRequest);
+		if (userCode.equals("ROLE_USER")) {
+			
+			return new ResponseEntity<>(HttpStatus.OK);			
+		}
+		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	// 특정 계좌정보 조회 메서드
 	@GetMapping("/{acctNo}")
 	public ResponseEntity<AccountVO> findByAcctNo(@PathVariable String acctNo) {
 		log.info("AccountController.findByAcctNo");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);	// application/json
-		
 		return new ResponseEntity<>(accountService.findByAcctNo(acctNo), HttpStatus.OK);
 	}
 	
