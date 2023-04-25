@@ -88,7 +88,7 @@ public class UserController {
 	}
 	
 	// 로그아웃
-	@PostMapping("/logout")
+	@PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         // SecurityContextHolder에서 인증 정보를 제거합니다.
         SecurityContextHolder.clearContext();
