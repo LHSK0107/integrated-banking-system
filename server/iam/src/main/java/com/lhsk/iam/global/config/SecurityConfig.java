@@ -1,5 +1,7 @@
 package com.lhsk.iam.global.config;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,6 +55,11 @@ public class SecurityConfig {
 				.httpBasic().disable()
 				.apply(new MyCustomDsl()) // 커스텀 필터 등록
 				.and()
+				.logout(logout -> logout
+	                    .logoutSuccessHandler((request, response, authentication) -> {
+	                        response.setStatus(HttpServletResponse.SC_OK);
+	                    })
+	            )
 				.authorizeRequests(authroize -> authroize.antMatchers("/users/**", "/api/accounts/**") 
 						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/manager/**")
