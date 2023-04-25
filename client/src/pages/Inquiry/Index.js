@@ -25,6 +25,7 @@ const Index = () => {
   useEffect(() => {
     if (token === null) {
       setLoggedIn(false);
+      navigate("/login");
     } else {
       const decodedPayload = decodeJwt(token);
       setLoggedUser({

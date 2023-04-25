@@ -17,6 +17,7 @@ const Index = () => {
    useEffect(() => {
      const savedToken = localStorage.getItem("jwt");
      setToken(savedToken);
+     navigate("/login");
    }, []);
    
    useEffect(() => {
