@@ -10,6 +10,7 @@ import DetailInquiry from "./pages/DetailInquiry/Index";
 import DashBoard from "./pages/Dashboard/Index";
 import InOut from "./pages/InOut/Index";
 import LogOut from "./pages/LogIn/LogOut";
+import Mypage from "./pages/Mypage/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./commons/Footer";
 import { LogInContext } from "./commons/LogInContext";
@@ -53,6 +54,7 @@ const App = () => {
                   <Route path=":acctNo" element={<DetailInquiry />} />
                 </Route>
                 <Route path="/inout" element={<InOut />} />
+                <Route path="/Mypage" element={<Mypage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
