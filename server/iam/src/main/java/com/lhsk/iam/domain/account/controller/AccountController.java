@@ -40,7 +40,7 @@ public class AccountController {
 	@GetMapping
 	public ResponseEntity<List<AccountVO>> findAllAccount(HttpServletRequest httpServletRequest) {
 		log.info("AccountController.AccountList");
-		// JWT에서 userCode 
+		// JWT에서 userCode를 추출 
 		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(httpServletRequest);
 		// USER는 403, MANAGER & ADMIN은 200, 그 외는 400 HttpStatus 반환
 		if (userCode.equals("ROLE_USER")) 
@@ -51,9 +51,15 @@ public class AccountController {
 	}
 	
 	// 조회 가능 계좌정보 리스트(ROLE_USER)
-	@GetMapping()
+	@GetMapping("/available")
 	public ResponseEntity<List<AccountVO>> findAllAvailableAccount(HttpServletRequest httpServletRequest) {
-		return new ResponseEntity<>(HttpStatus.OK);
+		log.info("AccountController.AvailableAccountList");
+		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(httpServletRequest);
+		if (userCode.equals("ROLE_USER")) {
+			
+			return new ResponseEntity<>(HttpStatus.OK);			
+		}
+		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 	// 특정 계좌정보 조회 메서드
