@@ -62,6 +62,15 @@
 		</choose>
 		order by trsc_dt ${sort} limit #{start}, #{pageSize};
 	</select>
+	
+	
+	<select id="findAllBankCodeAndBankName" resultType="java.util.HashMap">
+		SELECT bank_cd, bank_nm FROM bank_code ORDER BY bank_cd ASC
+	</select>
+	
+	<select id="findByBankCodeToBankName" parameterType="String" resultType="String">
+		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
+	</select>
 </mapper>
 
 
