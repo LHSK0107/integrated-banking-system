@@ -13,13 +13,32 @@ import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
 
 const Index = () => {
-  const isLogIn = localStorage.getItem("loggedIn");
-  const navigate = useNavigate();
+  // 토큰 확인
+  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
+  const navigate=useNavigate();
   
-  if(!isLogIn) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    const savedToken = localStorage.getItem("jwt");
+    setToken(savedToken);
+  }, []);
+  
+  useEffect(() => {
+    if (token === null) {
+      setLoggedIn(false);
+    } else {
+      const decodedPayload = decodeJwt(token);
+      setLoggedUser({
+        id: decodedPayload.id,
+        name: decodedPayload.name,
+        exp: decodedPayload.exp,
+        userCode: decodedPayload.userCode,
+        userNo: decodedPayload.userNo
+      });
+      setLoggedIn(true);
+    }
+  }, [token, setLoggedUser, setLoggedIn]);
 
+  // 계좌 구현
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
   const [loanList, setLoanList] = useState([]);
@@ -28,7 +47,6 @@ const Index = () => {
   let depAInsArr = [];
   let loanArr = [];
 
-  const { loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
   // console.log("here", loggedUser);
   // console.log("here", loggedIn);
 
@@ -48,7 +66,7 @@ const Index = () => {
     apiData.map((ele) => {
       if (ele.ACCT_DV === "01") {
         stateArr.push(ele);
-        setStatementList(stateArr);
+        setStatementList(...stateArr);
       } else if (ele.ACCT_DV === "02") {
         depAInsArr.push(ele);
         setDepAInsList(depAInsArr);
