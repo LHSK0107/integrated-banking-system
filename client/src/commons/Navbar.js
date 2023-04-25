@@ -53,25 +53,25 @@ const Navbar = () => {
 
       // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
 
-      // axios
-      //   .post("http://localhost:8080/logout", {})
-      //   .then((response) => {
-      //     if (response.status === 200) {
-      //       localStorage.removeItem("jwt");
-      //       setLoggedUser({
-      //         id: "",
-      //         name: "",
-      //         exp: "",
-      //         userCode: "",
-      //         userNo: "",
-      //       });
-      //       setLoggedIn(false);
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     if (error) console.log(error);
-      //   })
-      //   .finally(() => {});
+      axios
+        .post("http://localhost:8080/api/logout", {})
+        .then((response) => {
+          if (response.status === 200) {
+            localStorage.removeItem("jwt");
+            setLoggedUser({
+              id: "",
+              name: "",
+              exp: "",
+              userCode: "",
+              userNo: "",
+            });
+            setLoggedIn(false);
+          }
+        })
+        .catch((error) => {
+          if (error) console.log(error);
+        })
+        .finally(() => {});
       
       localStorage.removeItem("jwt");
       setLoggedUser({
