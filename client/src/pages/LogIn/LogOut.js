@@ -13,8 +13,7 @@ export default function LogOut() {
   } else {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // 확인 버튼 클릭시
-      console.log("로그아웃 완료");
-      axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
+      axios.post("http://localhost:8080/api/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
       localStorage.removeItem("jwt");
       setLoggedUser({
         id: "",
@@ -22,10 +21,11 @@ export default function LogOut() {
         exp: "",
         userCode: "",
         userNo: "",
-      });
-      setLoggedIn(false);
-      navigate("/login");
-      setToken(null);
+    });
+    setLoggedIn(false);
+    navigate("/login");
+    setToken(null);
+    console.log("로그아웃 완료");
     } else {
       // 취소 버튼 클릭시
       console.log("로그아웃 취소");
