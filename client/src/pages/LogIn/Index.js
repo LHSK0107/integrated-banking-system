@@ -5,15 +5,15 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 import axios from "axios";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LogInContext } from "../../commons/LogInContext";
 import decodeJwt from "../../hooks/decodeJwt";
 // import jwt_decode from 'jsonwebtoken';
 
 const Index = () => {
   const { loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
-  // console.log(loggedUser);
-  // console.log(loggedIn);
+  console.log(loggedUser);
+  console.log(loggedIn);
 
   const navigate = useNavigate();
 
@@ -43,10 +43,10 @@ const Index = () => {
   });
 
   // input value 관리를 위한 state
-  const [userInputValue, setUserInputValue] = useState({
-    username:"",
-    password:""
-  });
+  // const [userInputValue, setUserInputValue] = useState({
+  //   username:"",
+  //   password:""
+  // });
   // input name별 onChange 관리
   // const onChange = ((e) => {
   //   const {name, value} = e.target;
@@ -64,20 +64,15 @@ const Index = () => {
       })
       .then((response) => {
         // 로그인 성공 시
-        if(response.status === 200) {
+        if(response.status === 200 && response.headers.get("Authorization")) {
           const token = response.headers.get("Authorization").split(" ")[1];
-          // localStorage.setItem("jwtToken",token);
           // header에 default로 token 싣기
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
           // token을 decode
           const decodedPayload = decodeJwt(token);
-          // 로컬스토리지에 로그인 true
-          localStorage.setItem("loggedIn", true);
-          // 로컬스토리지에 유저코드
-          localStorage.setItem("userCode", decodedPayload.userCode);
-          // 로컬스토리지에 이름
-          localStorage.setItem("userCode", decodedPayload.name);
+          // 로컬스토리지에 jwt
+          localStorage.setItem("jwt", token);
           // context api 설정
           setLoggedUser({
             id: decodedPayload.id,

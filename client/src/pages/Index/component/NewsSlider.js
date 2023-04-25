@@ -19,7 +19,10 @@ const NewsSlider = () => {
       .then((response) => {
         clearData(response.data.items);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
+      });
   }, []);
 
   let newsArr = [];
