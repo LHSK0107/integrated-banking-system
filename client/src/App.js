@@ -9,12 +9,14 @@ import Index from "./pages/Index/Index";
 import DetailInquiry from "./pages/DetailInquiry/Index";
 import DashBoard from "./pages/Dashboard/Index";
 import InOut from "./pages/InOut/Index";
+import LogOut from "./pages/LogIn/LogOut";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./commons/Footer";
 import { LogInContext } from "./commons/LogInContext";
 import { useState } from "react";
 
 const App = () => {
+  const [token, setToken] = useState(null);
   const [loggedUser, setLoggedUser] = useState({
     id: "",
     name: "",
@@ -33,7 +35,7 @@ const App = () => {
 
   return (
     <LogInContext.Provider
-      value={{ loggedUser, setLoggedUser, loggedIn, setLoggedIn }}
+      value={{ token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn }}
     >
       <div className="App">
         <div className="container">
@@ -44,6 +46,7 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<LogIn />} />
+                <Route path="/logout" element={<LogOut />} />
                 <Route path="/dashboard" element={<DashBoard />} />
                 <Route path="inquiry">
                   <Route index element={<Inquiry />} />
