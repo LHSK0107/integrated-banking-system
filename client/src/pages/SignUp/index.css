@@ -2,13 +2,12 @@
 .signup_section {
   /* overflow-y: hidden; */
   width: 100%;
-  /* height: calc(100% - 120px); */
+  height: calc(100vh - 120px);
   padding: 40px;
   position: relative;
   height: 100%;
 }
-.signup_section .signup_image_section,
-.signup_section .signup_form_section {
+.signup_section >div > div {
   width: 48%;
   /* height: 100%; */
   padding: 40px;
@@ -16,7 +15,11 @@
 }
 .signup_section .signup_image_section figure{
   width: 100%;
+<<<<<<< HEAD
   height: 100%;
+=======
+  overflow: hidden;
+>>>>>>> 46e4716785324a4ee90f81f20b3266c1761e0576
 }
 .signup_section .signup_form_section h2 {
   margin-bottom: 80px;
@@ -63,18 +66,34 @@
   justify-content: center;
   content: "";
   position: absolute;
+<<<<<<< HEAD
   width: 89%;
   height: 2px;
   top: 2px;
   left: 6%;
+=======
+  width: 90%;
+  height: 2px;
+  top: 1px;
+  left: 50%;
+  transform: translate(-50%, 0);
+>>>>>>> 46e4716785324a4ee90f81f20b3266c1761e0576
   background-color: var(--color-lightgray);
 }
 .progress_bar {
   position: absolute;
+<<<<<<< HEAD
   width: 89%;
   height: 2px;
   top: 2px;
   left: 6%;
+=======
+  width: 90%;
+  height: 2px;
+  top: 1px;
+  left: 50%;
+  transform: translate(-50%, 0);
+>>>>>>> 46e4716785324a4ee90f81f20b3266c1761e0576
   background-color: var(--color-gray);
 }
 .progress_wrap .step.active::after{

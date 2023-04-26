@@ -1,22 +1,33 @@
 import "./index.css";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { LogInContext } from "../../commons/LogInContext";
+import decodeJwt from "../../hooks/decodeJwt";
+// import jwt_decode from 'jsonwebtoken';
 
 const Index = () => {
-  // alert( document.cookie );
+  const { loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
+  // console.log(loggedUser);
+  // console.log(loggedIn);
+
+  const navigate = useNavigate();
+
+  // login form 유효성 검사
   const schema = yup.object({
     username: yup
       .string()
+      .matches(/^(?=.*[a-zA-Z0-9]).{6,20}$/, "형식에 맞지 않습니다.")
       .min(6, "최소 6자 이상 입력해주세요.")
       .max(20, "최대 20자리까지 입력해주세요.")
       .required("아이디를 입력해주세요."),
     password: yup
       .string()
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#$%^&*+=-])(?=.*[0-9]).{6,20}$/, "대/소/특수/숫자 포함하여 입력해주세요.")
       .min(6, "최소 6자 이상 입력해주세요.")
       .max(20, "최대 20자리까지 입력해주세요.")
       .required("패스워드를 입력해주세요.")
@@ -24,11 +35,11 @@ const Index = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
     //   } = useForm({ resolver: yupResolver(schema) });
   } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    mode: "onChange", // 바뀔 때마다
   });
 
   // input value 관리를 위한 state
@@ -37,11 +48,11 @@ const Index = () => {
     password:""
   });
   // input name별 onChange 관리
-  const onChange = ((e) => {
-    const {name, value} = e.target;
-    console.log(e.target.name, e.target.value);
-    setUserInputValue({...userInputValue,[name]:value});
-  });
+  // const onChange = ((e) => {
+  //   const {name, value} = e.target;
+  //   // console.log(e.target.name, e.target.value);
+  //   setUserInputValue({...userInputValue,[name]:value});
+  // });
 
   const onSubmit = (data) => {
     // json 보내기
@@ -50,22 +61,40 @@ const Index = () => {
       .post("http://localhost:8080/login", {
         username: data.username,
         password: data.password,
-      },
-      {
-        headers: {
-          // "Access-Control-Allow-Origin": "http://localhost:8080",
-          // "Access-Control-Allow-Credentials": true,
-          // "Access-Control-Allow-Methods": "POST, OPTIONS"
-        }
       })
       .then((response) => {
-        // console.log(response, response.status, response.data.token);
+        // 로그인 성공 시
         if(response.status === 200) {
-          // 로그인 성공 시
+          const token = response.headers.get("Authorization").split(" ")[1];
+          // localStorage.setItem("jwtToken",token);
+          // header에 default로 token 싣기
+          axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+          // token을 decode
+          const decodedPayload = decodeJwt(token);
+          // 로컬스토리지에 로그인 true
+          localStorage.setItem("loggedIn", true);
+          // 로컬스토리지에 유저코드
+          localStorage.setItem("userCode", decodedPayload.userCode);
+          // 로컬스토리지에 이름
+          localStorage.setItem("userCode", decodedPayload.name);
+          // context api 설정
+          setLoggedUser({
+            id: decodedPayload.id,
+            name: decodedPayload.name,
+            exp: decodedPayload.exp,
+            userCode: decodedPayload.userCode,
+            userNo: decodedPayload.userNo
+          });
+          setLoggedIn(true);
         }
+        // 대시보드로 리다이렉트
+        navigate("/dashboard")
       })
       .catch((error) => {
-        console.log(error);
+        if(error) console.log(error);
+      })
+      .finally(() => {
       });
   };
 
@@ -73,36 +102,37 @@ const Index = () => {
 
   return (
     <div className="login_section">
-      <div className="inner">
-        <div className="content flex align_center">
-          <div className="content_right_container flex justify_center align_center">
+      <div className="inner flex justify_center">
+          <div className="login flex justify_center align_center">
             <figure>
               <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
             </figure>
           </div>
 
-          <div className="content_right_container">
+          <div className="login_form_section">
             <h2>로그인</h2>
             <div>
               <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
-                <div className="flex">
+                <div className="flex flex_column">
+                  <span>id</span>
                   <input
                     type="text"
                     placeholder="아이디를 입력하세요."
                     {...register("username")}
-                    value={userInputValue.username}
-                    onChange={onChange}
+                    // value={userInputValue.username}
+                    // onChange={onChange}
                   />
                   {/* {errors.id && <p>This field is required</p>} */}
                   <p>{errors.username?.message}</p>
                 </div>
-                <div className="flex">
+                <div className="flex flex_column">
+                  <span>pw</span>
                   <input
                     type="password"
                     placeholder="패스워드를 입력하세요."
                     {...register("password")}
-                    value={userInputValue.password}
-                    onChange={onChange}
+                    // value={userInputValue.password}
+                    // onChange={onChange}
                   />
                   <p>{errors.password?.message}</p>
                 </div>
@@ -114,12 +144,11 @@ const Index = () => {
               </form>
             </div>
             <div className="form_bottom flex justify_center align_center">
-              <Link to="">아이디 찾기</Link>
+              {/* <Link to="">아이디 찾기</Link> */}
               <Link to="">비밀번호 찾기</Link>
               <Link to="">회원가입</Link>
             </div>
           </div>
-        </div>
       </div>
     </div>
   );
