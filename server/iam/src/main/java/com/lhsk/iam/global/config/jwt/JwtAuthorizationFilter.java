@@ -18,27 +18,25 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
+import com.lhsk.iam.global.config.JwtConfig;
 import com.lhsk.iam.global.config.auth.PrincipalDetails;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private LoginMapper loginMapper;
 	
-	private String SECRET;
-	private long EXPIRATION_TIME;
-	private String TOKEN_PREFIX;
-	private String HEADER_STRING;
+	private JwtTokenProvider jwtTokenProvider;
+	private JwtConfig jwtConfig;
 	
 	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, LoginMapper loginMapper, Environment env) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, LoginMapper loginMapper, JwtConfig jwtConfig,
+								JwtTokenProvider jwtTokenProvider) {
 		super(authenticationManager);
 		this.loginMapper = loginMapper;
-		this.SECRET = env.getProperty("jwt.secret");
-	    this.EXPIRATION_TIME = Long.parseLong(env.getProperty("jwt.expirationTime"));
-	    this.TOKEN_PREFIX = env.getProperty("jwt.tokenPrefix");
-	    this.HEADER_STRING = env.getProperty("jwt.headerString");
+	    this.jwtTokenProvider = jwtTokenProvider;
+	    this.jwtConfig = jwtConfig;
 	}
-	
+	 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -46,7 +44,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		String jwtHeader = request.getHeader("Authorization");
 		
 		// header가 있는지 확인
-		if(jwtHeader == null || !jwtHeader.startsWith(TOKEN_PREFIX)) {
+		if(jwtHeader == null || !jwtHeader.startsWith(jwtConfig.getTokenPrefix())) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -56,11 +54,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
 		// 내가 SecurityContext에 직접접근해서 세션을 만들때 자동으로 UserDetailsService에 있는
 		// loadByUsername이 호출됨.
-		String jwtToken = request.getHeader(HEADER_STRING).replace(TOKEN_PREFIX, "");
-		System.out.println("jwtToken : "+jwtToken);
-		String id = 
-				JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("id").asString();
-		System.out.println("id : "+id);
+		String jwtToken = request.getHeader(jwtConfig.getHeaderString()).replace(jwtConfig.getTokenPrefix(), "");
+		String id = jwtTokenProvider.getUsernameFromToken(jwtToken);
 		// 서명이 정상적으로 됨
 		if(id != null) {
 			
