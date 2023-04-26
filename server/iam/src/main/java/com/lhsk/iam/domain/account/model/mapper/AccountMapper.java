@@ -19,7 +19,7 @@ public interface AccountMapper {
 	// 특정 계좌의 입출금 조회
 	List<InoutVO> findOneInout(InoutRequestVO vo);
 	// 조회 가능한 계좌 리스트
-	List<String> findAvailableAcct(int userNo);
+	List<String> findAvailableAccount(int userNo);
 	// 은행 코드 & 은행 이름 리스트
 	Map<String, String> findAllBankCodeAndBankName();
 	// 특정 은행 코드에 대응되는 은행 이름 조회

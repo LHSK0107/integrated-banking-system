@@ -19,7 +19,7 @@
 		WHERE acct_no=#{acctNo}
 	</select>
 	
-	<select id="findAvailableAcct" parameterType="int" resultType="java.util.ArrayList">
+	<select id="findAvailableAccount" parameterType="int" resultType="java.util.ArrayList">
 		select acct_no from user_account where user_no = #{userNo};
 	</select>	
 	
@@ -62,7 +62,6 @@
 		</choose>
 		order by trsc_dt ${sort} limit #{start}, #{pageSize};
 	</select>
-	
 	
 	<select id="findAllBankCodeAndBankName" resultType="java.util.HashMap">
 		SELECT bank_cd, bank_nm FROM bank_code ORDER BY bank_cd ASC

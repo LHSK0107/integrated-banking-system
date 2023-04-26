@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/accounts")
+//@RequestMapping("api/accounts")
 public class AccountController {
 	
 	private final AccountService accountService;
@@ -37,7 +37,7 @@ public class AccountController {
 	private final JwtPermissionVerifier jwtPermissionVerifier;	
 	
 	// 전체 계좌정보 조회 메서드(ROLE_MANAGER, ROLE_ADMIN)
-	@GetMapping
+	@GetMapping("/api/accounts")
 	public ResponseEntity<List<AccountVO>> findAllAccount(HttpServletRequest httpServletRequest) {
 		log.info("AccountController.AccountList");
 		// JWT에서 userCode를 추출 
@@ -51,19 +51,22 @@ public class AccountController {
 	}
 	
 	// 조회 가능 계좌정보 리스트(ROLE_USER)
-	@GetMapping("/available")
-	public ResponseEntity<List<AccountVO>> findAllAvailableAccount(HttpServletRequest httpServletRequest) {
+	@GetMapping("/api/accounts/{userNo}")
+	public ResponseEntity<List<AccountVO>> findAllAvailableAccount(
+												HttpServletRequest httpServletRequest,
+												@PathVariable int userNo) {
+
 		log.info("AccountController.AvailableAccountList");
 		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(httpServletRequest);
 		if (userCode.equals("ROLE_USER")) {
-			
-			return new ResponseEntity<>(HttpStatus.OK);			
+			List<AccountVO> accountList = accountService.findAllAvailableAccount(userNo);
+			return new ResponseEntity<>(accountList, HttpStatus.OK);			
 		}
 		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 	// 특정 계좌정보 조회 메서드
-	@GetMapping("/{acctNo}")
+	@GetMapping("api/accounts/{acctNo}")
 	public ResponseEntity<AccountVO> findByAcctNo(@PathVariable String acctNo) {
 		log.info("AccountController.findByAcctNo");
 		return new ResponseEntity<>(accountService.findByAcctNo(acctNo), HttpStatus.OK);
@@ -72,7 +75,7 @@ public class AccountController {
 	/*
 	 * 하나의 계좌를 조회할 때
 	 */	
-	@GetMapping("/inout/{acctNo}")
+	@GetMapping("api/accounts/inout/{acctNo}")
 	public ResponseEntity<List<InoutVO>> getInout(@RequestBody InoutRequestVO vo) {
 		/*
 		 * {
