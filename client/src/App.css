@@ -104,7 +104,8 @@ select option:hover {
 /* 공통 속성 class --- */
 #wrap {
     position: relative;
-    /* top: 50px; */
+    min-height: 300px;
+    top: 100px;
 }
 .inner > div {
   padding: 50px 0;

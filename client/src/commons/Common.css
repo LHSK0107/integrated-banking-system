@@ -132,6 +132,8 @@
 
 /* footer --- */
 footer {
+  position: relative;
+  top: 100px;
   background: var(--color-darkgray);
   padding: 30px 0;
   color: #ffffff;

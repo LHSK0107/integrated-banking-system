@@ -2,7 +2,6 @@ import "./Common.css";
 import React, {
   useState,
   useEffect,
-  useCallback,
   useRef,
   useContext,
 } from "react";
@@ -45,14 +44,12 @@ const Navbar = () => {
     }
   }, [token, setLoggedUser, setLoggedIn]);
   console.log(loggedUser);
+  console.log(loggedIn);
 
   // 로그아웃
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
-      console.log("로그아웃 완료");
-
       // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
-
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
@@ -66,23 +63,14 @@ const Navbar = () => {
               userNo: "",
             });
             setLoggedIn(false);
+            console.log("로그아웃 완료");
+            navigate("/login");
           }
         })
         .catch((error) => {
           if (error) console.log(error);
         })
         .finally(() => {});
-      
-      localStorage.removeItem("jwt");
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-      navigate("/login");
     } else {
       console.log("로그아웃 취소");
       return false;
@@ -204,7 +192,7 @@ const LogoutSection = (props) => {
         로그아웃
       </button>
       <p>
-        <Link to="/">개인정보수정</Link>
+        <Link to="/mypage">개인정보수정</Link>
       </p>
       {props.value.userCode[0] === "ROLE_ADMIN" ||
       props.value.userCode[0] === "ROLE_MANAGER" ? (
