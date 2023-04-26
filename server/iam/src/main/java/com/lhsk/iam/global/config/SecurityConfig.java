@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
 import com.lhsk.iam.global.config.jwt.JwtAuthenticationFilter;
 import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
+import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
@@ -27,7 +28,9 @@ public class SecurityConfig {
 	@Autowired
 	private LoginMapper loginMapper;	
 	@Autowired
-	private Environment env;
+	private JwtTokenProvider jwtTokenProvider;
+	@Autowired
+	private JwtConfig jwtConfig;
 	
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -60,12 +63,10 @@ public class SecurityConfig {
 	                        response.setStatus(HttpServletResponse.SC_OK);
 	                    })
 	            )
-				.authorizeRequests(authroize -> authroize.antMatchers("/users/**", "/api/accounts/**") 
+				.authorizeRequests(authroize -> authroize.antMatchers("/api/users/**", "/api/accounts/**") 
 						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-						.antMatchers("/manager/**")
-						.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/admin/**")
-						.access("hasRole('ROLE_ADMIN')")
+						.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.anyRequest().permitAll());
 
 		return http.build();
@@ -77,8 +78,8 @@ public class SecurityConfig {
 		    AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 		    http
 		            .addFilter(corsConfig.corsFilter())
-		            .addFilter(new JwtAuthenticationFilter(authenticationManager, env))
-		            .addFilter(new JwtAuthorizationFilter(authenticationManager, loginMapper, env));
+		            .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtConfig, jwtTokenProvider))
+		            .addFilter(new JwtAuthorizationFilter(authenticationManager, loginMapper, jwtConfig, jwtTokenProvider));
 		}
 	}
 
