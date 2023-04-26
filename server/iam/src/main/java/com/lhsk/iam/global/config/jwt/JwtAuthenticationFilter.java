@@ -97,8 +97,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
          Authentication authResult) throws IOException, ServletException {
       PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
       
-      System.out.println("SECRET : " + SECRET);
-      System.out.println("EXPIRATION_TIME : " + EXPIRATION_TIME);
+//      System.out.println("SECRET : " + SECRET);
+//      System.out.println("EXPIRATION_TIME : " + EXPIRATION_TIME);
       
       String jwtToken = JWT.create()
             .withSubject(principalDetailis.getUsername())
@@ -109,7 +109,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .withClaim("userCode", principalDetailis.getUserVO().getUserCodeList())
             .withClaim("userNo", principalDetailis.getUserVO().getUserNo())
             .sign(Algorithm.HMAC512(SECRET));
-      System.out.println("principalDetailis.getUsername() : " + principalDetailis.getUsername());
+//      System.out.println("principalDetailis.getId() : " + principalDetailis.getUserVO().getId());
+//      System.out.println("principalDetailis.getName() : " + principalDetailis.getUserVO().getName());
+//      System.out.println("principalDetailis.getUserCodeList() : " + principalDetailis.getUserVO().getUserCodeList());
+//      System.out.println("principalDetailis.getUserNo() : " + principalDetailis.getUserVO().getUserNo());
       response.addHeader(HEADER_STRING, TOKEN_PREFIX+jwtToken);
       response.addHeader("Access-Control-Expose-Headers", HEADER_STRING);
    }
