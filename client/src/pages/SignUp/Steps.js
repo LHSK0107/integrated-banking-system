@@ -55,7 +55,7 @@ const ProgressBar = (props) => {
   const progressWrapRef = useRef();
   // 추후 progress wrap 이용해서 전부 처리
   useEffect(() => {
-    const progressWidth = progressWrapRef.current.offsetWidth;
+    const progressWidth = parseInt((progressWrapRef.current.offsetWidth)*0.9);
     const progressCountImg = progressWrapRef.current.childNodes.length;
     const progressChildList = progressWrapRef.current.children;
 
@@ -78,7 +78,7 @@ const ProgressBar = (props) => {
   // 현재 width를 바탕으로 progress bar 작업
   const progressFunc = (pageNum, width, count) => {
     progressBarRef.current.style.transition = "0.4s ease-in-out";
-    progressBarRef.current.style.width = `${(width / count) * pageNum}px`;
+    progressBarRef.current.style.width = `${((width / count) * pageNum)-10}px`;
   };
   return (
     <div ref={progressWrapRef} className="progress_wrap flex justify_between">
@@ -98,11 +98,5 @@ const ProgressBar = (props) => {
     </div>
   );
 };
-
-// const FormTitle = (props) => {
-//   // 페이지별 title
-//   const formTitles = ["기본정보", "이메일 인증", "회원정보"];
-//   return <h1>{formTitles[props.pageNum]}</h1>;
-// };
 
 export default Steps;
