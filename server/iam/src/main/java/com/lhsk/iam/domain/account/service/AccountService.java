@@ -1,6 +1,7 @@
 package com.lhsk.iam.domain.account.service;
 
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +82,28 @@ public class AccountService {
 		}
 		return list;
 	}
+	
+	// 특정 사용자의 조회 가능한 계좌 리스트 
+	public List<AccountVO> findAllAvailableAccount(int userNo) {
+		// 회원번호를 토대로 해당 회원이 열람 가능한 계좌번호 목록 조회
+		List<String> acctNoList = accountMapper.findAvailableAccount(userNo);
+		List<AccountVO> accountList = new ArrayList<AccountVO>();
+		
+		for (String acctNo : acctNoList) {
+			try {
+				// 암호화 되어 저장된 계좌번호를 다시 복호화
+				acctNo = aesGcmEncrypt.decrypt(acctNo, key);
+				// 해당 계좌의 정보를 accountList에 추가
+				accountList.add(accountMapper.findByAcctNo(acctNo));
+				
+			} catch (GeneralSecurityException e) {
+				throw new RuntimeException("Failed to decrypt acctNo", e); 
+			}
+		}
+		return accountList;
+	}
+	
+	
 	
 //	---------------------------------------------------------------------------------------
 	
