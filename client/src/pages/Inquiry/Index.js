@@ -25,7 +25,7 @@ const Index = () => {
   useEffect(() => {
     if (token === null) {
       setLoggedIn(false);
-      navigate("/login");
+      // navigate("/login");
     } else {
       const decodedPayload = decodeJwt(token);
       setLoggedUser({
@@ -67,7 +67,7 @@ const Index = () => {
     apiData.map((ele) => {
       if (ele.ACCT_DV === "01") {
         stateArr.push(ele);
-        setStatementList(...stateArr);
+        setStatementList(stateArr);
       } else if (ele.ACCT_DV === "02") {
         depAInsArr.push(ele);
         setDepAInsList(depAInsArr);
