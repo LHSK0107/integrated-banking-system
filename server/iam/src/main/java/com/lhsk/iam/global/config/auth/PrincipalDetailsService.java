@@ -32,7 +32,6 @@ public class PrincipalDetailsService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 		
-		System.out.println("PrincipalDetailsService : 진입(findUserById 전)");
 		UserVO userEntity =  loginMapper.findUserById(id);
 		
 		AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
@@ -44,9 +43,6 @@ public class PrincipalDetailsService implements UserDetailsService{
 			e.printStackTrace();
 		}
 		
-		System.out.println("PrincipalDetailsService : 진입(findUserById 후)");
-		
-		System.out.println("PrincipalDetails 생성 : " + new PrincipalDetails(userEntity));
 		if(userEntity == null) {
 			throw new UsernameNotFoundException("id " + id + " not found");
 		}

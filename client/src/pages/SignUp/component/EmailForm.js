@@ -4,43 +4,27 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
-import axios from 'axios';
-const UserInfo = () => {
+const EmailForm = () => {
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
   // form의 각 요소 지정
   const schema = yup.object().shape({
-    id: yup
-      .string()
-      .matches(/^(?=.*[a-zA-Z0-9]).{6,20}$/, "형식에 맞지 않습니다.")
-      .min(6, "최소 6자 이상 입력해주세요.")
-      .max(20, "최대 20자리까지 입력해주세요.")
-      .required("아이디를 다시 입력해주세요."),
+    id: yup.string().required("아이디를 다시 입력해주세요."),
     password: yup
       .string()
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#$%^&*+=-])(?=.*[0-9]).{6,20}$/, "대/소/특수/숫자 포함하여 입력해주세요.")
-      .min(6, "최소 6자 이상 입력해주세요.")
-      .max(20, "최대 20자리까지 입력해주세요.")
+      .min(8, "최소 8자 이상 입력해주세요.")
+      .max(14)
       .required("패스워드를 다시 입력해주세요."),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "패스워드가 틀립니다.")
       .required("패스워드를 다시 입력해주세요."),
-    email: yup
-      .string()
-      .matches(/^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, "이메일 형식으로 입력해주세요.")
-      .email()
-      .required("이메일을 입력해주세요."),
+    email: yup.string().email().required("이메일을 다시 입력해주세요."),
   }).required();
   const { register ,handleSubmit, formState: { errors }, unregister} = useForm({
-    resolver: yupResolver(schema), mode: "onChange",
+    resolver: yupResolver(schema),
   });
-  const [isCheckID, setIsCheckID] = useState(false);
   // 다음 버튼 클릭 시, formData에 각 입력값 전달
   const onSubmit = (data) => {
-    if(isCheckID===false) {
-      alert('id 중복확인을 해주세요');
-      return false
-    };
     const values = {
       id: data.id,
       password: data.password,
@@ -74,65 +58,54 @@ const UserInfo = () => {
     email: formData.email
     });
   }, []);
-  const checkID = () =>{
-    axios
-      .get("http://localhost:8080/api/signup/id", { 
-        id: userInputValue.id 
-      })
-      .then((res) => console.log(res.data));
-    axios
-      .get("http://localhost:8080/api/signup/email", {
-        email: "test5@gmail.com",
-      })
-      .then((res) => console.log(res.data));
-  }
-  
   return (
     <div className="form_container">
       <form className="userInfo_form" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <p>아이디</p>
           <input
             type="text"
             placeholder="아이디를 입력하세요."
             {...register("id")}
+            value={userInputValue.id}
+            onChange={onChange}
           />
-          <button onClick={checkID}>아이디 중복확인</button>
-          <span>{errors.id?.message}</span>
+          <p>{errors.id?.message}</p>
         </div>
         <div>
-          <p>비밀번호</p>
           <input
             type="password"
             placeholder="패스워드를 입력하세요."
             {...register("password")}
+            value={userInputValue.password}
+            onChange={onChange}
           />
-          <span>{errors.password?.message}</span>
+          <p>{errors.password?.message}</p>
         </div>
         <div>
-          <p>비밀번호 확인</p>
           <input
             type="password"
             placeholder="패스워드를 다시 입력하세요."
             {...register("confirmPassword")}
+            value={userInputValue.confirmPassword}
+            onChange={onChange}
           />
-          <span>{errors.confirmPassword?.message}</span>
+          <p>{errors.confirmPassword?.message}</p>
         </div>
         <div>
-          <p>이메일</p>
           <input
             type="text"
             placeholder="이메일을 입력하세요."
             {...register("email")}
-            // value={userInputValue.email}
-            // onChange={onChange}
+            value={userInputValue.email}
+            onChange={onChange}
           />
-          <span>{errors.email?.message}</span>
+          <p>{errors.email?.message}</p>
         </div>
+        <hr />
         <input type="submit" value="다음" />
       </form>
     </div>
   );
 };
 
-export default UserInfo;
+export default EmailForm;

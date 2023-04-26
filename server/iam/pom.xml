@@ -81,6 +81,26 @@
 		    <version>3.10.2</version>
 		</dependency>
 		
+		<!--jjwt-->
+		<dependency>
+	        <groupId>io.jsonwebtoken</groupId>
+	        <artifactId>jjwt-api</artifactId>
+	        <version>0.11.5</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>io.jsonwebtoken</groupId>
+	        <artifactId>jjwt-impl</artifactId>
+	        <version>0.11.5</version>
+	        <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>io.jsonwebtoken</groupId>
+	        <artifactId>jjwt-jackson</artifactId>
+	        <version>0.11.5</version>
+	        <scope>runtime</scope>
+	    </dependency>
+		
+		
 		<!--외부 API 호출용-->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
