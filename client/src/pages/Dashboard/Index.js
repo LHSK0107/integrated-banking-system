@@ -13,16 +13,11 @@ const Index = () => {
    // 토큰 확인
    const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
    const navigate = useNavigate();
-   
    useEffect(() => {
-     const savedToken = localStorage.getItem("jwt");
+    const savedToken = localStorage.getItem("jwt");
      setToken(savedToken);
-     navigate("/login");
-   }, []);
-   
-   useEffect(() => {
      if (token === null) {
-    //    navigate("/login");
+       navigate("/login");
         setLoggedIn(false);
      } else {
        const decodedPayload = decodeJwt(token);
@@ -35,20 +30,6 @@ const Index = () => {
        });
        setLoggedIn(true);
      }
-
-    // const savedToken = localStorage.getItem("jwt");
-    // if (savedToken) {
-    //   const decodedPayload = decodeJwt(savedToken);
-    //   setLoggedUser({
-    //     id: decodedPayload.id,
-    //     name: decodedPayload.name,
-    //     exp: decodedPayload.exp,
-    //     userCode: decodedPayload.userCode,
-    //     userNo: decodedPayload.userNo
-    //   });
-    //   setLoggedIn(true);
-    // }
-    // setToken(savedToken);
    }, [token, setLoggedUser, setLoggedIn]);
 
    // 대시보드 구현
@@ -196,7 +177,7 @@ const Index = () => {
       <div className="banner">
         <div className="inner flex">
           <div className="member">
-            <p>{loggedUser.userCode!=="" && loggedUser.userCode[0].split("_")[1]}</p>
+            <p>{loggedUser.userCode!=="" && loggedUser.userCode.split("_")[1]}</p>
             <h2>
               안녕하세요,
               <br />

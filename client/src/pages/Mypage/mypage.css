@@ -1,1 +1,53 @@
 @charset "utf-8";
+
+h2 {
+    margin-bottom: 50px;
+}
+
+.confirmPw > p {
+    margin-bottom: 30px;
+}
+
+.inner .updateInfo {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 100px;
+    width: 100%;
+}
+.userInfo ul {
+    border-top: 1px solid var(--color-gray);
+    margin-bottom: 50px;
+}
+.userInfo li {
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.userInfo li p {
+    padding: 8px;
+}
+.userInfo li p:first-child {
+    width: 20%;
+    background-color: var(--color-background);
+}
+
+.updateInfo h4 {
+    margin-bottom: 18px;
+    font-weight: 500;
+    color: var(--color-red);
+}
+
+.mypage_form {
+    margin-bottom: 18px;
+}
+.mypage_form ul {
+    margin-bottom: 30px;
+}
+.mypage_form li {
+    margin-bottom: 8px;
+}
+.mypage_form li p {
+    width: 20%;
+}
+.mypage_form li span {
+    margin-left: 8px;
+    font-size: .8rem;
+}
