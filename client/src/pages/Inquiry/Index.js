@@ -18,11 +18,9 @@ const Index = () => {
   const navigate=useNavigate();
   
   useEffect(() => {
+    // 로컬스토리지에서 jwt 가져오기
     const savedToken = localStorage.getItem("jwt");
     setToken(savedToken);
-  }, []);
-  
-  useEffect(() => {
     if (token === null) {
       setLoggedIn(false);
       // navigate("/login");
