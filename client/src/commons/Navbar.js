@@ -10,12 +10,12 @@ const Navbar = () => {
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
     useContext(LogInContext);
   const navigate = useNavigate();
+  const savedToken = localStorage.getItem("jwt");
+  setToken(savedToken);
 
   useEffect(() => {
     // 로컬스토리지에서 jwt 가져오기
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
-    if (token === null) {
+    if (savedToken === null) {
       setLoggedUser({
         id: "",
         name: "",
@@ -43,11 +43,11 @@ const Navbar = () => {
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
+      localStorage.removeItem("jwt");
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
           if (response.status === 200) {
-            localStorage.removeItem("jwt");
             setLoggedUser({
               id: "",
               name: "",
