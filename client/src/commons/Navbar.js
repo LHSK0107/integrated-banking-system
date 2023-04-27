@@ -10,12 +10,12 @@ const Navbar = () => {
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
     useContext(LogInContext);
   const navigate = useNavigate();
+  const savedToken = localStorage.getItem("jwt");
+  setToken(savedToken);
 
   useEffect(() => {
     // 로컬스토리지에서 jwt 가져오기
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
-    if (token === null) {
+    if (savedToken === null) {
       setLoggedUser({
         id: "",
         name: "",
@@ -25,7 +25,7 @@ const Navbar = () => {
       });
       setLoggedIn(false);
     } else {
-      const decodedPayload = decodeJwt(token);
+      const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
         id: decodedPayload.id,
         name: decodedPayload.name,
@@ -43,11 +43,11 @@ const Navbar = () => {
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
+      localStorage.removeItem("jwt");
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
           if (response.status === 200) {
-            localStorage.removeItem("jwt");
             setLoggedUser({
               id: "",
               name: "",
@@ -187,8 +187,8 @@ const LogoutSection = (props) => {
       <p>
         <Link to="/mypage">개인정보수정</Link>
       </p>
-      {props.value.userCode[0] === "ROLE_ADMIN" ||
-      props.value.userCode[0] === "ROLE_MANAGER" ? (
+      {props.value.userCode === "ROLE_ADMIN" ||
+      props.value.userCode === "ROLE_MANAGER" ? (
         <p>
           <Link to="/">관리자 페이지</Link>
         </p>

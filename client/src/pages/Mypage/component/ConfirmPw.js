@@ -14,17 +14,17 @@ export default function ConfirmPw() {
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
     useContext(LogInContext);
   const navigate = useNavigate();
+  // 로컬스토리지에서 jwt 가져오기
+  const savedToken = localStorage.getItem("jwt");
+  setToken(savedToken);
 
   // 토큰으로 로그인 context api 세팅
   useEffect(() => {
-    // 로컬스토리지에서 jwt 가져오기
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
-    if (token === null) {
+    if (savedToken === null) {
       // 토큰이 없다면
       setLoggedIn(false);
     } else {
-      const decodedPayload = decodeJwt(token);
+      const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
         id: decodedPayload.id,
         name: decodedPayload.name,
