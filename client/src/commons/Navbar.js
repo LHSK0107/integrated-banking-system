@@ -1,10 +1,5 @@
 import "./Common.css";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
 import { LogInContext } from "./LogInContext";
@@ -17,11 +12,9 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // 로컬스토리지에서 jwt 가져오기
     const savedToken = localStorage.getItem("jwt");
     setToken(savedToken);
-  }, []);
-
-  useEffect(() => {
     if (token === null) {
       setLoggedUser({
         id: "",
