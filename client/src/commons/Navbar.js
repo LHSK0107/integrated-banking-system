@@ -43,11 +43,11 @@ const Navbar = () => {
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
+      localStorage.removeItem("jwt");
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
           if (response.status === 200) {
-            localStorage.removeItem("jwt");
             setLoggedUser({
               id: "",
               name: "",

@@ -14,10 +14,10 @@ const Index = () => {
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
     useContext(LogInContext);
   const navigate = useNavigate();
+  const savedToken = localStorage.getItem("jwt");
+  setToken(savedToken);
   useEffect(() => {
     // 로컬스토리지에서 jwt 가져오기
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
     if (token === null) {
       navigate("/login");
       setLoggedIn(false);
