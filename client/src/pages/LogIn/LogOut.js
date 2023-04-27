@@ -11,10 +11,10 @@ export default function LogOut() {
   if (token === null) {
     navigate("/login");
   } else {
+    localStorage.removeItem("jwt");
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // 확인 버튼 클릭시
       axios.post("http://localhost:8080/api/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
-      localStorage.removeItem("jwt");
       setLoggedUser({
         id: "",
         name: "",
