@@ -3,6 +3,7 @@ package com.lhsk.iam.domain.user.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -121,6 +122,21 @@ public class UserController {
 	// 로그아웃
 	@PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("refreshToken".equals(cookie.getName())) {
+	                // 쿠키의 값을 비우고 유효 시간을 과거로 설정하여 삭제합니다.
+	                cookie.setValue(null);
+	                cookie.setMaxAge(0);
+	                cookie.setHttpOnly(true);
+	                cookie.setSecure(true); // HTTPS를 사용하는 경우에만 필요합니다.
+	                cookie.setPath("/");
+	                response.addCookie(cookie);
+	                break;
+	            }
+	        }
+	    }
         // SecurityContextHolder에서 인증 정보를 제거합니다.
         SecurityContextHolder.clearContext();
         // 성공적으로 로그아웃 되었다는 응답을 반환합니다.
