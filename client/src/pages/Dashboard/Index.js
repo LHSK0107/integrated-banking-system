@@ -18,7 +18,7 @@ const Index = () => {
   setToken(savedToken);
   useEffect(() => {
     // 로컬스토리지에서 jwt 가져오기
-    if (token === null) {
+    if (savedToken === null) {
       navigate("/login");
       setLoggedIn(false);
     } else {
