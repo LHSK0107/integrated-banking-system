@@ -24,17 +24,14 @@
   border-right: 1px solid var(--color-lightgray);
 }
 .quick figure {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   margin-bottom: 1rem;
   border-radius: 50%;
   background-color: var(--color-white);
 }
 .quick a:hover figure {
   background-color: var(--color-background);
-}
-.quick figure img {
-  
 }
 /* --- quick */
 
