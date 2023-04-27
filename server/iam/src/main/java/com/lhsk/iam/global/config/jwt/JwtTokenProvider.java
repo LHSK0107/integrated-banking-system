@@ -7,11 +7,13 @@ import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.lhsk.iam.global.config.JwtConfig;
 import com.lhsk.iam.global.config.auth.PrincipalDetails;
+import com.lhsk.iam.global.config.auth.PrincipalDetailsService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,6 +30,8 @@ public class JwtTokenProvider {
 	
 	@Autowired
     private JwtConfig jwtConfig;
+	@Autowired
+	private PrincipalDetailsService principalDetailsService;
 	
 	private SecretKey secretKey;
 	
@@ -64,7 +68,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtConfig.getRefreshExpirationTime());
 		
         String refreshToken = Jwts.builder()
-                .setSubject(principalDetailis.getUsername())
+                .setSubject(principalDetailis.getUserVO().getId())
                 .setId(UUID.randomUUID().toString())			// JTI(jwt의 고유아이디)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
@@ -73,6 +77,13 @@ public class JwtTokenProvider {
 
         return refreshToken;
     }
+	
+	// 액세스토큰 재발급시 비밀번호 없이 Authentication 객체를 생성 및 반환
+	public Authentication getAuthenticationFromRefreshToken(String refreshToken) {
+	    String username = getUsernameFromToken(refreshToken);
+	    PrincipalDetails principalDetails = (PrincipalDetails) principalDetailsService.loadUserByUsername(username);
+	    return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+	}
 	
 	// 유저아이디 추출
 	public String getUsernameFromToken(String token) {
@@ -105,12 +116,10 @@ public class JwtTokenProvider {
 	                .parseClaimsJws(token);
 	                
 	        if (claims.getBody().getExpiration().before(new Date())) {
-	            return false;
+	        	System.out.println("토큰이 만료됨" + token);
+	            throw new ExpiredJwtException(null, claims.getBody(), "Token has expired");
 	        }
 	        return true;
-	    } catch (ExpiredJwtException e) {
-	        // 토큰이 만료된 경우에 대한 처리
-	    	log.info("토큰이 만료됨");
 	    } catch (MalformedJwtException e) {
 	        // 토큰 구조가 올바르지 않은 경우에 대한 처리
 	    	log.info("토큰의 구조가 올바르지 않음");
