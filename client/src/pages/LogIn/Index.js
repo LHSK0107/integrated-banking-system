@@ -96,8 +96,6 @@ const Index = () => {
       });
   };
 
-  // console.log(watch("example")); // watch input value by passing the name of it
-
   return (
     <div className="login_section">
       <div className="inner flex justify_center">

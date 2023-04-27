@@ -14,15 +14,13 @@ const UpdateInfo = () => {
     useContext(LogInContext);
   const navigate = useNavigate();
 
-  // 로컬스토리지에서 jwt 가져오기
-  useEffect(() => {
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
-    getUserInfo(); // 서버에서 회원정보 가져오기
-  }, []);
-
   // 토큰으로 로그인 context api 세팅
   useEffect(() => {
+    // 로컬스토리지에서 jwt 가져오기
+    const savedToken = localStorage.getItem("jwt");
+    setToken(savedToken);
+    // 서버에서 회원정보 가져오기
+    getUserInfo();
     if (token === null) {
       // 토큰이 없다면
       setLoggedIn(false);
@@ -67,26 +65,6 @@ const UpdateInfo = () => {
   const [telValue, setTelValue] = useState("");
   console.log(prePwValue, pwValue, confirmPwValue, telValue);
 
-  // 빈 값일 때 unregister
-//   const blankUnreg = () => {
-//     if(prePwValue === "") {
-//         unregister("presentPassword");
-//         setPrePwValue(null);
-//     }
-//     if(pwValue === "") {
-//         unregister("presentPassword");
-//         setPwValue(null);
-//     }
-//     if(confirmPwValue === "") {
-//         unregister("presentPassword");
-//         setConfirmPwValue(null);
-//     }
-//     if(telValue === "") {
-//         unregister("presentPassword");
-//         setTelValue(null);
-//     }
-//   }
-
   // form 유효성 검사
   const schema = yup.object().shape({
     presentPassword: yup
@@ -118,7 +96,7 @@ const UpdateInfo = () => {
       .string()
       .matches(
         /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/,
-        "핸드폰번호 형식으로 입력해주세요."
+        "010-0000-0000 형식으로 입력해주세요."
       )
       .transform((value) => (value === "" ? null : value))
       .nullable(),
@@ -127,7 +105,7 @@ const UpdateInfo = () => {
     register,
     handleSubmit,
     formState: { errors },
-    unregister
+    unregister,
   } = useForm({
     resolver: yupResolver(schema),
     // mode: "onChange",
@@ -135,65 +113,88 @@ const UpdateInfo = () => {
 
   // 수정사항 보내기
   const onSubmit = (data) => {
-    // 빈 값일 때 unregister
-    // blankUnreg();
-    if(data.presentPassword === null && data.password === null && data.confirmPassword === null && data.tel === null) {
-        console.log("모두 null");
-        alert("변경사항이 없습니다.")
-        return false;
-    } else if(data.presentPassword !== null || data.password !== null || data.confirmPassword !== null) {
-        // 비밀번호 쪽을 하나라도 건들였다면 현재 비밀번호 확인
-        axios.post("http://localhost:8080/api/users/checkPass", {
-            userNo: loggedUser.userNo,
-            password: data.presentPassword
-        }).then((res) => {
-            console.log(res);
-            console.log(res.data);
-            if(res.status === 200 && res.data === true) {
-                // 비밀번호 수정
-                axios
-                  .put("http://localhost:8080/api/users/", {
-                    userNo: loggedUser.userNo,
-                    password: data.password,
-                    phone: data.tel
-                  })
-                  .then((res) => {
-                    console.log(res);
-                    console.log(res.data);
-                    console.log(data);
-                    if (res.status === 200 && res.data === true) {
-                        alert("수정완료");
-                    } else if (res.data === false) {
-                      alert("비밀번호 수정 실패");
-                      return false;
-                    }
-                  })
-                  .catch((err) => {console.log(err);});
-            }
-        }).catch((err) => {console.log(err);})
-    } else if(data.tel !== null) {
-        console.log(data);
-        // axios
-        //   .put("http://localhost:8080/api/users/", {
-        //     userNo: loggedUser.userNo,
-        //     password: data.password,
-        //   })
-        //   .then((res) => {
-        //     console.log(res);
-        //     console.log(res.data);
-        //     if (res.status === 200 && res.data === true) {
-        //     } else if (res.data === false) {
-        //       alert("변경한 정보가 없습니다.");
-        //       return false;
-        //     }
-        //   });
+    // const values = Object.values(data);
+    // const result = values.filter(val => {return val != null})
 
+    // console.log(values);
+
+    // if(result.length) {
+    //     console.log("result: ", result);
+    // }else {
+    //     console.log("모두 null");
+    // }
+
+    // 빈 값일 때 unregister
+    if (
+      data.presentPassword === null &&
+      data.password === null &&
+      data.confirmPassword === null &&
+      data.tel === null
+    ) {
+      console.log("모두 null");
+      alert("변경사항이 없습니다.");
+      // return false;
+    } else if (
+      data.presentPassword !== null ||
+      data.password !== null ||
+      data.confirmPassword !== null
+    ) {
+      // 비밀번호 쪽을 하나라도 건들였다면 현재 비밀번호 확인
+      axios
+        .post("http://localhost:8080/api/users/checkPass", {
+          userNo: loggedUser.userNo,
+          password: data.presentPassword,
+        })
+        .then((res) => {
+          console.log(res);
+          console.log(res.data);
+          if (res.status === 200 && res.data === true) {
+            // 비밀번호 수정
+            axios
+              .put("http://localhost:8080/api/users/", {
+                userNo: loggedUser.userNo,
+                password: data.password,
+                phone: data.tel,
+              })
+              .then((res) => {
+                console.log(res);
+                console.log(res.data);
+                console.log(data);
+                if (res.status === 200 && res.data === true) {
+                  alert("수정완료");
+                } else if (res.data === false) {
+                  alert("비밀번호 수정 실패");
+                  return false;
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (data.tel !== null) {
+      console.log(data);
+      // axios
+      //   .put("http://localhost:8080/api/users/", {
+      //     userNo: loggedUser.userNo,
+      //     password: data.password,
+      //   })
+      //   .then((res) => {
+      //     console.log(res);
+      //     console.log(res.data);
+      //     if (res.status === 200 && res.data === true) {
+      //     } else if (res.data === false) {
+      //       alert("변경한 정보가 없습니다.");
+      //       return false;
+      //     }
+      //   });
     } else {
-        console.log("else");
+      console.log("else");
     }
   };
-  
-console.log()
 
   return (
     <div className="updateInfo">
@@ -237,7 +238,9 @@ console.log()
                 onChange={(e) => setPrePwValue(e.target.value)}
               />
             </div>
-            {errors.presentPassword &&<span>{errors.presentPassword?.message}</span>}
+            {errors.presentPassword && (
+              <span>{errors.presentPassword?.message}</span>
+            )}
           </li>
           <li className="flex align_center">
             <p>변경할 비밀번호</p>
