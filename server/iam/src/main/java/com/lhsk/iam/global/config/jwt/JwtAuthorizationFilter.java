@@ -21,6 +21,9 @@ import com.lhsk.iam.domain.user.model.vo.UserVO;
 import com.lhsk.iam.global.config.JwtConfig;
 import com.lhsk.iam.global.config.auth.PrincipalDetails;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private LoginMapper loginMapper;
@@ -57,14 +60,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// 내가 SecurityContext에 직접접근해서 세션을 만들때 자동으로 UserDetailsService에 있는
 		// loadByUsername이 호출됨.
 		String jwtToken = request.getHeader(jwtConfig.getHeaderString()).replace(jwtConfig.getTokenPrefix(), "");
-		System.out.println("accessToken : "+jwtToken);
+		log.info("accessToken : "+jwtToken);
 		
 		if(!jwtTokenProvider.validateToken(jwtToken)) {
-			System.out.println("validateToken false");
+			log.info("validateToken false");
 			chain.doFilter(request, response);
 		} else {
 			String id = jwtTokenProvider.getUsernameFromToken(jwtToken);
-			System.out.println("doFilterInternal : " + id);
+			log.info("doFilterInternal : " + id);
 			// 서명이 정상적으로 됨
 			if(id != null) {
 				
