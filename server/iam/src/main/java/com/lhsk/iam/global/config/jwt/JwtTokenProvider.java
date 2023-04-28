@@ -22,6 +22,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -114,20 +115,18 @@ public class JwtTokenProvider {
 	                .setSigningKey(secretKey)
 	                .build()
 	                .parseClaimsJws(token);
-	                
-	        if (claims.getBody().getExpiration().before(new Date())) {
-	        	System.out.println("토큰이 만료됨" + token);
-	            throw new ExpiredJwtException(null, claims.getBody(), "Token has expired");
-	        }
 	        return true;
+	    } catch(ExpiredJwtException e) {
+	    	log.info("토큰이 만료됨 " + token);
+	    	return false;
 	    } catch (MalformedJwtException e) {
 	        // 토큰 구조가 올바르지 않은 경우에 대한 처리
-	    	log.info("토큰의 구조가 올바르지 않음");
-	    } catch (Exception e) {
-	        // 기타 예외에 대한 처리
-	    	log.info("validateToken 기타 예외");
+	    	log.info("토큰의 구조가 올바르지 않음 " + token);
+	    	return false;
+	    }  catch(SignatureException e) {
+	    	// Jwt가 올바르게 서명되지 않음 -> 스프링 재실행시 일어날듯
+	    	log.info("서명이 일치하지 않음 " + token);
+	    	return false;
 	    }
-	    
-	    return false;
 	}
 }
