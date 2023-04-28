@@ -1,31 +1,30 @@
 package com.lhsk.iam.global.config.jwt;
 
-import java.util.Enumeration;
-import java.util.Iterator;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lhsk.iam.global.config.JwtConfig;
-import com.lhsk.iam.global.config.auth.PrincipalDetails;
 import com.lhsk.iam.global.config.auth.PrincipalDetailsService;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class TokenController {
 	
+	@Autowired
 	private JwtConfig jwtConfig;
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
@@ -52,25 +51,32 @@ public class TokenController {
                 }
 	        }
 	    }
-	    
+
+    	// 리프레시 토큰 유효성 검사
 	    try {
-	    	// 리프레시 토큰 유효성 검사
 	    	if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+	    		log.info("리프레시 토큰 : " + refreshToken);
 	    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
 	    	}
-	    } catch (ExpiredJwtException e) {
-	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token has expired.");
-		}
-	    
+	    } catch(ExpiredJwtException e) {
+	    	// 토큰이 만료됨
+	    	log.info("토큰이 만료됨 : " + refreshToken);
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료됐습니다.");
+	    } catch(MalformedJwtException e) {
+	    	// 토큰 구조가 올바르지 않은 경우에 대한 처리
+	    	log.info("토큰의 구조가 올바르지 않음 : " + refreshToken);
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("손상된 토큰입니다.");
+	    } catch(SignatureException e) {
+	    	// Jwt가 올바르게 서명되지 않음 -> 스프링 재실행시 일어날듯
+	    	log.info("서명이 일치하지 않음 : " + refreshToken);
+	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("서명이 일치하지 않습니다.");
+	    }
 	    
 	    Authentication authentication = jwtTokenProvider.getAuthenticationFromRefreshToken(refreshToken);
 	    String newAccessToken = jwtTokenProvider.createAccessToken(authentication);
-	    System.out.println("재발급한 액세스토큰"+newAccessToken);
+	    log.info("재발급한 액세스토큰 : "+newAccessToken);
 	    return ResponseEntity.ok().header(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix() + newAccessToken).build();
 	}
-	
-	
-	
 
 	
 }
