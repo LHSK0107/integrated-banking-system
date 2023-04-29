@@ -41,8 +41,8 @@ li {
   list-style: none;
 }
 img {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   -o-object-fit: cover;
   object-fit: cover;
 }
@@ -104,7 +104,8 @@ select option:hover {
 /* 공통 속성 class --- */
 #wrap {
     position: relative;
-    /* top: 50px; */
+    min-height: 300px;
+    top: 100px;
 }
 .inner > div {
   padding: 50px 0;

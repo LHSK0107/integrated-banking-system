@@ -1,4 +1,4 @@
-import "./index.css";
+import "./404.css";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotFoundBgImg from "../../assets/images/notfound_bg.png";

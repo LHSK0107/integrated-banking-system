@@ -3,6 +3,7 @@ package com.lhsk.iam.domain.user.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +22,8 @@ import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
 import com.lhsk.iam.domain.user.service.UserService;
+import com.lhsk.iam.global.config.JwtConfig;
+import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,31 +34,60 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	// 생성자 주입
 	private final UserService userService;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtConfig jwtConfig;
 	
 	// id 중복 체크
 	@PostMapping("/api/signup/id")
-	public String checkDuplicateId(@RequestBody UserVO userVO) {
+	public ResponseEntity<?> checkDuplicateId(@RequestBody UserVO userVO) {
 		log.info("UserController.CheckDuplicateId");
-//		log.info(userVO.getId());
-		return "{\"status\":\""+userService.checkDuplicateId(userVO.getId())+"\"}";
+		boolean flag = userService.checkDuplicateId(userVO.getId());
+		// 상태코드 200과 함께 중복되면 true, 중복되지 않으면 false 반환
+		return new ResponseEntity<>(flag, HttpStatus.OK);
 	}
 	
 	// email 중복 체크
 	@PostMapping("/api/signup/email")
-	public String checkDuplicateEmail(@RequestBody UserVO userVO) {
+	public ResponseEntity<?> checkDuplicateEmail(@RequestBody UserVO userVO) {
 		log.info("UserController.CheckDuplicateEmail");
-//		log.info(userVO.getEmail());
-		return "{\"status\":\""+userService.checkDuplicateEmail(userVO.getEmail())+"\"}";
+		boolean flag = userService.checkDuplicateEmail(userVO.getEmail());
+		// 상태코드 200과 함께 중복되면 true, 중복되지 않으면 false 반환
+		return new ResponseEntity<>(flag, HttpStatus.OK);
 	}
 	
-	// email 인증 /api/signup/email
-
+	// password 일치 확인
+	@PostMapping("/api/users/checkPass")
+	public ResponseEntity<?> checkPassword(
+											@RequestBody Map<String, Object> data, 
+											HttpServletRequest httpServletRequest	
+	) {
+		log.info("UserController.CheckPassword");
+		// 토큰으로 userCode parsing
+		String accessToken = httpServletRequest
+								.getHeader("Authorization")
+								.replace(jwtConfig.getTokenPrefix(), "");
+		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
+		// userCode가 user, manager, admin일 때 password 일치 확인 가능
+		if (
+			userCode.equals("ROLE_USER" ) || 
+			userCode.equals("ROLE_MANAGER") || 
+			userCode.equals("ROLE_ADMIN")
+		) {
+			// Map으로 받은 data를 key로 parsing
+			boolean flag = userService.checkPassword((int)data.get("userNo"), (String)data.get("password"));
+			// true/false 와 함께 200 상태코드 반환
+			return new ResponseEntity<>(flag, HttpStatus.OK);
+		// 그 외에는 403 forbidden 접근 제한
+		} else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+	
 	// 회원가입
-	@PostMapping("/api/users")
-	public String signup(@RequestBody UserVO userVO) {
+	@PostMapping("/api/signup")
+	public ResponseEntity<?> signup(@RequestBody UserVO userVO) {
 		log.info("UserController.signup");
-//		log.info("userVO: "+userVO);
-		return "{\"status\":\""+userService.signup(userVO)+"\"}";
+		if (userService.signup(userVO).equals("success"))
+			return ResponseEntity.ok().body("success");
+		else return ResponseEntity.badRequest().body("fail");
 	}
 	
 	// 회원정보 수정
@@ -90,21 +122,27 @@ public class UserController {
 	// 로그아웃
 	@PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("refreshToken".equals(cookie.getName())) {
+	                // 쿠키의 값을 비우고 유효 시간을 과거로 설정하여 삭제합니다.
+	                cookie.setValue(null);
+	                cookie.setMaxAge(0);
+	                cookie.setHttpOnly(true);
+	                cookie.setSecure(true); // HTTPS를 사용하는 경우에만 필요합니다.
+	                cookie.setPath("/");
+	                response.addCookie(cookie);
+	                break;
+	            }
+	        }
+	    }
         // SecurityContextHolder에서 인증 정보를 제거합니다.
         SecurityContextHolder.clearContext();
         // 성공적으로 로그아웃 되었다는 응답을 반환합니다.
         return ResponseEntity.ok().body("로그아웃 되었습니다.");
     }
 	
-	// 회원 비밀번호 일치 확인
-	@PostMapping("/api/users/checkPass")
-	public ResponseEntity<?> checkPassword(@RequestBody Map<String, Object> data) {
-		// Map으로 받은 data를 key로 parsing
-		log.info("userNo: "+data.get("userNo").toString()+" password: "+data.get("password"));
-		// true/false 와 함께 200 상태코드 반환
-		boolean flag = userService.checkPassword((int)data.get("userNo"), (String)data.get("password"));
-		return new ResponseEntity<>(flag, HttpStatus.OK);
-	}
 	
 		
 }

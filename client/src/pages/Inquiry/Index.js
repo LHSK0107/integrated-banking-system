@@ -17,28 +17,26 @@ const Index = () => {
   // 토큰 확인
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
   const navigate=useNavigate();
+  // 로컬스토리지에서 jwt 가져오기
+  const savedToken = localStorage.getItem("jwt");
+  setToken(savedToken);
   
   useEffect(() => {
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
-  }, []);
-  
-  // useEffect(() => {
-  //   if (token === null) {
-  //     setLoggedIn(true);
-  //     // navigate("/login");
-  //   } else {
-  //     const decodedPayload = decodeJwt(token);
-  //     setLoggedUser({
-  //       id: decodedPayload.id,
-  //       name: decodedPayload.name,
-  //       exp: decodedPayload.exp,
-  //       userCode: decodedPayload.userCode,
-  //       userNo: decodedPayload.userNo
-  //     });
-  //     setLoggedIn(true);
-  //   }
-  // }, [token, setLoggedUser, setLoggedIn]);
+    if (savedToken === null) {
+      setLoggedIn(false);
+      // navigate("/login");
+    } else {
+      const decodedPayload = decodeJwt(savedToken);
+      setLoggedUser({
+        id: decodedPayload.id,
+        name: decodedPayload.name,
+        exp: decodedPayload.exp,
+        userCode: decodedPayload.userCode,
+        userNo: decodedPayload.userNo
+      });
+      setLoggedIn(true);
+    }
+  }, [token, setLoggedUser, setLoggedIn]);
 
   // 계좌 구현
   const [statementList, setStatementList] = useState([]);

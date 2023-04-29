@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+/*
+ * deprecated됐음
+ * JwtTokenProvider 객체를 Autowired로 받고 getUserCodeFromToken(token)를 호출하여
+ * 유저 권한을 추출할 수 있음. 현재 이 클래스를 사용하는 모든 곳에서 JwtTokenProvider를 적용하도록 수정 요구
+ */
 @Component
 public class JwtPermissionVerifier {
 
