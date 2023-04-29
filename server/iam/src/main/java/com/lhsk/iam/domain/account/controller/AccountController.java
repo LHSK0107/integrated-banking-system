@@ -20,7 +20,9 @@ import com.lhsk.iam.domain.account.model.vo.InoutVO;
 import com.lhsk.iam.domain.account.service.AccountApiService;
 import com.lhsk.iam.domain.account.service.AccountService;
 import com.lhsk.iam.domain.account.service.InoutProcessingService;
+import com.lhsk.iam.global.config.JwtConfig;
 import com.lhsk.iam.global.config.jwt.JwtPermissionVerifier;
+import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +36,17 @@ public class AccountController {
 	private final AccountService accountService;
 	private final AccountApiService accountApiService;
 	private final InoutProcessingService inoutProcessingService;
-	private final JwtPermissionVerifier jwtPermissionVerifier;	
+	private final JwtPermissionVerifier jwtPermissionVerifier;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtConfig jwtConfig;
 	
 	// 전체 계좌정보 조회 메서드(ROLE_MANAGER, ROLE_ADMIN)
 	@GetMapping
 	public ResponseEntity<List<AccountVO>> findAllAccount(HttpServletRequest httpServletRequest) {
 		log.info("AccountController.AccountList");
+		String accessToken = httpServletRequest.getHeader("Authorization").replace(jwtConfig.getTokenPrefix(), "");
 		// JWT에서 userCode를 추출 
-		String userCode = jwtPermissionVerifier.getUserCodeFromJWT(httpServletRequest);
+		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
 		// USER는 403, MANAGER & ADMIN은 200, 그 외는 400 HttpStatus 반환
 		if (userCode.equals("ROLE_USER")) 
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);

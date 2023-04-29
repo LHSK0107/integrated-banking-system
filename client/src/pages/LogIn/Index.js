@@ -1,5 +1,5 @@
-import "./index.css";
-import React, { useCallback, useContext, useState } from "react";
+import "./login.css";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,9 +11,7 @@ import decodeJwt from "../../hooks/decodeJwt";
 // import jwt_decode from 'jsonwebtoken';
 
 const Index = () => {
-  const { loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
-  console.log(loggedUser);
-  console.log(loggedIn);
+  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
 
   const navigate = useNavigate();
 
@@ -63,6 +61,10 @@ const Index = () => {
         password: data.password,
       })
       .then((response) => {
+
+        // axios.defaults.withCredentials = true;
+        // axios.post("http://192.168.240.140:8080/refreshToken")
+
         // 로그인 성공 시
         if(response.status === 200 && response.headers.get("Authorization")) {
           const token = response.headers.get("Authorization").split(" ")[1];
@@ -87,13 +89,12 @@ const Index = () => {
         navigate("/dashboard")
       })
       .catch((error) => {
-        if(error) console.log(error);
+        alert(error);
+        return false;
       })
       .finally(() => {
       });
   };
-
-  // console.log(watch("example")); // watch input value by passing the name of it
 
   return (
     <div className="login_section">

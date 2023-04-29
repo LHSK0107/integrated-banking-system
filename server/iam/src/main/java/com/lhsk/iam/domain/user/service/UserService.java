@@ -51,14 +51,20 @@ public class UserService {
 		for (String encryptedEmail : emailList) {
 			try {
 				String decryptedEmail = aesGcmEncrypt.decrypt(encryptedEmail, key);
-				log.info(encryptedEmail);
-				log.info(decryptedEmail);
+//				log.info(encryptedEmail);
+//				log.info(decryptedEmail);
 				if (email.equals(decryptedEmail)) return true;
 			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
+				throw new RuntimeException("Failed to decrypt user information", e);
 			}
 		}
 		return false;
+	}
+	
+	// 비밀번호 일치 확인
+	public boolean checkPassword(int userNo, String password) {
+		// DB에 저장된 password와 Client에서 받아온 password가 일치하는 지 비교 후, true / false 반환 
+		return bCryptPasswordEncoder.matches(password, userMapper.checkPassword(userNo));
 	}
 	
 	// 최초 가입 유무 체크
@@ -74,34 +80,32 @@ public class UserService {
 			// existUser 값이 0이면 userCode를 ROLE_ADMIN으로 세팅
 			String userCode = checkExistsUser() == 0 ? "ROLE_ADMIN" : "ROLE_USER";
 			userVO.setUserCode(userCode);
-//			log.info(userVO.getUserCode());
 		// 회원 정보 암호화
 			encryptUser(userVO);
-		// mapper의 signup메서드 호출 (조건 : VO객체를 넘겨줘야 함)
+		// mapper의 signup메서드 호출 (조건 : VO 객체를 넘겨줘야 함)
 			userMapper.signup(userVO);			
-//		} catch (NoSuchAlgorithmException e) {
-//			log.error("Error: " + e.getMessage());
-//			return "fail";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "fail";
 		}
-		return "ok";
+		return "success";
 	}
 
 	// 회원정보 수정
 	public String updateUser(UpdateUserVO updateUserVO) {
-		encryptUser(updateUserVO);
-		// 변경하는 값이 없는 경우 : VO에서 변경 될 수 있는 값들이 모두 null로 넘어올 경우
+		// 변경하는 값이 없는 경우 : VO에서 변경 될 수 있는 값들이 모두 null이나 ""로 넘어올 경우 fail 반환
 		if (
-			updateUserVO.getUserCode() == null
-			&& updateUserVO.getPassword() == null
-			&& updateUserVO.getName() == null
-			&& updateUserVO.getDept() == null
-			&& updateUserVO.getPhone() == null
+			(updateUserVO.getUserCode() == null || updateUserVO.getUserCode().equals(""))
+			&& (updateUserVO.getPassword() == null || updateUserVO.getPassword().equals(""))
+			&& (updateUserVO.getName() == null || updateUserVO.getName().equals(""))
+			&& (updateUserVO.getDept() == null || updateUserVO.getDept().equals(""))
+			&& (updateUserVO.getPhone() == null || updateUserVO.getPhone().equals(""))
 		) return "fail";
-		else if (userMapper.updateUser(updateUserVO) > 0) return "ok";
-		else return "fail";
+		else {
+			// 변경된 정보를 암호화하여 update 하고 정상적으로 수행 되었으면 ok 반환
+			if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) return "ok";
+			else return "fail";
+		}
 	}
 
 	// 회원 삭제
@@ -118,7 +122,6 @@ public class UserService {
 		for (int i=0; i<userList.size(); i++) {
 			DetailUserVO user = userList.get(i);
 			user = decryptUser(user);
-			log.info(user.toString());
 		}
 		log.info("userList size: "+userList.size());
 		return userList;
@@ -130,11 +133,6 @@ public class UserService {
 		return decryptUser(userMapper.findByUserNo(userNo));
 	}
 	
-	// 비밀번호 일치 확인
-	public boolean checkPassword(int userNo, String password) {
-		// DB에 저장된 password와 Client에서 받아온 password가 일치하는 지 비교 후, true / false 반환 
-		return bCryptPasswordEncoder.matches(password, userMapper.checkPassword(userNo));
-	}
 
 	
 //	------------------------------------------------------------------------------------
@@ -146,7 +144,6 @@ public class UserService {
 		// String[] -> byte[]로 번환
 		for (int i = 0; i < iv.length; i++) {
 		    iv[i] = Byte.parseByte(ivStringArray[i]);
-//		    log.info(iv[i]+"");
 		}
 		return iv;
 	}
@@ -160,7 +157,7 @@ public class UserService {
 			userVO.setEmail(aesGcmEncrypt.encrypt(userVO.getEmail(), key, iv));
 			userVO.setPhone(aesGcmEncrypt.encrypt(userVO.getPhone(), key, iv));
 		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Failed to encrypt user information", e);
 		}
 		return userVO;
 	}
@@ -177,7 +174,7 @@ public class UserService {
 			if (updateUserVO.getPhone() != null && !updateUserVO.getPhone().equals("")) {
 				updateUserVO.setPhone(aesGcmEncrypt.encrypt(updateUserVO.getPhone(), key, iv)); }
 		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Failed to encrypt user information", e);
 		}
 		return updateUserVO;
 	}
@@ -189,7 +186,7 @@ public class UserService {
 			detailUserVO.setEmail(aesGcmEncrypt.decrypt(detailUserVO.getEmail(), key));
 			detailUserVO.setPhone(aesGcmEncrypt.decrypt(detailUserVO.getPhone(), key));
 		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Failed to decrypt user information", e);
 		}
 		return detailUserVO;
 		
