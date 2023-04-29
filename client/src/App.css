@@ -212,7 +212,7 @@ select option:hover {
     font-size: .8rem;
 }
 .nav_depth figure{
-  width: 15px;
+  width: 10px;
   margin: 0 5px;
 }
 .nav_depth a img {
