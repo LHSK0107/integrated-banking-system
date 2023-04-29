@@ -6,22 +6,27 @@ const Breadcrumb = ({title, subMenu}) =>{
   return (
     <div className="nav_depth flex justify_end align_center">
       <Link className="flex justify_end align_center">
-        <img
-          src={HomeIcon}
-          alt="home img icon"
-        />&nbsp;
-        홈
-        &nbsp;
+        <figure>
+          <img
+            src={HomeIcon}
+            alt="home img icon"
+          />
+        </figure>
+        &nbsp;홈&nbsp;
       </Link>
-      <img
-        src={Arrow}
-        alt="arrow img icon"
-      />
+      <figure>
+        <img
+          src={Arrow}
+          alt="arrow img icon"
+        />
+      </figure>
       <p>&nbsp;{title}&nbsp;</p>
+      <figure>
       <img
         src={Arrow}
         alt="arrow img icon"
       />
+      </figure>
       <p>
         <span>&nbsp;{subMenu}&nbsp;</span>
       </p>
