@@ -32,7 +32,7 @@ const Index = () => {
   return (
     <div className="signup_section">
       <div className="inner">
-        <div className="signup_wrap flex justify_center">
+        <div className="signup_wrap flex justify_between">
           <div className="signup_image_section flex justify_center align_center">
             <figure>
               <img src={SignUpBgImg} alt="회원가입 페이지 이미지" />

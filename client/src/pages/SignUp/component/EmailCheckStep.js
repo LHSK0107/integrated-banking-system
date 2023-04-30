@@ -4,21 +4,14 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
-const EmailForm = () => {
+import {Link} from "react-router-dom";
+const EmailCheckStep = () => {
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
   // form의 각 요소 지정
   const schema = yup.object().shape({
-    id: yup.string().required("아이디를 다시 입력해주세요."),
-    password: yup
-      .string()
-      .min(8, "최소 8자 이상 입력해주세요.")
-      .max(14)
-      .required("패스워드를 다시 입력해주세요."),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "패스워드가 틀립니다.")
-      .required("패스워드를 다시 입력해주세요."),
     email: yup.string().email().required("이메일을 다시 입력해주세요."),
+    checkTerm1: yup.bool().oneOf([true], 'IAM 서비스 이용약관에 동의가 필요합니다'),
+    checkTerm2: yup.bool().oneOf([true], '개인정보 수집 및 이용에 동의가 필요합니다'),
   }).required();
   const { register ,handleSubmit, formState: { errors }, unregister} = useForm({
     resolver: yupResolver(schema),
@@ -62,36 +55,7 @@ const EmailForm = () => {
     <div className="form_container">
       <form className="userInfo_form" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <input
-            type="text"
-            placeholder="아이디를 입력하세요."
-            {...register("id")}
-            value={userInputValue.id}
-            onChange={onChange}
-          />
-          <p>{errors.id?.message}</p>
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="패스워드를 입력하세요."
-            {...register("password")}
-            value={userInputValue.password}
-            onChange={onChange}
-          />
-          <p>{errors.password?.message}</p>
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="패스워드를 다시 입력하세요."
-            {...register("confirmPassword")}
-            value={userInputValue.confirmPassword}
-            onChange={onChange}
-          />
-          <p>{errors.confirmPassword?.message}</p>
-        </div>
-        <div>
+          <p>E-mail</p>
           <input
             type="text"
             placeholder="이메일을 입력하세요."
@@ -99,8 +63,16 @@ const EmailForm = () => {
             value={userInputValue.email}
             onChange={onChange}
           />
-          <p>{errors.email?.message}</p>
+          {errors.email && <p className="signup-error-msg">{errors.email?.message}</p>}
         </div>
+        <div className="signup-checkbox-wrap flex justify_between">
+          <p>[필수] <Link className="signup-term-link" to="">IAM 서비스 이용약관</Link>에 동의합니다.</p>
+          <input
+            type="checkbox"
+            {...register("checkTerm1")}
+          />
+        </div>
+        {errors.checkTerm1 && <p className="signup-error-msg">{errors.checkTerm1?.message}</p>}
         <hr />
         <input type="submit" value="다음" />
       </form>
@@ -108,4 +80,4 @@ const EmailForm = () => {
   );
 };
 
-export default EmailForm;
+export default EmailCheckStep;
