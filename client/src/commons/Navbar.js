@@ -145,7 +145,7 @@ const Navbar = () => {
                 <span onClick={() => navigate("/inquiry")}>조회</span>
               </li>
               <li>
-                <span onClick={() => navigate("/inquiry")}>보고서</span>
+                <span onClick={() => navigate("/dailyReport")}>보고서</span>
               </li>
               <li>
                 <span onClick={() => navigate("/dashboard")}>대시보드</span>
