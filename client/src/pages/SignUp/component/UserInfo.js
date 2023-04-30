@@ -1,11 +1,14 @@
 /* eslint-disable */
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState, useRef } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
 import axios from 'axios';
+import useAxiosAcctInquiry from "../../../api/useAxios";
 const UserInfo = () => {
+  const idRef = useRef();
+
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
   // form의 각 요소 지정
   const schema = yup.object().shape({
@@ -32,12 +35,12 @@ const UserInfo = () => {
       .required("이메일을 입력해주세요."),
   }).required();
   const { register ,handleSubmit, formState: { errors }, unregister} = useForm({
-    resolver: yupResolver(schema), mode: "onChange",
+    resolver: yupResolver(schema)
+    // , mode: "onChange",
   });
-  const [isCheckID, setIsCheckID] = useState(false);
   // 다음 버튼 클릭 시, formData에 각 입력값 전달
   const onSubmit = (data) => {
-    if(isCheckID===false) {
+    if(checkId===false) {
       alert('id 중복확인을 해주세요');
       return false
     };
@@ -47,6 +50,7 @@ const UserInfo = () => {
       confirmPassword: data.confirmPassword,
       email: data.email,
     };
+    console.log(values);
     setFormData({ ...formData, ...values });
     setPageNum(pageNum + 1);
   };
@@ -60,6 +64,7 @@ const UserInfo = () => {
   // input name별 onChange 관리
   const onChange = useCallback((e) => {
     const {name, value}=e.target;
+    console.log(e.target);
     setUserInputValue({...userInputValue,[name]:value});
   });
   useEffect(() => {
@@ -74,17 +79,20 @@ const UserInfo = () => {
     email: formData.email
     });
   }, []);
-  const checkID = () =>{
-    axios
-      .get("http://localhost:8080/api/signup/id", { 
+  const [checkId,setCheckId] = useState(false);
+  const checkID = (id) =>{
+    axios.post("http://localhost:8080/api/signup/id", { 
         id: userInputValue.id 
-      })
-      .then((res) => console.log(res.data));
-    axios
-      .get("http://localhost:8080/api/signup/email", {
-        email: "test5@gmail.com",
-      })
-      .then((res) => console.log(res.data));
+      }).then((res) => {
+        if(res.data===true){
+          alert("중복된 아이디가 있습니다. 아이디를 다시 입력해주십시오.");
+          setCheckId(false);
+          console.log(res.data);
+        } else {
+          setCheckId(true);
+          console.log(res.data);
+        }
+      });
   }
   
   return (
@@ -96,8 +104,17 @@ const UserInfo = () => {
             type="text"
             placeholder="아이디를 입력하세요."
             {...register("id")}
+            value={userInputValue.id}
+            onChange={onChange}
           />
-          <button onClick={checkID}>아이디 중복확인</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              checkID(userInputValue.id);
+            }}
+          >
+            아이디 중복확인
+          </button>
           <span>{errors.id?.message}</span>
         </div>
         <div>
@@ -106,6 +123,8 @@ const UserInfo = () => {
             type="password"
             placeholder="패스워드를 입력하세요."
             {...register("password")}
+            value={userInputValue.password}
+            onChange={onChange}
           />
           <span>{errors.password?.message}</span>
         </div>
@@ -115,6 +134,8 @@ const UserInfo = () => {
             type="password"
             placeholder="패스워드를 다시 입력하세요."
             {...register("confirmPassword")}
+            value={userInputValue.confirmPassword}
+            onChange={onChange}
           />
           <span>{errors.confirmPassword?.message}</span>
         </div>
@@ -124,6 +145,8 @@ const UserInfo = () => {
             type="text"
             placeholder="이메일을 입력하세요."
             {...register("email")}
+            value={userInputValue.email}
+            onChange={onChange}
             // value={userInputValue.email}
             // onChange={onChange}
           />
