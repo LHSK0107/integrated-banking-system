@@ -39,18 +39,7 @@ public class TokenController {
 	@PostMapping("/refreshToken")
 	public ResponseEntity<?> reAccessToken(HttpServletRequest req) {
 		// 쿠키에서 리프레시 토큰 추출
-	    System.out.println("Request Cookies:");
-	    Cookie[] cookies = req.getCookies();
-	    String refreshToken = null;
-	    if (cookies != null) {
-	        for (Cookie cookie : cookies) {
-	            System.out.println(cookie.getName() + ": " + cookie.getValue());
-	            if (cookie.getName().equals("refreshToken")) {
-                    refreshToken = cookie.getValue();
-                    break;
-                }
-	        }
-	    }
+	    String refreshToken = getRefreshTokenFromCookies(req);
 
     	// 리프레시 토큰 유효성 검사
 	    try {
@@ -77,6 +66,19 @@ public class TokenController {
 	    log.info("재발급한 액세스토큰 : "+newAccessToken);
 	    return ResponseEntity.ok().header(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix() + newAccessToken).build();
 	}
-
+	
+	// 쿠키로부터 리프레시 토큰을 추출하는 메소드
+	private String getRefreshTokenFromCookies(HttpServletRequest req) {
+	    Cookie[] cookies = req.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if (cookie.getName().equals("refreshToken")) {
+	            	log.info("리프레시 토큰 : "+cookie.getValue());
+	                return cookie.getValue();
+	            }
+	        }
+	    }
+	    return null;
+	}
 	
 }

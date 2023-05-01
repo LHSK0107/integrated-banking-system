@@ -63,8 +63,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		log.info("accessToken : "+jwtToken);
 		
 		if(!jwtTokenProvider.validateToken(jwtToken)) {
-			log.info("validateToken false");
-			chain.doFilter(request, response);
+		    log.info("validateToken false");
+//		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // HTTP 응답 코드 401 Unauthorized 설정
+//		    response.setContentType("application/json;charset=UTF-8"); // 응답 데이터 타입 설정
+//		    response.getWriter().write("{\"message\":\"Token has expired\"}"); // 실패 메시지 반환
+//		    return;
 		} else {
 			String id = jwtTokenProvider.getUsernameFromToken(jwtToken);
 			log.info("doFilterInternal : " + id);

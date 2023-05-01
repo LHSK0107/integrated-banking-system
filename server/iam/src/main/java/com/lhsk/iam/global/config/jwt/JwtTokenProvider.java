@@ -37,9 +37,9 @@ public class JwtTokenProvider {
 	private SecretKey secretKey;
 	
 	@PostConstruct
-    public void init() {
-		secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    }
+	public void init() {
+	    secretKey = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes());
+	}
 	
 	// 엑세스토큰 발급
 	public String createAccessToken(Authentication authentication) {
