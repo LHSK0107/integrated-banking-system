@@ -104,7 +104,8 @@ select option:hover {
 /* 공통 속성 class --- */
 #wrap {
     position: relative;
-    /* top: 50px; */
+    min-height: 300px;
+    top: 100px;
 }
 .inner > div {
   padding: 50px 0;
@@ -212,7 +213,7 @@ select option:hover {
     font-size: .8rem;
 }
 .nav_depth figure{
-  width: 15px;
+  width: 10px;
   margin: 0 5px;
 }
 .nav_depth a img {

@@ -4,6 +4,8 @@
   width: 100%;
   height: calc(100vh - 120px);
   padding: 40px;
+  position: relative;
+  height: 100%;
 }
 .signup_section >div > div {
   width: 48%;
@@ -13,11 +15,15 @@
 }
 .signup_section .signup_image_section figure{
   width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 .signup_section .signup_form_section h2 {
-  margin-bottom: 30px;
+  margin-bottom: 80px;
   text-align: center;
+}
+.signup_section .signup_wrap{
+  height: 80%;
 }
 .signup_form_wrap {
   /* width: 80%; */
@@ -27,17 +33,34 @@
 }
 /* 수정 */
 .signup_form_wrap form div {
-  margin-bottom: 20px;
+  /* margin-bottom: 60px; */
+}
+.signup_form_wrap input{
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+}
+.signup_form_wrap p {
+  margin-bottom: 10px;
+}
+.signup_form_wrap span {
+  color: rgb(254, 46, 46);
 }
 .userInfo_form div{
   width: 100%;
+  height: 100%;
+  padding:10px 0;
+}
+.userInfo_form label {
+  margin-bottom: 15px;
 }
 .progress_wrap {
   position: relative;
-  margin-bottom: 80px
+  margin-bottom: 70px
 }
 .progress_wrap::before {
-  display: block;
+  display: flex;
+  justify-content: center;
   content: "";
   position: absolute;
   width: 90%;
@@ -56,6 +79,15 @@
   transform: translate(-50%, 0);
   background-color: var(--color-gray);
 }
+.progress_wrap .step.active::after{
+  position: absolute;
+  content:"";
+  top:-22px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: aquamarine;
+}
 .progress_wrap .step span {
   display: block;
   width: 6px;
@@ -64,12 +96,13 @@
   border: 3px solid var(--color-darkgray);
   border-radius: 50%;
   z-index: 100;
+  margin-bottom: 30px;
 }
-.progress_wrap .step.active span {
+/* .progress_wrap .step.active span {
   border: 1px solid var(--color-gray);
   transition: 0.8s ease-in-out;
   background-color: var(--color-gray);
-}
+} */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
