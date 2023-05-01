@@ -4,6 +4,7 @@ package com.lhsk.iam.domain.user.model.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
@@ -22,6 +23,7 @@ public interface UserMapper {
 	int checkExistsUser();
 	
 	// 회원가입
+	@Transactional
 	int signup(UserVO userVO);
 	// 회원정보 수정
 	int updateUser(UpdateUserVO updateUserVO);
