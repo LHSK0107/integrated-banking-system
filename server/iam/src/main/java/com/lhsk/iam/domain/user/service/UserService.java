@@ -106,9 +106,9 @@ public class UserService {
 			if (userCode.equals("ROLE_USER")) {
 				// 변경할 수 없는 값이 들어온 경우
 				if (
-					(updateUserVO.getUserCode() != null || !updateUserVO.getUserCode().equals("")) &&
-					(updateUserVO.getName() != null || !updateUserVO.getName().equals("")) && 
-					(updateUserVO.getDept() != null || !updateUserVO.getDept().equals(""))
+					(updateUserVO.getUserCode() != null && !updateUserVO.getUserCode().equals("")) ||
+					(updateUserVO.getName() != null && !updateUserVO.getName().equals("")) || 
+					(updateUserVO.getDept() != null && !updateUserVO.getDept().equals(""))
 				) {
 					return "fail";
 				// 변경할 수 있는 값인 경우 
