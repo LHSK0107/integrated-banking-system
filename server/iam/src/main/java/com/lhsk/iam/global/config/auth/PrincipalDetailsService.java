@@ -37,7 +37,9 @@ public class PrincipalDetailsService implements UserDetailsService{
 		AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
 		try {
 			String name = aesGcmEncrypt.decrypt(userEntity.getName(), key);
+			String email = aesGcmEncrypt.decrypt(userEntity.getEmail(), key);
 			userEntity.setName(name);
+			userEntity.setEmail(email);
 		} catch (GeneralSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
