@@ -1,4 +1,4 @@
-package com.lhsk.iam.domain.admin.model.mapper;
+package com.lhsk.iam.domain.admin.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,4 +16,5 @@ public class LoginHistoryReqeustVO {
 	private int pageSize;	// 한 페이지에서 볼 건수
 	private int start;		// LIMIT에서 첫번째 파라미터값 (start-1) * pageSize
 	private String sort;	// 정렬기준
+	private String name;	// 검색대상
 }
