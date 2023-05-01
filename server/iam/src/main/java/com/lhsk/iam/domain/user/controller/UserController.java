@@ -61,12 +61,10 @@ public class UserController {
 		// Token에서 userCode parsing
 		String accessToken = request.getHeader("Authorization")
 									.replace(jwtConfig.getTokenPrefix(), "");
-		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
-		// userCode가 user, manager, admin일 때 password 일치 확인 가능
-		if (userCode.equals("ROLE_USER" ) || 
-			userCode.equals("ROLE_MANAGER") || 
-			userCode.equals("ROLE_ADMIN")
-		) {
+		int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
+		String id = jwtTokenProvider.getUsernameFromToken(accessToken);
+		// 토큰 소유자와 id가 본인과 일치하는 지 검증 후, password 일치 확인 가능
+		if (id.equals(userService.findByUserNo(userNo).getId())) {
 			// Map으로 받은 data를 key로 parsing
 			boolean flag = userService.checkPassword((int)data.get("userNo"), (String)data.get("password"));
 			// true/false 와 함께 200 상태코드 반환
@@ -113,16 +111,13 @@ public class UserController {
 				return new ResponseEntity<>("fail", HttpStatus.FORBIDDEN); 
 			}
 		// 2. manager나 admin일 때
-		} else if (userCode.equals("ROLE_MANAGER") || userCode.equals("ROLE_ADMIN")) {
+		} else {
 			String flag = userService.updateUser(userCode, updateUserVO);
 			// 쿼리 성공 여부에 따라 다른 상태코드 반환
 			if (flag.equals("success")) { 
 				return new ResponseEntity<>(flag, HttpStatus.OK); }
 			else { 
 				return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
-		// 3. userCode가 user, manager, admin이 아닌 경우 접근 제한
-		} else {
-			return new ResponseEntity<>("fail", HttpStatus.FORBIDDEN);
 		}
 	}
 	
@@ -136,7 +131,6 @@ public class UserController {
 		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
 		String id = jwtTokenProvider.getUsernameFromToken(accessToken);
 		
-		// userCode가 user, manager, admin일 때 탈퇴 가능
 		// 1. user일 때
 		if (userCode.equals("ROLE_USER" )) {
 			// 삭제하려는 회원과 토큰을 가진 회원이 동일한지 검증
@@ -176,16 +170,13 @@ public class UserController {
 					return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
 			}
 		// 3. admin일 때
-		} else if (userCode.equals("ROLE_ADMIN")) {
+		} else {
 			String flag = userService.deleteUser(userNo);
 			// 쿼리 성공 여부에 따라 다른 상태 코드 반환
 			if (flag.equals("success")) {
 				return new ResponseEntity<>(flag, HttpStatus.OK); }
 			else {
 				return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
-		// 4. userCode가 user, manger, admin이 아닐 때, 접근 제한
-		} else {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 	} 
 
@@ -242,11 +233,8 @@ public class UserController {
 				return new ResponseEntity<>(userInfo, HttpStatus.OK); 
 			}
 		// 3. admin일 때
-		} else if (userCode.equals("ROLE_ADMIN")) {
-			return new ResponseEntity<>(userInfo, HttpStatus.OK);
-		// 4. userCode가 user, manger, admin이 아닐 때, 접근 제한
 		} else {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>(userInfo, HttpStatus.OK);
 		}
 	}
 	
