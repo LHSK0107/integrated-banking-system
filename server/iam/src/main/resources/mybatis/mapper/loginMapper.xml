@@ -9,8 +9,8 @@
 	</select>
 	
 	<insert id="insertLoginHistory">
-    INSERT INTO user_login
-    VALUES (#{userNo}, #{name}, #{email}, #{loginDt})
-</insert>
+	    INSERT INTO user_login
+	    VALUES (#{userNo}, #{name}, #{email}, #{loginDt})
+	</insert>
 	
 </mapper>
