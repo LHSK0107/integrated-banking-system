@@ -38,9 +38,9 @@ public class UserService {
 	private byte[] iv = new byte[12];
 	
 	// id 중복체크
-	public boolean checkDuplicateId(String id) {
-		log.info("Duplicate id count: "+userMapper.checkDuplicateId(id));
-		if(userMapper.checkDuplicateId(id) > 0) return true;
+	public boolean checkExistsId(String id) {
+		log.info("Duplicate id count: "+userMapper.checkExistsId(id));
+		if(userMapper.checkExistsId(id) > 0) return true;
 		else return false;
 	}
 	
@@ -51,9 +51,7 @@ public class UserService {
 		for (String encryptedEmail : emailList) {
 			try {
 				String decryptedEmail = aesGcmEncrypt.decrypt(encryptedEmail, key);
-//				log.info(encryptedEmail);
-//				log.info(decryptedEmail);
-				if (email.equals(decryptedEmail)) return true;
+				if (email.equals(decryptedEmail)) { return true; }
 			} catch (GeneralSecurityException e) {
 				throw new RuntimeException("Failed to decrypt user information", e);
 			}
@@ -92,25 +90,57 @@ public class UserService {
 	}
 
 	// 회원정보 수정
-	public String updateUser(UpdateUserVO updateUserVO) {
+	public String updateUser(String userCode, UpdateUserVO updateUserVO) {
 		// 변경하는 값이 없는 경우 : VO에서 변경 될 수 있는 값들이 모두 null이나 ""로 넘어올 경우 fail 반환
 		if (
 			(updateUserVO.getUserCode() == null || updateUserVO.getUserCode().equals(""))
 			&& (updateUserVO.getPassword() == null || updateUserVO.getPassword().equals(""))
 			&& (updateUserVO.getName() == null || updateUserVO.getName().equals(""))
 			&& (updateUserVO.getDept() == null || updateUserVO.getDept().equals(""))
-			&& (updateUserVO.getPhone() == null || updateUserVO.getPhone().equals(""))
-		) return "fail";
-		else {
-			// 변경된 정보를 암호화하여 update 하고 정상적으로 수행 되었으면 ok 반환
-			if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) return "ok";
-			else return "fail";
+			&& (updateUserVO.getPhone() == null || updateUserVO.getPhone().equals(""))			
+		) { 
+			return "fail"; 
+		// 변경 값이 있는 경우 : userCode에 따라 변경 가능한 값이 올바르게 들어왔는지 검증
+		} else {
+			// 1. user일 때
+			if (userCode.equals("ROLE_USER")) {
+				// 변경할 수 없는 값이 들어온 경우
+				if (
+					(updateUserVO.getUserCode() != null || !updateUserVO.getUserCode().equals("")) &&
+					(updateUserVO.getName() != null || !updateUserVO.getName().equals("")) && 
+					(updateUserVO.getDept() != null || !updateUserVO.getDept().equals(""))
+				) {
+					return "fail";
+				// 변경할 수 있는 값인 경우 
+				} else {
+					// 변경된 정보를 암호화하여 update 하고 정상적으로 수행 되었으면 success 반환
+					if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) { return "success"; }
+					else { return "fail"; }
+
+				}
+			// 2. manager일 때
+			} else if (userCode.equals("ROLE_MANAGER")) {
+				// 변경할 수 없는 값이 들어온 경우
+				if (updateUserVO.getUserCode() != null || !updateUserVO.getUserCode().equals("")) {
+					return "fail";
+				// 변경할 수 있는 값인 경우
+				} else {
+					// 변경된 정보를 암호화하여 update 하고 정상적으로 수행 되었으면 success 반환
+					if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) { return "success"; }
+					else { return "fail"; }
+				}
+			// 3. admin일 때
+			} else {
+				// 변경된 정보를 암호화하여 update 하고 정상적으로 수행 되었으면 success 반환
+				if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) { return "success"; }
+				else { return "fail"; }
+			}
 		}
 	}
 
 	// 회원 삭제
 	public String deleteUser(int userNo) {
-		if (userMapper.deleteUser(userNo) > 0) return "ok";
+		if (userMapper.deleteUser(userNo) > 0) return "success";
 		else return "fail";
 	}
 
