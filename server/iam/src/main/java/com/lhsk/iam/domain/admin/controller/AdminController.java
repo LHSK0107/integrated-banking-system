@@ -2,6 +2,7 @@ package com.lhsk.iam.domain.admin.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lhsk.iam.domain.admin.model.mapper.LoginHistoryReqeustVO;
+import com.lhsk.iam.domain.admin.model.vo.LoginHistoryReqeustVO;
 import com.lhsk.iam.domain.admin.service.AdminService;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 
@@ -18,11 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class AdminController {
-
-	private AdminService adminService;
+	
+	private final AdminService adminService;
 	
 	// 모든 유저의 로그인 기록 조회
-	@GetMapping("/api/admin/login")
+	@GetMapping("/api/admin/logins")
 	public ResponseEntity<List<LoginHistoryVO>> getAllLoginHistory(@RequestBody LoginHistoryReqeustVO vo) {
 		/*
 		 * {
@@ -36,10 +37,10 @@ public class AdminController {
 	}
 	
 	// 특정 유저의 로그인 기록 조회
-	@GetMapping("/api/admin/login/{name}")
-	public ResponseEntity<List<LoginHistoryVO>> getLoginHistory(@PathVariable String name, @RequestBody LoginHistoryReqeustVO vo) {
+	@GetMapping("/api/admin/login")
+	public ResponseEntity<List<LoginHistoryVO>> getLoginHistory(@RequestBody LoginHistoryReqeustVO vo) {
 		vo.setStart((vo.getPage()-1) * vo.getPageSize());
-		return null;
+		return new ResponseEntity<>(adminService.findLoginHistory(vo), HttpStatus.OK);
 	}
 
 }
