@@ -1,29 +1,35 @@
 package com.lhsk.iam.global.config.jwt;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
+import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 import com.lhsk.iam.domain.user.model.vo.LoginRequestVO;
+import com.lhsk.iam.domain.user.model.vo.UserVO;
+import com.lhsk.iam.domain.user.service.UserService;
+import com.lhsk.iam.global.config.JwtConfig;
 import com.lhsk.iam.global.config.auth.PrincipalDetails;
+import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,21 +37,21 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
    
    private AuthenticationManager authenticationManager;
+   private JwtTokenProvider jwtTokenProvider;
+   private JwtConfig jwtConfig;
+   private LoginMapper loginMapper;
+   private String key;
+   private String ivString;
    
-   public JwtAuthenticationFilter(AuthenticationManager authenticationManager, 
-                           Environment env) {
+   public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
+		    LoginMapper loginMapper, JwtConfig jwtConfig, JwtTokenProvider jwtTokenProvider, String key, String ivString) {
        this.authenticationManager = authenticationManager;
-       this.SECRET = env.getProperty("jwt.secret");
-       this.EXPIRATION_TIME = Long.parseLong(env.getProperty("jwt.expirationTime"));
-       this.TOKEN_PREFIX = env.getProperty("jwt.tokenPrefix");
-       this.HEADER_STRING = env.getProperty("jwt.headerString");
+       this.loginMapper = loginMapper;
+       this.jwtTokenProvider = jwtTokenProvider;
+       this.jwtConfig = jwtConfig;
+       this.key = key;
+       this.ivString = ivString;
    }
-   
-   
-   private String SECRET;
-   private long EXPIRATION_TIME;
-   private String TOKEN_PREFIX;
-   private String HEADER_STRING;
    
    // Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
    // 인증 요청시에 실행되는 함수 => /login
@@ -63,9 +69,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
          e.printStackTrace(); 
       }
 
-      System.out.println("입력받은 username : "+loginRequestDto.getUsername());
-      System.out.println("입력받은 password : "+loginRequestDto.getPassword());
-
+      log.info("입력받은 username : "+loginRequestDto.getUsername());
+      log.info("입력받은 password : "+loginRequestDto.getPassword());
       
       // 유저네임패스워드 토큰 생성
       UsernamePasswordAuthenticationToken authenticationToken = 
@@ -95,35 +100,65 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
    @Override
    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
          Authentication authResult) throws IOException, ServletException {
-      PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
-      
-//      System.out.println("SECRET : " + SECRET);
-//      System.out.println("EXPIRATION_TIME : " + EXPIRATION_TIME);
-      
-      String jwtToken = JWT.create()
-            .withSubject(principalDetailis.getUsername())
-            .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
-            .withClaim("id", principalDetailis.getUserVO().getId())
-            .withClaim("name", principalDetailis.getUserVO().getName())
-            .withClaim("expirationTime", new Date(System.currentTimeMillis()+EXPIRATION_TIME))
-            .withClaim("userCode", principalDetailis.getUserVO().getUserCodeList().get(0))
-            .withClaim("userNo", principalDetailis.getUserVO().getUserNo())
-            .sign(Algorithm.HMAC512(SECRET));
-//      System.out.println("principalDetailis.getId() : " + principalDetailis.getUserVO().getId());
-//      System.out.println("principalDetailis.getName() : " + principalDetailis.getUserVO().getName());
-//      System.out.println("principalDetailis.getUserCodeList() : " + principalDetailis.getUserVO().getUserCodeList());
-//      System.out.println("principalDetailis.getUserNo() : " + principalDetailis.getUserVO().getUserNo());
-      response.addHeader(HEADER_STRING, TOKEN_PREFIX+jwtToken);
-      response.addHeader("Access-Control-Expose-Headers", HEADER_STRING);
+	   
+       PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
+       String accessToken = jwtTokenProvider.createAccessToken(authResult);
+       String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
+ 
+       // 리프레시 토큰 발급(쿠키)
+       Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+       refreshTokenCookie.setHttpOnly(true);			// JS로 쿠키접근 불가능
+       refreshTokenCookie.setPath("/refreshToken");	// 프론트가 쿠키를 서버측으로 전송할때, 특정 url로 요청할 경우에만 전송가능
+       refreshTokenCookie.setMaxAge(60 * 30); 			// 30 min
+       
+//       refreshTokenCookie.setSecure(true);			// https에서만 전송되도록 설정
+       response.addCookie(refreshTokenCookie);
+       
+       // 액세스 토큰 발급(헤더)
+       response.addHeader(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix()+accessToken);
+       response.addHeader("Access-Control-Expose-Headers", jwtConfig.getHeaderString());
+       
+       // 로그인 기록 저장
+       UserVO user = principalDetailis.getUserVO();
+       AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
+       byte[] iv = new byte[12];
+       String[] ivStringArray = ivString.split(", ");
+		// String[] -> byte[]로 번환
+		for (int i = 0; i < iv.length; i++) {
+		    iv[i] = Byte.parseByte(ivStringArray[i]);
+		}
+       
+       LoginHistoryVO vo = null;
+	try {
+		vo = LoginHistoryVO.builder()
+				   .userNo(user.getUserNo())
+				   .name(aesGcmEncrypt.encrypt(user.getName(), key, iv))
+				   .email(aesGcmEncrypt.encrypt(user.getEmail(), key, iv))
+				   .loginDt(LocalDateTime.now())
+				   .build();
+	} catch (GeneralSecurityException e) {
+		e.printStackTrace();
+	}
+       
+       loginMapper.insertLoginHistory(vo);
    }
    
    // 로그인 실패시 상태코드와 응답 메시지를 담아준다.
    @Override
    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                               AuthenticationException failed) throws IOException, ServletException {
+                                              AuthenticationException failed) throws IOException, ServletException {
        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // HTTP 응답 코드 401 Unauthorized 설정
        response.setContentType("application/json;charset=UTF-8"); // 응답 데이터 타입 설정
-       response.getWriter().write("{\"message\":\"아이디 또는 비밀번호가 잘못 입력되었습니다.\"}"); // 실패 메시지 반환
+       String message;
+       if (failed instanceof UsernameNotFoundException) {
+           message = "아이디가 존재하지 않습니다.";
+       } else if (failed instanceof BadCredentialsException) {
+           message = "비밀번호가 잘못 입력되었습니다.";
+       } else {
+           message = "아이디가 존재하지 않습니다.";
+       }
+
+       response.getWriter().write("{\"message\":\"" + message + "\"}"); // 실패 메시지 반환
    }
    
 }

@@ -6,6 +6,7 @@ import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
 import useAxiosAccTInquiry from "../../api/useAxiosAcctInquiry";
+import useAxios from "../../api/useAxios";
 import BankName from '../../hooks/useBankName';
 import useCurrentTime from "../../hooks/useCurrentTime";
 
@@ -23,7 +24,7 @@ const Index = () => {
     paging:"10"
   });
   
-  const {apiData}=useAxiosAccTInquiry("http://localhost:3001/api/getAccountList");
+  const {apiData}=useAxios("http://localhost:3001/api/getAccountList");
   /** 계좌 중, 은행코드 중복 제거 함수 */
   const getBankCD = () =>{
     let arr = [];
@@ -32,9 +33,9 @@ const Index = () => {
   }
   /** 은행별 계좌 요소를 option으로 리턴하는 함수 */
   const bankListOption = apiData &&
-    getBankCD().map((ele) => {
+    getBankCD().map((ele,i) => {
       return (
-        <option name="bankCD" value={ReactDOMServer.renderToString(<BankName bankCD={ele} num={0} />)}>
+        <option key={i} name="bankCD" value={ReactDOMServer.renderToString(<BankName bankCD={ele} num={0} />)}>
           <BankName bankCD={ele} />
         </option>
       );
@@ -55,9 +56,9 @@ const Index = () => {
     } else if (optionVal.bankCD===ele?.BANK_CD){
       return ele;
     }
-  }).map((val)=>{
+  }).map((val,i)=>{
     return (
-      <option value={val?.ACCT_NO}>
+      <option key={i} value={val?.ACCT_NO}>
         &nbsp;{val?.ACCT_NO}&nbsp;{val?.LOAN_NM}
       </option>
     )

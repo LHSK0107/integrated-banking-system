@@ -1,11 +1,5 @@
 import "./Common.css";
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
 import { LogInContext } from "./LogInContext";
@@ -16,14 +10,12 @@ const Navbar = () => {
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
     useContext(LogInContext);
   const navigate = useNavigate();
+  const savedToken = localStorage.getItem("jwt");
+  setToken(savedToken);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("jwt");
-    setToken(savedToken);
-  }, []);
-
-  useEffect(() => {
-    if (token === null) {
+    // 로컬스토리지에서 jwt 가져오기
+    if (savedToken === null) {
       setLoggedUser({
         id: "",
         name: "",
@@ -33,7 +25,7 @@ const Navbar = () => {
       });
       setLoggedIn(false);
     } else {
-      const decodedPayload = decodeJwt(token);
+      const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
         id: decodedPayload.id,
         name: decodedPayload.name,
@@ -45,19 +37,17 @@ const Navbar = () => {
     }
   }, [token, setLoggedUser, setLoggedIn]);
   console.log(loggedUser);
+  console.log(loggedIn);
 
   // 로그아웃
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
-      console.log("로그아웃 완료");
-
       // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
-
+      localStorage.removeItem("jwt");
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
           if (response.status === 200) {
-            localStorage.removeItem("jwt");
             setLoggedUser({
               id: "",
               name: "",
@@ -66,23 +56,14 @@ const Navbar = () => {
               userNo: "",
             });
             setLoggedIn(false);
+            console.log("로그아웃 완료");
+            navigate("/login");
           }
         })
         .catch((error) => {
           if (error) console.log(error);
         })
         .finally(() => {});
-      
-      localStorage.removeItem("jwt");
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-      navigate("/login");
     } else {
       console.log("로그아웃 취소");
       return false;
@@ -204,10 +185,10 @@ const LogoutSection = (props) => {
         로그아웃
       </button>
       <p>
-        <Link to="/">개인정보수정</Link>
+        <Link to="/mypage">개인정보수정</Link>
       </p>
-      {props.value.userCode[0] === "ROLE_ADMIN" ||
-      props.value.userCode[0] === "ROLE_MANAGER" ? (
+      {props.value.userCode === "ROLE_ADMIN" ||
+      props.value.userCode === "ROLE_MANAGER" ? (
         <p>
           <Link to="/">관리자 페이지</Link>
         </p>

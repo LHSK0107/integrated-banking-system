@@ -32,21 +32,19 @@ public class PrincipalDetailsService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 		
-		System.out.println("PrincipalDetailsService : 진입(findUserById 전)");
 		UserVO userEntity =  loginMapper.findUserById(id);
 		
 		AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
 		try {
 			String name = aesGcmEncrypt.decrypt(userEntity.getName(), key);
+			String email = aesGcmEncrypt.decrypt(userEntity.getEmail(), key);
 			userEntity.setName(name);
+			userEntity.setEmail(email);
 		} catch (GeneralSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println("PrincipalDetailsService : 진입(findUserById 후)");
-		
-		System.out.println("PrincipalDetails 생성 : " + new PrincipalDetails(userEntity));
 		if(userEntity == null) {
 			throw new UsernameNotFoundException("id " + id + " not found");
 		}

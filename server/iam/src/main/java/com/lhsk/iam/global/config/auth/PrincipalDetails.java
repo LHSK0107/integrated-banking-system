@@ -38,7 +38,7 @@ public class PrincipalDetails implements UserDetails {
 	// ID반환
 	@Override
 	public String getUsername() {
-		return userVO.getEmail();
+		return userVO.getId();
 	}
 
 	// 계정이 만료되었는가?
