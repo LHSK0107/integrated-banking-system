@@ -64,7 +64,7 @@ public class AdminService {
 	}
 	
 	// iv property를 byte[]로 변환
-	public byte[] ivToByteArray(String ivString) {
+	private byte[] ivToByteArray(String ivString) {
 		// property에서 String으로 받아온 ivString을  ", "을 기준으로 split -> String[]에 저장
 		String[] ivStringArray = ivString.split(", ");
 		// String[] -> byte[]로 번환

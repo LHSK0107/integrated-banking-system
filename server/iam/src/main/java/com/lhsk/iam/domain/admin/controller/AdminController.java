@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
 	
 	private final AdminService adminService;
-	private final JwtTokenProvider jwtTokenProvider;
 	
 	// 모든 유저의 로그인 기록 조회
 	@GetMapping("/api/admin/logins")
