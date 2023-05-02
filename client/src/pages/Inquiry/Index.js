@@ -11,6 +11,7 @@ import { LogInContext } from "../../commons/LogInContext";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
+import ExcelExportComponent from "./component/ExcelExportComponent";
 
 const Index = () => {
   // 토큰 확인
@@ -46,16 +47,10 @@ const Index = () => {
   let depAInsArr = [];
   let loanArr = [];
 
-  // console.log("here", loggedUser);
-  // console.log("here", loggedIn);
-
-  // const token = decodeJwt(localStorage.getItem("jwtToken"));
-  // console.log(token);
-  // console.log(isLogIn);
-
-  // const { apiData, isLoading, error } = useAxiosAcctInquiry(
-  //   "http://localhost:3001/api/getAccountList"
-  // );
+  const { apiData, isLoading, error } = useAxiosAcctInquiry(
+    "http://localhost:8080/api/accounts"
+  );
+  
   useEffect(() => {
     apiData && clearData(apiData);
   }, [apiData]);
@@ -63,13 +58,13 @@ const Index = () => {
   // api 요소 중, 계좌 구분에 따라 분리
   const clearData = (apiData) => {
     apiData.map((ele) => {
-      if (ele.ACCT_DV === "01") {
+      if (ele.acctDv === "01") {
         stateArr.push(ele);
         setStatementList(stateArr);
-      } else if (ele.ACCT_DV === "02") {
+      } else if (ele.acctDv === "02") {
         depAInsArr.push(ele);
         setDepAInsList(depAInsArr);
-      } else if (ele.ACCT_DV === "03") {
+      } else if (ele.acctDv === "03") {
         loanArr.push(ele);
         setLoanList(loanArr);
       }
@@ -81,13 +76,13 @@ const Index = () => {
   const calcTotalBal = useCallback(() => {
     let [stateBal, depInsBal, loanBal] = [0, 0, 0];
     statementList.map((ele) => {
-      stateBal += Number(ele?.BAL);
+      stateBal += Number(ele?.bal);
     });
-    depAInsList.map((ele) => {
-      depInsBal += Number(ele?.BAL);
+    depAInsList?.map((ele) => {
+      depInsBal += Number(ele?.bal);
     });
-    loanList.map((ele) => {
-      loanBal += Number(ele?.BAL);
+    loanList?.map((ele) => {
+      loanBal += Number(ele?.bal);
     });
     return { stateBal, depInsBal, loanBal };
   }, [loanList]);
@@ -197,12 +192,12 @@ const Index = () => {
   return (
     <div id="wrap">
       <div className="inner">
-        <Breadcrumb/>
+        <Breadcrumb title={"조회"} subMenu={"전체계좌조회"} />
         <div className="flex">
           <SideNav />
           <section>
             <h3>전체계좌조회</h3>
-            <Description/>
+            <Description />
             <div className="content_wrap">
               <ul className="tab flex">
                 {tabContArr.map((ele) => {
@@ -210,10 +205,18 @@ const Index = () => {
                 })}
               </ul>
               <p>조회일시 {currentTime}</p>
-              <div className="content">
-                {tabContArr[activeIndex].tabCont}
-              </div>
+              <div className="content">{tabContArr[activeIndex].tabCont}</div>
             </div>
+            {apiData && (
+              <ExcelExportComponent
+                stateData={statementList}
+                depAInsData={depAInsList}
+                loadData={loanList}
+                stateBal={calcTotalBal().stateBal}
+                depInsBal={calcTotalBal().depInsBal}
+                loanBal={calcTotalBal().loanBal}
+              />
+            )}
           </section>
         </div>
       </div>
