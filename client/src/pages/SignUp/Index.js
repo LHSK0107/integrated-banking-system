@@ -40,7 +40,7 @@ const Index = () => {
           </div>
           <div className="signup_form_section flex flex_column justify_center ">
             <h2>회원가입</h2>
-            <div className="signup_form_wrap flex flex_column justify_center">
+            <div className="signup_form_wrap ">
               {showCurrentPage()}
             </div>
           </div>
