@@ -14,8 +14,11 @@ const Index = () => {
   const savedToken = localStorage.getItem("jwt");
   setToken(savedToken);
 
+  
   useEffect(() => {
+    console.log(1);
     if (savedToken === null) {
+        console.log(2);
         setLoggedUser({
             id: "",
             name: "",
@@ -25,6 +28,7 @@ const Index = () => {
         });
         setLoggedIn(false);
     } else {
+        console.log(3);
         const decodedPayload = decodeJwt(savedToken);
         setLoggedUser({
             id: decodedPayload.sub,
@@ -36,17 +40,20 @@ const Index = () => {
         setLoggedIn(true);
         // 회원 목록 불러오기
         memberList();
+        console.log(4);
     }
+    console.log(5);
 }, [setLoggedUser]);
+console.log(6);
 
 // 회원 목록
 const [members, setMembers] = useState(null);
 // 회원 목록 불러오기
 const memberList = () => {
   axios
-    .get("http://localhost:8080/api/users", 
+    .get("http://localhost:8080/api/manager/users", 
       {
-      headers: {Authorization: "Bearer "+savedToken,},
+      headers: {Authorization: "Bearer "+ savedToken},
       }
     )
     .then((res) => {
@@ -105,7 +112,7 @@ const memberList = () => {
           </aside>
           <section className="admin_list">
             <h3>회원 목록</h3>
-            <div>
+            <div className="list_wrap">
               <ul>
                 <li className="list_column flex">
                   <p className="list_userCode">권한</p>
