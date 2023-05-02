@@ -12,6 +12,7 @@ import InOut from "./pages/InOut/Index";
 import LogOut from "./pages/LogIn/LogOut";
 import Mypage from "./pages/Mypage/Index";
 import Admin from "./pages/Admin/Index";
+import AdminDetail from "./pages/Admin/component/Detail.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./commons/Footer";
 import { LogInContext } from "./commons/LogInContext";
@@ -56,7 +57,10 @@ const App = () => {
                 </Route>
                 <Route path="/inout" element={<InOut />} />
                 <Route path="/mypage" element={<Mypage />} />
-                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin">
+                  <Route index element={<Admin />} />
+                  <Route path=":userNo" element={<AdminDetail />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
