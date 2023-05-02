@@ -17,10 +17,10 @@ const Index = () => {
   const realAcctNo=paramList[1];
   // 카드형식 데이터 api 호출
   const getAccountInfo = useCallback(() => {
-    axios.get(`http://localhost:3001/api/getDetailAccountHistory/${realAcctNo}`)
-    .then((res)=>{
-      getData(res.data.RESP_DATA);
-    });
+    // axios.get(`http://localhost:3001/api/getDetailAccountHistory/${realAcctNo}`)
+    // .then((res)=>{
+    //   getData(res.data.RESP_DATA);
+    // });
   },[realAcctNo]);
 
   useEffect(()=>{
@@ -81,17 +81,17 @@ const Index = () => {
     // 초기 빈 value 값을 위한 조건문 실행
       if(inputValueList.strDate===""){
         const dateObj = initialDate();
-        const url = `http://localhost:3001/api/getDate/${realAcctNo}/${dateObj.pastStr}/${dateObj.currentStr}`;
-        return await axios
-          .get(url)
-          .then((res) => res.data);
+        // const url = `http://localhost:3001/api/getDate/${realAcctNo}/${dateObj.pastStr}/${dateObj.currentStr}`;
+        // return await axios
+        //   .get(url)
+        //   .then((res) => res.data);
       } else {
         const start = inputValueList.strDate.replaceAll("-","");
         const end = inputValueList.endDate.replaceAll("-","");
-        const url = `http://localhost:3001/api/getDate/${realAcctNo}/${start}/${end}`;
-        return await axios
-          .get(url)
-          .then((res) => res.data);
+        // const url = `http://localhost:3001/api/getDate/${realAcctNo}/${start}/${end}`;
+        // return await axios
+        //   .get(url)
+        //   .then((res) => res.data);
       }
   };
   // useQuery api 조회

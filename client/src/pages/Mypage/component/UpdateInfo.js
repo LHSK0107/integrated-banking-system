@@ -27,7 +27,7 @@ const UpdateInfo = () => {
     } else {
       const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
-        id: decodedPayload.id,
+        id: decodedPayload.sub,
         name: decodedPayload.name,
         exp: decodedPayload.exp,
         userCode: decodedPayload.userCode,
@@ -177,7 +177,7 @@ const UpdateInfo = () => {
         });
     } else if (data.tel !== null) {
       console.log(data);
-      // axios
+      //1 axios
       //   .put("http://localhost:8080/api/users/", {
       //     userNo: loggedUser.userNo,
       //     password: data.password,

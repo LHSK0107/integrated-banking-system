@@ -13,16 +13,16 @@ const NewsSlider = () => {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    const url = "http://localhost:3001/news/getNews";
-    axios
-      .get(url)
-      .then((response) => {
-        clearData(response.data.items);
-      })
-      .catch((err) => {
-        console.log(err);
-        news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
-      });
+    // const url = "http://localhost:3001/news/getNews";
+    // axios
+    //   .get(url)
+    //   .then((response) => {
+    //     clearData(response.data.items);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
+    //   });
   }, []);
 
   let newsArr = [];
