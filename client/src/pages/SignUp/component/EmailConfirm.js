@@ -25,14 +25,14 @@ const UserInfo = () => {
   });
   const onSubmit = (data) => {
     console.log(formData);
-    axios.post("http://localhost:3001/auth/signup",{
-      id: formData.id,
-      password: formData.password,
-      email: formData.email,
-      name: formData.name,
-      dept: formData.dept,
-      phone: formData.phone,
-    }).then((res)=>{console.log(res.data)});
+    // axios.post("http://localhost:3001/auth/signup",{
+    //   id: formData.id,
+    //   password: formData.password,
+    //   email: formData.email,
+    //   name: formData.name,
+    //   dept: formData.dept,
+    //   phone: formData.phone,
+    // }).then((res)=>{console.log(res.data)});
     
     // isVerify === true ? setPageNum(pageNum+1) : alert("다시 한 번 확인해주시기 바랍니다.");
     setPageNum(pageNum+1);

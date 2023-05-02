@@ -27,7 +27,7 @@ const Index = () => {
     } else {
       const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
-        id: decodedPayload.id,
+        id: decodedPayload.sub,
         name: decodedPayload.name,
         exp: decodedPayload.exp,
         userCode: decodedPayload.userCode,
@@ -53,9 +53,9 @@ const Index = () => {
   // console.log(token);
   // console.log(isLogIn);
 
-  const { apiData, isLoading, error } = useAxiosAcctInquiry(
-    "http://localhost:3001/api/getAccountList"
-  );
+  // const { apiData, isLoading, error } = useAxiosAcctInquiry(
+  //   "http://localhost:3001/api/getAccountList"
+  // );
   useEffect(() => {
     apiData && clearData(apiData);
   }, [apiData]);

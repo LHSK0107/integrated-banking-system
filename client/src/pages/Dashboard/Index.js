@@ -17,7 +17,7 @@ const Index = () => {
   // 로컬스토리지에서 jwt 가져오기
   const savedToken = localStorage.getItem("jwt");
   setToken(savedToken);
-  
+
   useEffect(() => {
     if (savedToken === null) {
       navigate("/login");
@@ -25,7 +25,7 @@ const Index = () => {
     } else {
       const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
-        id: decodedPayload.id,
+        id: decodedPayload.sub,
         name: decodedPayload.name,
         exp: decodedPayload.exp,
         userCode: decodedPayload.userCode,
@@ -57,17 +57,17 @@ const Index = () => {
   // 계좌 구분별
   useEffect(() => {
     arr = null;
-    const url = "http://localhost:3001/api/getAccountList";
-    axios
-      .get(url)
-      .then((res) => {
-        res.data.RESP_DATA.REC === null
-          ? console.log("failed")
-          : console.log("success");
-        clearData(res.data.RESP_DATA);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {});
+    // const url = "http://localhost:3001/api/getAccountList";
+    // axios
+    //   .get(url)
+    //   .then((res) => {
+    //     res.data.RESP_DATA.REC === null
+    //       ? console.log("failed")
+    //       : console.log("success");
+    //     clearData(res.data.RESP_DATA);
+    //   })
+    //   .catch((err) => console.log(err))
+    //   .finally(() => {});
   }, []);
 
   const clearData = (allAccount) => {
@@ -141,18 +141,18 @@ const Index = () => {
     const start = Number(end) - 9 + "";
     // console.log("start: ", start, typeof(start));
     // console.log("end: ", end, typeof(end));
-    const url = `http://localhost:3001/api/getDates/${start}/${end}`;
-    axios
-      .get(url)
-      .then((res) => {
-        res.data.RESP_DATA.REC === null
-          ? console.log("입출 failed")
-          : console.log("입출 success");
-        clearData2(res.data.RESP_DATA);
-        // ppLinist();
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {});
+    // const url = `http://localhost:3001/api/getDates/${start}/${end}`;
+    // axios
+    //   .get(url)
+    //   .then((res) => {
+    //     res.data.RESP_DATA.REC === null
+    //       ? console.log("입출 failed")
+    //       : console.log("입출 success");
+    //     clearData2(res.data.RESP_DATA);
+    //     // ppLinist();
+    //   })
+    //   .catch((err) => console.log(err))
+    //   .finally(() => {});
   }, []);
 
   const clearData2 = (data) => {
