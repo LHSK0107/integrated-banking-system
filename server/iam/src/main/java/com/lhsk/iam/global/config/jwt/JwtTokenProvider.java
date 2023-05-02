@@ -116,7 +116,7 @@ public class JwtTokenProvider {
 	                .parseClaimsJws(token)
 	                .getBody();
 
-	        return claims.get("userNo", int.class);
+	        return claims.get("userNo", Integer.class);
 	}
 	
 	// 유저 이름 추출
