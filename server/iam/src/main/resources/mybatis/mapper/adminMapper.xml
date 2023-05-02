@@ -5,11 +5,11 @@
 <mapper namespace="com.lhsk.iam.domain.admin.model.mapper.AdminMapper">
 	
 	<select id="findAllLoginHistory" parameterType="String" resultType="LoginHistoryVO">
-		SELECT * FROM user_login ORDER BY #{sort} LIMIT ${start}, ${pageSize}
+		SELECT * FROM user_login ORDER BY login_dt ${sort} LIMIT ${start}, ${pageSize}
 	</select>
 	
 	<select id="findLoginHistory" parameterType="String" resultType="LoginHistoryVO">
-		SELECT * FROM user_login where name = #{name} ORDER BY #{sort} LIMIT ${start}, ${pageSize}
+		SELECT * FROM user_login where name = #{name} ORDER BY login_dt ${sort} LIMIT ${start}, ${pageSize}
 	</select>
 	
 	
