@@ -23,9 +23,8 @@ const Index = () => {
     arrange:"recent",
     paging:"10"
   });
-  
+
   const {apiData}=useAxios("http://localhost:3001/api/getAccountList");
-  
   /** 계좌 중, 은행코드 중복 제거 함수 */
   const getBankCD = () =>{
     let arr = [];
