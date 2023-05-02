@@ -241,6 +241,12 @@ public class UserController {
 	// 로그아웃
 	@PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+		
+		// 메뉴 클릭 기록 집계 등록 (insert)
+		
+		
+		
+		// 로그아웃 처리
 		Cookie[] cookies = request.getCookies();
 	    if (cookies != null) {
 	        for (Cookie cookie : cookies) {
