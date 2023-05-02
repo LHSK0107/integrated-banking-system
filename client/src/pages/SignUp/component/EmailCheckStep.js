@@ -4,8 +4,10 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PageContext } from "../context/PageContext";
-import {Link} from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
+import axios from "axios";
 const EmailCheckStep = () => {
+  const navigate = useNavigate();
   const { pageNum, setPageNum, formData, setFormData } = useContext(PageContext);
   // form의 각 요소 지정
   const schema = yup.object().shape({
@@ -18,14 +20,23 @@ const EmailCheckStep = () => {
   });
   // 다음 버튼 클릭 시, formData에 각 입력값 전달
   const onSubmit = (data) => {
-    const values = {
-      id: data.id,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-      email: data.email,
-    };
-    setFormData({ ...formData, ...values });
-    setPageNum(pageNum + 1);
+    axios.post("http://localhost:8080/api/signup/email",{"email":data.email})
+    .then((res)=>{
+      console.log(`결과값:${res.data}`);
+      if(res.data===false){
+        const values = {
+          id: data.id,
+          password: data.password,
+          confirmPassword: data.confirmPassword,
+          email: data.email,
+        };
+        setFormData({ ...formData, ...values });
+        setPageNum(pageNum + 1);
+      } else {
+        alert("이미 가입된 이메일이 존재합니다. 로그인 해주세요.");
+        navigate("/login");
+      }
+    });
   };
   // input value 관리를 위한 state
   const [userInputValue, setUserInputValue] = useState({
@@ -65,15 +76,23 @@ const EmailCheckStep = () => {
           />
           {errors.email && <p className="signup-error-msg">{errors.email?.message}</p>}
         </div>
-        <div className="signup-checkbox-wrap flex justify_between">
-          <p>[필수] <Link className="signup-term-link" to="">IAM 서비스 이용약관</Link>에 동의합니다.</p>
+        <div className="signup-checkbox-wrap flex justify_between align_center">
+          <span>[필수] <Link className="signup-term-link" to="">IAM 서비스 이용약관</Link>에 동의합니다.</span>
           <input
             type="checkbox"
             {...register("checkTerm1")}
           />
         </div>
         {errors.checkTerm1 && <p className="signup-error-msg">{errors.checkTerm1?.message}</p>}
-        <hr />
+        <div className="signup-checkbox-wrap flex justify_between align_center">
+          <span>[필수] <Link className="signup-term-link" to="">개인정보 수집 및 이용</Link>에 동의합니다.</span>
+          <input
+            type="checkbox"
+            {...register("checkTerm2")}
+          />
+        </div>
+        {errors.checkTerm2 && <p className="signup-error-msg">{errors.checkTerm2?.message}</p>}
+        <div className="signup-seperate-liner"></div>
         <input type="submit" value="다음" />
       </form>
     </div>

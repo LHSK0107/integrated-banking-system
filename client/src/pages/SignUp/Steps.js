@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext, useEffect, useRef } from "react";
 import { PageContext } from "./context/PageContext";
 import UserInfo from "./component/UserInfo";
@@ -92,7 +93,7 @@ const ProgressBar = (props) => {
         <span></span>
         <p>이메일 정보</p>
       </div>
-      <div className="step flex flex_column justify_between align_center active">
+      <div className="step flex flex_column justify_between align_center">
         <span></span>
         <p>이메일 인증</p>
       </div>
