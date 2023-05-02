@@ -3,6 +3,7 @@ package com.lhsk.iam.global.config;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
+import com.lhsk.iam.domain.user.service.UserService;
 import com.lhsk.iam.global.config.jwt.JwtAuthenticationFilter;
 import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
 import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
@@ -31,6 +33,11 @@ public class SecurityConfig {
 	private JwtTokenProvider jwtTokenProvider;
 	@Autowired
 	private JwtConfig jwtConfig;
+	
+    @Value("${aes.secret}")
+    private String key;
+    @Value("${aes.iv}")
+    private String ivString;
 	
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -65,8 +72,10 @@ public class SecurityConfig {
 	            )
 				.authorizeRequests(authroize -> authroize.antMatchers("/api/users/**", "/api/accounts/**") 
 						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-						.antMatchers("/admin/**")
+						.antMatchers("/api/manager/**")
 						.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+						.antMatchers("/api/admin/**")
+						.access("hasRole('ROLE_ADMIN')")
 						.anyRequest().permitAll());
 
 		return http.build();
@@ -78,7 +87,7 @@ public class SecurityConfig {
 		    AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 		    http
 		            .addFilter(corsConfig.corsFilter())
-		            .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtConfig, jwtTokenProvider))
+		            .addFilter(new JwtAuthenticationFilter(authenticationManager, loginMapper, jwtConfig, jwtTokenProvider, key, ivString))
 		            .addFilter(new JwtAuthorizationFilter(authenticationManager, loginMapper, jwtConfig, jwtTokenProvider));
 		}
 	}
