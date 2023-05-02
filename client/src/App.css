@@ -227,7 +227,7 @@ aside {
 }
 aside h2 {
     /* #wrap > .inner > .nav_depth + div > aside */
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 10px;
 }
@@ -248,8 +248,8 @@ aside h2 {
 /* aside 옆 section --- */
 aside + section {
     /* #wrap > .inner > .nav_depth + div > aside + section */
-    width: calc(100% - 240px);
-    margin-left: 30px;
+    width: calc(100% - 260px);
+    margin-left: 50px;
 }
 section h3 {
     font-size: 1.5rem;
