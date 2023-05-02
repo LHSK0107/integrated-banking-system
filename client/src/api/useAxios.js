@@ -12,17 +12,12 @@ function useAxiosAcctInquiry ( url ) {
     const fetchController = new AbortController();
     const signal = fetchController.signal;
     setIsLoading(true);
-    console.log(localStorage.getItem("jwt"));
     axios
       .get(url, {
-        signal: signal,
-        headers: {
-          "Authorization":
-            `Bearer ${localStorage.getItem("jwt")}`,
-        },
+        signal: signal
       })
       .then((res) => {
-        setApiData(res.data);
+        setApiData(res.data.RESP_DATA.REC);
       })
       .catch((err) => setError(`에러 발생 ${err}`))
       .finally(() => {

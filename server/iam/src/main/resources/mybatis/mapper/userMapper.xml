@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lhsk.iam.domain.user.model.mapper.UserMapper">
-	<select id="checkDuplicateId" parameterType="String" resultType="int">
+	<select id="checkExistsId" parameterType="String" resultType="int">
 		SELECT EXISTS (SELECT id FROM user WHERE id=#{id}) AS flag
 	</select>
 	
@@ -11,6 +11,10 @@
 		SELECT email FROM user
 	</select>
 	
+	<select id="checkPassword" parameterType="int" resultType="String">
+		SELECT password FROM user WHERE user_no=#{userNo}
+	</select>
+
 	<select id="checkExistsUser" resultType="int">
 		SELECT EXISTS (SELECT * FROM user)
 	</select>
@@ -58,7 +62,20 @@
 		ORDER BY user_no ASC;
 	</select>
 	
-	<select id="checkPassword" parameterType="int" resultType="String">
-		SELECT password FROM user WHERE user_no=#{userNo}
+	<select id="findAllDept" resultType="String">
+		SELECT dept FROM department
 	</select>
+	
+	<insert id="AddDept" parameterType="String">
+		INSERT INTO department (dept) VALUES (#{dept})
+	</insert>
+	
+	<update id="updateDept" parameterType="String">
+		UPDATE department SET dept=#{newDept} WHERE dept=#{oldDept}
+	</update>
+	
+	<delete id="deleteDept" parameterType="String">
+		DELETE FROM department WHERE dept=#{dept}
+	</delete>
+	
 </mapper>

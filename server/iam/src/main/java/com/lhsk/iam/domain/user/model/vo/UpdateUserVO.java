@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class UpdateUserVO {
 	
 	// ※ id, email은 수정 불가
@@ -15,5 +14,13 @@ public class UpdateUserVO {
 	private String name;
 	private String dept;
 	private String phone;		// ROLE_USER가 수정 가능한 값
+	
+	public void setUserCode(String userCode) { this.userCode = userCode; }
+	public void setPassword(String password) { this.password = password; }
+	public void setName(String name) { this.name = name; }
+	public void setDept(String dept) { this.dept = dept; }
+	public void setPhone(String phone) { this.phone = phone; }
 
+	
+	
 }
