@@ -181,12 +181,13 @@ public class UserController {
 	} 
 
 	// 회원 리스트 (ROLE_ADMIN, ROLE_MANAGER)
-	@GetMapping("/api/admin/users")
+	@GetMapping("/api/manager/users")
 	public ResponseEntity<?> findAllUser(HttpServletRequest request) {
 		log.info("UserController.userList");
 
 		// Token에서 userCode parsing
 		String accessToken = request.getHeader("Authorization");
+		accessToken = accessToken.split(" ")[1];
 		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
 	
 		// 1. manager나 admin일 때
@@ -205,7 +206,8 @@ public class UserController {
 
 		// Token에서 userCode parsing
 		String accessToken = request.getHeader("Authorization");
-		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);		
+		accessToken = accessToken.split(" ")[1];
+		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);	
 		String id = jwtTokenProvider.getUsernameFromToken(accessToken);
 		
 		DetailUserVO userInfo = userService.findByUserNo(userNo);
