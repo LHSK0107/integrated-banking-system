@@ -6,13 +6,10 @@ function useAxiosAcctInquiry ( url ) {
   const [isLoading, setIsLoading]=useState(false);
   const [error, setError]=useState(null);
 
-  const imsiValue = localStorage.getItem("jwt");
-
   useEffect(()=>{
     const fetchController = new AbortController();
     const signal = fetchController.signal;
     setIsLoading(true);
-    console.log(localStorage.getItem("jwt"));
     axios
       .get(url, {
         signal: signal,
