@@ -1,8 +1,10 @@
+/* eslint-disable */
 import React, { useContext, useEffect, useRef } from "react";
 import { PageContext } from "./context/PageContext";
 import UserInfo from "./component/UserInfo";
 import PersonalInfo from "./component/PersonalInfo";
 import EmailConfirm from "./component/EmailConfirm";
+import EmailCheckStep from "./component/EmailCheckStep";
 import Result from "./component/Result";
 import UserIcon from "../../assets/images/icon/user.png";
 const Steps = () => {
@@ -13,24 +15,28 @@ const Steps = () => {
       return (
         <>
           <ProgressBar pageNum={pageNum} />
-          {/* <FormTitle pageNum={pageNum} /> */}
-          <UserInfo />
+          <EmailCheckStep />
         </>
       );
-    case 1:
+      case 1:
       return (
         <>
           <ProgressBar pageNum={pageNum} />
-          {/* <FormTitle pageNum={pageNum} /> */}
-          <PersonalInfo />
+          <EmailConfirm />
         </>
       );
     case 2:
       return (
         <>
           <ProgressBar pageNum={pageNum} />
-          {/* <FormTitle pageNum={pageNum} /> */}
-          <EmailConfirm />
+          <UserInfo />
+        </>
+      );
+    case 3:
+      return (
+        <>
+          <ProgressBar pageNum={pageNum} />
+          <PersonalInfo />
         </>
       );
     // case 3:
@@ -85,11 +91,15 @@ const ProgressBar = (props) => {
       <div ref={progressBarRef} className="progress_bar"></div>
       <div className="step flex flex_column justify_between align_center active">
         <span></span>
-        <p>기본정보</p>
+        <p>이메일 정보</p>
       </div>
       <div className="step flex flex_column justify_between align_center">
         <span></span>
         <p>이메일 인증</p>
+      </div>
+      <div className="step flex flex_column justify_between align_center">
+        <span></span>
+        <p>계정 정보</p>
       </div>
       <div className="step flex flex_column justify_between align_center">
         <span></span>

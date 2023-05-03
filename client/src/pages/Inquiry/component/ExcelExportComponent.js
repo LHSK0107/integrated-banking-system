@@ -3,7 +3,8 @@ import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 import BankNM from "../../../hooks/useBankName";
 import ReactDomServer from 'react-dom/server';
-
+import ExcelIcon from "../../../assets/images/icon/excel.png";
+import "../index.css";
 const ExcelExportComponent = ({ stateData, depAInsData, loadData, stateBal, depInsBal, loanBal }) => {
   
   const excelDownload = () => {
@@ -407,6 +408,6 @@ const ExcelExportComponent = ({ stateData, depAInsData, loadData, stateBal, depI
     });
   };
 
-  return <button onClick={() => excelDownload()}>Excel</button>;
+  return <button className="excel-btn" onClick={() => excelDownload()}><img src={ExcelIcon} alt="excel img icon" style={{width:"20px",height:"20px"}}/>Excel</button>;
 };
 export default ExcelExportComponent;
