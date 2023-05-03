@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import "./index.css";
+import "./inquiry.module.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
@@ -107,7 +107,7 @@ const Index = () => {
       ),
       tabCont: (
         <>
-        <div className={stateOn ? "on" : ""}>
+        <div className={stateOn ? "" : "on"}>
           <div className="accordian_btn flex justify_between align_center" onClick={() => {stateOn? setStateOn(false) : setStateOn(true)}}>
             <div>
               <p>
@@ -164,7 +164,7 @@ const Index = () => {
         </li>
       ),
       tabCont: (
-        <div className={loanOn ? "on" : ""}>
+        <div className={loanOn ? "" : "on"}>
           <div className="accordian_btn flex justify_between align_center" onClick={() => {loanOn? setLoanOn(false) : setLoanOn(true)}}>
             <div>
               <p>
@@ -194,7 +194,7 @@ const Index = () => {
       <div className="inner">
         <Breadcrumb title={"조회"} subMenu={"전체계좌조회"} />
         <div className="flex">
-          <SideNav />
+          <SideNav now={"전체계좌조회"} />
           <section>
             <h3>전체계좌조회</h3>
             <Description />
