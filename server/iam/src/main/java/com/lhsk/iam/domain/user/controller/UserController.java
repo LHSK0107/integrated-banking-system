@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
@@ -242,10 +243,18 @@ public class UserController {
 	
 	// 로그아웃
 	@PostMapping("/api/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-		
-		// 메뉴 클릭 기록 집계 등록 (insert)
-		
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, @RequestBody MenuClickRequestVO vo) {
+		/*
+		 * {
+		 * 	"allAccount" : 1,
+		 *  "inout" : 2,
+		 *  "inoutReport" : 3,
+		 *  "dailyReport" : 4,
+		 *  "dashboard" : 5
+		 * }
+		 */
+		// 메뉴 클릭 기록 집계 등록 (insert or update)
+		userService.updateMenuClick(vo);
 		
 		
 		// 로그아웃 처리
