@@ -13,8 +13,9 @@ import LogOut from "./pages/LogIn/LogOut";
 import Mypage from "./pages/Mypage/Index";
 import Admin from "./pages/Admin/Index";
 import AdminDetail from "./pages/Admin/component/Detail.js";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./commons/Footer";
+import DailyReport from "./pages/DailyReport/Index";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogInContext } from "./commons/LogInContext";
 import { useState } from "react";
 
@@ -56,6 +57,7 @@ const App = () => {
                   <Route path=":acctNo" element={<DetailInquiry />} />
                 </Route>
                 <Route path="/inout" element={<InOut />} />
+                <Route path="/dailyReport" element={<DailyReport />} />
                 <Route path="/mypage" element={<Mypage />} />
                 <Route path="/admin">
                   <Route index element={<Admin />} />
