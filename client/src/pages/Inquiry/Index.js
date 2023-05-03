@@ -206,8 +206,7 @@ const Index = () => {
               </ul>
               <p>조회일시 {currentTime}</p>
               <div className="content">{tabContArr[activeIndex].tabCont}</div>
-            </div>
-            {apiData && (
+              {apiData && (
               <ExcelExportComponent
                 stateData={statementList}
                 depAInsData={depAInsList}
@@ -217,6 +216,7 @@ const Index = () => {
                 loanBal={calcTotalBal().loanBal}
               />
             )}
+            </div>
           </section>
         </div>
       </div>
