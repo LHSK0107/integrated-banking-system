@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, {useState, useRef, useCallback, useEffect}  from "react";
 import ReactDOMServer from 'react-dom/server'
-import "./index.css";
+import "./inout.module.css";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
@@ -118,7 +118,7 @@ const Index = () => {
       <div className="inner">
         <Breadcrumb title={"조회"} subMenu={"입출금내역조회"}/>
         <div className="flex">
-          <SideNav />
+          <SideNav now={"입출내역조회"} />
           <section>
             <h3>입출내역조회</h3>
             <Description />
