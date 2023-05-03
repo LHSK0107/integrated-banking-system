@@ -33,6 +33,10 @@
 .quick a:hover figure {
   background-color: var(--color-background);
 }
+
+.quick figure img {
+  width: auto;
+}
 /* --- quick */
 
 /* main_news --- */
