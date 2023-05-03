@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
-import "./index.css";
+import "./dailyreport.module.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
