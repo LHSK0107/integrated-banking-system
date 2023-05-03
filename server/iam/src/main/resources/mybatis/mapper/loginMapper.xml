@@ -5,7 +5,12 @@
 <mapper namespace="com.lhsk.iam.domain.user.model.mapper.LoginMapper">
 	
 	<select id="findUserById" parameterType="String" resultType="UserVO">
-		SELECT user_no, id, name, password, user_code FROM user WHERE id = #{id}
+		SELECT user_no, id, name, password, user_code, email FROM user WHERE id = #{id}
 	</select>
+	
+	<insert id="insertLoginHistory">
+	    INSERT INTO user_login
+	    VALUES (#{userNo}, #{name}, #{email}, #{loginDt})
+	</insert>
 	
 </mapper>
