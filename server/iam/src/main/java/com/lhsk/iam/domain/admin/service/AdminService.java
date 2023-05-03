@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.lhsk.iam.domain.admin.model.mapper.AdminMapper;
 import com.lhsk.iam.domain.admin.model.vo.LoginHistoryReqeustVO;
+import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
+import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
@@ -26,25 +28,9 @@ public class AdminService {
 	private byte[] iv = new byte[12];
 	
 	// 모든 유저의 로그인기록 조회
-	public List<LoginHistoryVO> findAllLoginHistory(LoginHistoryReqeustVO vo) {
-		List<LoginHistoryVO> list = adminMapper.findAllLoginHistory(vo);
+	public List<LoginHistoryVO> findAllLoginHistory() {
+		List<LoginHistoryVO> list = adminMapper.findAllLoginHistory();
 		decrypt(list);	// 복호화
-		return list;
-	}
-	
-	// 특정 유저의 로그인기록 조회
-	public List<LoginHistoryVO> findLoginHistory(LoginHistoryReqeustVO vo) {
-		
-		// 함께 입력받은 이름 암호화 진행
-		AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
-		iv = ivToByteArray(ivString);
-		try {
-			vo.setName(aesGcmEncrypt.encrypt(vo.getName(), key, iv));
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-		}
-		List<LoginHistoryVO> list = adminMapper.findLoginHistory(vo);
-		decrypt(list);
 		return list;
 	}
 	
@@ -61,6 +47,21 @@ public class AdminService {
 		}
 		
 		return list;
+	}
+	
+	// 7일간의 메뉴 클릭 집계
+	public List<MenuClickVO> findMenuClickDay() {
+		return adminMapper.findMenuClickDay();
+	}
+	
+	// 7주간의 메뉴 클릭 집계
+	public List<MenuClickVO> findMenuClickWeek() {
+		return adminMapper.findMenuClickWeek();
+	}
+	
+	// 7개월간의 메뉴 클릭 집계
+	public List<MenuClickVO> findMenuClickMonth() {
+		return adminMapper.findMenuClickMonth();
 	}
 	
 	// iv property를 byte[]로 변환
