@@ -22,8 +22,10 @@ const Detail = () => {
   const [role, setRole] = useState(null);
   const [rename, setRename] = useState(null);
   const [team, setTeam] = useState(null);
-//   const [rerename, setRerename] = useState(null);
-const rerename = member && member.name;
+  //   const [rerename, setRerename] = useState(null);
+  const rerename = member && member.name;
+
+  const navigate = useNavigate();
 
   // 로컬스토리지에서 jwt 가져오기
   const savedToken = localStorage.getItem("jwt");
@@ -55,7 +57,7 @@ const rerename = member && member.name;
       if (member === null) {
         memberDetail();
       }
-      if(rename === rerename) setRename(null);
+      if (rename === rerename) setRename(null);
     }
   }, [member]);
 
@@ -72,8 +74,8 @@ const rerename = member && member.name;
           console.log(member);
 
           setRename(res.data.name);
-        //   setRerename(res.data.name);
-        const rerename = member && member.name;
+          //   setRerename(res.data.name);
+          const rerename = member && member.name;
         }
       })
       .catch((err) => console.log(err))
@@ -120,36 +122,61 @@ const rerename = member && member.name;
   // 수정사항 보내기
   const onSubmit = (e) => {
     e.preventDefault();
-    // if (
-    //   e.target[0].value === member.userCode &&
-    //   e.target[1].value === member.name &&
-    //   e.target[2].value === member.dept
-    // ) {
-    //   alert("변경사항이 없습니다.");
-    // } else {
-    //   console.log(e);
-    // }
-    // axios
-    //   .put(`http://localhost:8080/api/users/${location}`, {
-    //     headers: { Authorization: "Bearer " + savedToken },
-    //   }, {
 
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.status === 200) {
-    //       console.log(res);
-    //       setMember(res.data);
-    //     }
-    //   })
-    //   .catch((err) => console.log(err))
-    //   .finally(() => {});
+    if (role === null && rename === null && team === null) {
+      alert("변경사항이 없습니다.");
+    } else {
+      console.log(e);
+      axios
+        .put(
+          `http://localhost:8080/api/users`,
+          {
+            userNo: member.userNo,
+            userCode: role,
+            name: rename,
+            dept: team,
+          },
+          {
+            headers: { Authorization: "Bearer " + savedToken },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            alert("회원정보가 수정되었습니다.");
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {});
+    }
   };
 
+  // 탈퇴하기
+  const deleteMember = () => {
+    if (window.confirm("탈퇴하시겠습니까?")) {
+      axios
+        .delete(`http://localhost:8080/api/users/${location}`, {
+          headers: { Authorization: "Bearer " + savedToken },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            alert("탈퇴되었습니다.");
+            navigate("/admin");
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {});
+    } else {
+      return false;
+    }
+  };
+
+  // 위임하기
   const changeRole = () => {
     if (
       loggedUser.userCode === "ROLE_ADMIN" &&
-      member.userCode === "ROLE_MANAGER"
+      member?.userCode === "ROLE_MANAGER"
     ) {
       return <button>위임하기</button>;
     }
@@ -240,6 +267,10 @@ const rerename = member && member.name;
                       <p>{member?.userNo}</p>
                     </li>
                     <li className="flex">
+                      <p>ID</p>
+                      <p>{member?.id}</p>
+                    </li>
+                    <li className="flex">
                       <p>이름</p>
                       <p>
                         <input
@@ -282,8 +313,11 @@ const rerename = member && member.name;
                 </form>
               </div>
               <div>
-                <button type="button">위임하기</button>
-                <button type="button">탈퇴하기</button>
+                {/* <button type="button">위임하기</button> */}
+                {changeRole()}
+                <button type="button" onClick={deleteMember}>
+                  탈퇴하기
+                </button>
               </div>
             </section>
           </div>
