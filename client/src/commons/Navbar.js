@@ -27,7 +27,7 @@ const Navbar = () => {
     } else {
       const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
-        id: decodedPayload.id,
+        id: decodedPayload.sub,
         name: decodedPayload.name,
         exp: decodedPayload.exp,
         userCode: decodedPayload.userCode,
@@ -190,7 +190,7 @@ const LogoutSection = (props) => {
       {props.value.userCode === "ROLE_ADMIN" ||
       props.value.userCode === "ROLE_MANAGER" ? (
         <p>
-          <Link to="/">관리자 페이지</Link>
+          <Link to="/admin">관리자 페이지</Link>
         </p>
       ) : (
         <></>
