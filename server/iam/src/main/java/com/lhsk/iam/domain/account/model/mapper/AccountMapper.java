@@ -1,5 +1,6 @@
 package com.lhsk.iam.domain.account.model.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,12 +15,12 @@ public interface AccountMapper {
 	
 	// 전체 계좌정보 조회
 	List<AccountVO> findAllAccount();
-	// 특정 계좌정보 조회
-	AccountVO findByAcctNo(String acctNo);
+	// 특정 회원이 조회 가능한 계좌정보 리스트
+	List<AccountVO> findAvailableAccount(int userNo);
+	// 해당 계좌에 접근(조회) 가능한 사용자인지 확인
+	int checkByAcctNoToAccessibleUser(HashMap<String, Object> userInfo);
 	// 특정 계좌의 입출금 조회
 	List<InoutVO> findOneInout(InoutRequestVO vo);
-	// 조회 가능한 계좌 리스트
-	List<String> findAvailableAccount(int userNo);
 	// 은행 코드 & 은행 이름 리스트
 	Map<String, String> findAllBankCodeAndBankName();
 	// 특정 은행 코드에 대응되는 은행 이름 조회

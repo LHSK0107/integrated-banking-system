@@ -2,7 +2,9 @@ package com.lhsk.iam.domain.account.service;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -54,54 +56,52 @@ public class AccountService {
 		return accountList;
 	}
 
-	// 특정 계좌 상세정보
-	public AccountVO findByAcctNo(String acctNo) {
-		try {
-			// acctNo를 암호화 하여 동일한 값을 가진 계좌정보 조회 
-			ivToByteArray(ivString);
-			AccountVO account = accountMapper.findByAcctNo(aesGcmEncrypt.encrypt(acctNo, key, iv));
-			// DB에서 가져온 정보 중, 계좌번호를 평문으로 복호화
-			account.setAcctNo(aesGcmEncrypt.decrypt(account.getAcctNo(), key));
-			return account;
-		} catch (GeneralSecurityException e) {
-			throw new RuntimeException("Failed to encrypt acctNo", e); 
-		}
-	}
-	
-	// 한 계좌의 거래내역 조회
-	public List<InoutVO> findOneInout(InoutRequestVO vo) {
-		vo.setStart((vo.getPage()-1)*vo.getPageSize());
-		List<InoutVO> list = accountMapper.findOneInout(vo);
-		// 거래 내역에서 계좌번호 복호화
-		for (InoutVO inout : list) {
-			try {
-				inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
-			} catch (GeneralSecurityException e) {
-				throw new RuntimeException("Failed to encrypt acctNo", e); 
-			}
-		}
-		return list;
-	}
-	
-	// 특정 사용자의 조회 가능한 계좌 리스트 
+	// 특정 사용자의 조회 가능한 계좌정보 리스트 
 	public List<AccountVO> findAllAvailableAccount(int userNo) {
-		// 회원번호를 토대로 해당 회원이 열람 가능한 계좌번호 목록 조회
-		List<String> acctNoList = accountMapper.findAvailableAccount(userNo);
-		List<AccountVO> accountList = new ArrayList<AccountVO>();
-		
-		for (String acctNo : acctNoList) {
+		// 회원번호를 토대로 해당 회원이 열람 가능한 계좌정보 목록 조회
+		List<AccountVO> accountList = accountMapper.findAvailableAccount(userNo);
+		// 조회 가능한 계좌정보가 없으면 null 반환
+		if (accountList == null) return null;
+		// 계좌 정보가 있으면 암호화 되어 저장된 계좌번호를 다시 복호화해서 반환
+		for (AccountVO account : accountList) {
 			try {
-				// 암호화 되어 저장된 계좌번호를 다시 복호화
-				acctNo = aesGcmEncrypt.decrypt(acctNo, key);
-				// 해당 계좌의 정보를 accountList에 추가
-				accountList.add(accountMapper.findByAcctNo(acctNo));
-				
+				account.setAcctNo(aesGcmEncrypt.decrypt(account.getAcctNo(), key));				
 			} catch (GeneralSecurityException e) {
 				throw new RuntimeException("Failed to decrypt acctNo", e); 
 			}
 		}
 		return accountList;
 	}
+	
+	// 해당 계좌에 접근(조회) 가능한 사용자인지 확인
+	public int checkByAcctNoToAccessibleUser(HashMap<String, Object> userInfo) {
+		return accountMapper.checkByAcctNoToAccessibleUser(userInfo);
+	}
+	
+	// 한 계좌의 거래내역 조회
+	public List<InoutVO> findOneInout(InoutRequestVO vo, int userNo) {
+		// mapper에 전달할 hashMap 객체 생성
+		HashMap<String, Object> userInfo = new HashMap<>();
+		userInfo.put("userNo", userNo);
+		userInfo.put("acctNo", vo.getAcctNo());
+		
+		// 토큰 보유자의 userNo와 조회할 계좌의 acctNo를 넘겨 해당 사용자가 조회할 수 있는 계좌인지 판별
+		if (checkByAcctNoToAccessibleUser(userInfo) > 0) {
+			vo.setStart((vo.getPage()-1)*vo.getPageSize());
+			List<InoutVO> list = accountMapper.findOneInout(vo);
+			// 거래 내역에서 계좌번호 복호화
+			for (InoutVO inout : list) {
+				try {
+					inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
+				} catch (GeneralSecurityException e) {
+					throw new RuntimeException("Failed to encrypt acctNo", e); 
+				}
+			}
+			return list;
+		}
+		return null;
+	}
+	
 	
 	
 	
