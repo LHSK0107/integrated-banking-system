@@ -132,6 +132,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	try {
 		vo = LoginHistoryVO.builder()
 				   .userNo(user.getUserNo())
+				   .dept(user.getDept())
 				   .name(aesGcmEncrypt.encrypt(user.getName(), key, iv))
 				   .email(aesGcmEncrypt.encrypt(user.getEmail(), key, iv))
 				   .loginDt(LocalDateTime.now())
@@ -139,7 +140,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	} catch (GeneralSecurityException e) {
 		e.printStackTrace();
 	}
-       
+       System.out.println("dt : "+vo.getLoginDt());
+       System.out.println("dept : "+vo.getDept());
        loginMapper.insertLoginHistory(vo);
    }
    
