@@ -2,6 +2,7 @@ package com.lhsk.iam.global.config.jwt;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class TokenController {
 	 * 미통과시(보안 공격, 리프레시 토큰 만료) -> 로그아웃 처리
 	 */
 	 
-	@PostMapping("/refreshToken")
+	@PostMapping("/reAccessToken")
 	public ResponseEntity<?> reAccessToken(HttpServletRequest req) {
 		// 쿠키에서 리프레시 토큰 추출
 	    String refreshToken = getRefreshTokenFromCookies(req);
@@ -65,6 +66,44 @@ public class TokenController {
 	    String newAccessToken = jwtTokenProvider.createAccessToken(authentication);
 	    log.info("재발급한 액세스토큰 : "+newAccessToken);
 	    return ResponseEntity.ok().header(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix() + newAccessToken).build();
+	}
+	
+	@PostMapping("/refreshToken")
+	public ResponseEntity<?> genereateRefreshToken(HttpServletRequest req, HttpServletResponse resp) {
+		
+		String oldRefreshToken = getRefreshTokenFromCookies(req);
+		try {
+	    	if (oldRefreshToken == null || !jwtTokenProvider.validateToken(oldRefreshToken)) {
+	    		log.info("리프레시 토큰 : " + oldRefreshToken);
+	    		System.out.println("토큰이 이상함");
+	    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
+	    	}
+	    } catch(ExpiredJwtException e) {
+	    	// 토큰이 만료됨
+	    	log.info("토큰이 만료됨 : " + oldRefreshToken);
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료됐습니다.");
+	    } catch(MalformedJwtException e) {
+	    	// 토큰 구조가 올바르지 않은 경우에 대한 처리
+	    	log.info("토큰의 구조가 올바르지 않음 : " + oldRefreshToken);
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("손상된 토큰입니다.");
+	    } catch(SignatureException e) {
+	    	// Jwt가 올바르게 서명되지 않음 -> 스프링 재실행시 일어날듯
+	    	log.info("서명이 일치하지 않음 : " + oldRefreshToken);
+	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("서명이 일치하지 않습니다.");
+	    }
+		
+		Authentication authentication = jwtTokenProvider.getAuthenticationFromRefreshToken(oldRefreshToken);
+		
+		String newRefreshToken = jwtTokenProvider.createRefreshToken(authentication);
+				
+		Cookie refreshTokenCookie = new Cookie("refreshToken", newRefreshToken);
+		refreshTokenCookie.setHttpOnly(true);			// JS로 쿠키접근 불가능
+		refreshTokenCookie.setPath("/");	// 프론트가 쿠키를 서버측으로 전송할때, 특정 url로 요청할 경우에만 전송가능
+		refreshTokenCookie.setMaxAge(60 * 30); 			// 30 min
+		
+//      refreshTokenCookie.setSecure(true);			// https에서만 전송되도록 설정
+        resp.addCookie(refreshTokenCookie);
+		return new ResponseEntity<>("로그인 연장 완료",HttpStatus.OK);
 	}
 	
 	// 쿠키로부터 리프레시 토큰을 추출하는 메소드
