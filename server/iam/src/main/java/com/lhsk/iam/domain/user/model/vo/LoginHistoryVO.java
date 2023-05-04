@@ -17,5 +17,6 @@ public class LoginHistoryVO {
 	private int userNo;
 	private String name;
 	private String email;
+	private String dept;
 	private LocalDateTime loginDt;
 }
