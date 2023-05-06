@@ -28,7 +28,7 @@ const Index = () => {
     } else {
       const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
-        id: decodedPayload.id,
+        id: decodedPayload.sub,
         name: decodedPayload.name,
         exp: decodedPayload.exp,
         userCode: decodedPayload.userCode,
@@ -50,6 +50,7 @@ const Index = () => {
   const { apiData, isLoading, error } = useAxiosAcctInquiry(
     "http://localhost:8080/api/accounts"
   );
+  
   useEffect(() => {
     apiData && clearData(apiData);
   }, [apiData]);

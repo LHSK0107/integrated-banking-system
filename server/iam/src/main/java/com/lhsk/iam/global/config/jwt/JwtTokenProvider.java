@@ -37,9 +37,9 @@ public class JwtTokenProvider {
 	private SecretKey secretKey;
 	
 	@PostConstruct
-    public void init() {
-		secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    }
+	public void init() {
+	    secretKey = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes());
+	}
 	
 	// 엑세스토큰 발급
 	public String createAccessToken(Authentication authentication) {
@@ -107,6 +107,29 @@ public class JwtTokenProvider {
 
         return claims.get("userCode", String.class);
     }
+	
+	// 유저 번호 추출
+	public int getUserNoFromToken(String token) {
+		 Claims claims = Jwts.parserBuilder()
+	                .setSigningKey(secretKey)
+	                .build()
+	                .parseClaimsJws(token)
+	                .getBody();
+
+	        return claims.get("userNo", Integer.class);
+	}
+	
+	// 유저 이름 추출
+	public String getNameFromToken(String token) {
+		Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("name", String.class);
+	}
+	
 	
 	// 토큰의 유효성 검사
 	public boolean validateToken(String token) {

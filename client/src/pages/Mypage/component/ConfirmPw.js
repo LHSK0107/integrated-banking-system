@@ -26,7 +26,7 @@ export default function ConfirmPw() {
     } else {
       const decodedPayload = decodeJwt(savedToken);
       setLoggedUser({
-        id: decodedPayload.id,
+        id: decodedPayload.sub,
         name: decodedPayload.name,
         exp: decodedPayload.exp,
         userCode: decodedPayload.userCode,
@@ -70,7 +70,11 @@ export default function ConfirmPw() {
       .post("http://localhost:8080/api/users/checkPass", {
         userNo: loggedUser.userNo,
         password: data.password,
-      })
+      },
+      {
+        headers: {Authorization: "Bearer "+savedToken,},
+      }
+      )
       .then((res) => {
         console.log(res);
         console.log(res.data);

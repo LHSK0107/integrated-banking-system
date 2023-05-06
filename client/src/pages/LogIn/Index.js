@@ -60,7 +60,7 @@ const Index = () => {
           localStorage.setItem("jwt", token);
           // context api 설정
           setLoggedUser({
-            id: decodedPayload.id,
+            id: decodedPayload.sub,
             name: decodedPayload.name,
             exp: decodedPayload.exp,
             userCode: decodedPayload.userCode,
