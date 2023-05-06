@@ -17,6 +17,7 @@ import DailyReport from "./pages/DailyReport/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogInContext } from "./commons/LogInContext";
 import { useState } from "react";
+import { UserContext } from "./setup/context/UserContextProvider";
 
 const App = () => {
   const [token, setToken] = useState(null);
