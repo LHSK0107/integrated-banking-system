@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import "./inquiry.module.css";
+import "./inquiry.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
-import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
+import {useAuthGetAxios} from "../../api/useCommonAxios";
 import { AcctList } from "./component/AcctList";
 import { Link, useNavigate } from "react-router-dom";
 import decodeJwt from "../../hooks/decodeJwt";
@@ -47,10 +47,9 @@ const Index = () => {
   let depAInsArr = [];
   let loanArr = [];
 
-  const { apiData, isLoading, error } = useAxiosAcctInquiry(
-    "http://localhost:8080/api/accounts"
+  const { apiData, isLoading, error } = useAuthGetAxios(
+    "/api/accounts"
   );
-  
   useEffect(() => {
     apiData && clearData(apiData);
   }, [apiData]);
