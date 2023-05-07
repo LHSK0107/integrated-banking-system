@@ -9,19 +9,28 @@
 				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
 		FROM account
 	</select>
-	
-	<select id="findByAcctNo" parameterType="String" resultType="AccountVO">
-		SELECT	acct_no, bank_cd, bal, ib_type, acct_dv, 
+		
+	<select id="findAvailableAccount" parameterType="int" resultType="AccountVO">
+		SELECT	UA.user_no, UA.acct_no, bank_cd, bal, ib_type, acct_dv, 
 				loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, 
 				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
-				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
-		FROM account
-		WHERE acct_no=#{acctNo}
-	</select>
-	
-	<select id="findAvailableAcct" parameterType="int" resultType="java.util.ArrayList">
-		select acct_no from user_account where user_no = #{userNo};
+       			loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt
+		FROM	user_account UA
+		INNER JOIN account ACCT
+		on 		UA.acct_no = ACCT.acct_no
+		WHERE 	UA.user_no = #{userNo}
+		ORDER BY  acct_dv, bank_cd;
 	</select>	
+	
+	 <select id="checkByAcctNoToAccessibleUser" parameterType="java.util.HashMap" resultType="int">
+		SELECT EXISTS (
+			SELECT user_no 
+			FROM user_account 
+			WHERE user_no=#{userNo} 
+				AND acct_no=#{acctNo}
+			) 
+		AS flag			 	
+	 </select>
 	
 	<select id="findOneInout" resultType="InoutVO">
 		SELECT a.*, b.acct_dv FROM inout_past a 
@@ -62,7 +71,6 @@
 		</choose>
 		order by trsc_dt ${sort} limit #{start}, #{pageSize};
 	</select>
-	
 	
 	<select id="findAllBankCodeAndBankName" resultType="java.util.HashMap">
 		SELECT bank_cd, bank_nm FROM bank_code ORDER BY bank_cd ASC

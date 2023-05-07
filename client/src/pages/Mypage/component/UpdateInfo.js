@@ -16,7 +16,7 @@ const UpdateInfo = () => {
   // 로컬스토리지에서 jwt 가져오기
   const savedToken = localStorage.getItem("jwt");
   setToken(savedToken);
-  
+
   // 토큰으로 로그인 context api 세팅
   useEffect(() => {
     // 서버에서 회원정보 가져오기
@@ -44,7 +44,9 @@ const UpdateInfo = () => {
   // 회원정보 가져오기
   const getUserInfo = () => {
     axios
-      .get(`http://localhost:8080/api/users/${loggedUser.userNo}`, {})
+      .get(`http://localhost:8080/api/users/${loggedUser.userNo}`, {
+        headers: { Authorization: "Bearer " + savedToken },
+      })
       .then((res) => {
         setUserInfo({
           userNo: res.data.userNo,
@@ -63,7 +65,7 @@ const UpdateInfo = () => {
   const [pwValue, setPwValue] = useState("");
   const [confirmPwValue, setConfirmPwValue] = useState("");
   const [telValue, setTelValue] = useState("");
-  console.log(prePwValue, pwValue, confirmPwValue, telValue);
+  // console.log(prePwValue, pwValue, confirmPwValue, telValue);
 
   // form 유효성 검사
   const schema = yup.object().shape({
@@ -124,7 +126,6 @@ const UpdateInfo = () => {
     //     console.log("모두 null");
     // }
 
-    // 빈 값일 때 unregister
     if (
       data.presentPassword === null &&
       data.password === null &&
@@ -140,61 +141,98 @@ const UpdateInfo = () => {
       data.confirmPassword !== null
     ) {
       // 비밀번호 쪽을 하나라도 건들였다면 현재 비밀번호 확인
+      if (data.presentPassword !== data.password) {
+        axios
+          .post(
+            "http://localhost:8080/api/users/checkPass",
+            {
+              userNo: loggedUser.userNo,
+              password: data.presentPassword,
+              phone: data.tel,
+            },
+            {
+              headers: { Authorization: "Bearer " + savedToken },
+            }
+          )
+          .then((res) => {
+            if (res.status === 200 && res.data === true) {
+              axios
+                .put(
+                  "http://localhost:8080/api/users/",
+                  {
+                    userNo: loggedUser.userNo,
+                    password: data.password,
+                    phone: data.tel,
+                  },
+                  {
+                    headers: { Authorization: "Bearer " + savedToken },
+                  }
+                )
+                .then((res) => {
+                  console.log(res);
+                  // console.log(res.data);
+                  // console.log(data);
+                  if (res.status === 200 && res.data === "success") {
+                    alert("수정되었습니다.");
+                    navigate("/");
+                  } else if (res.data === "fail") {
+                    alert("수정에 실패하였습니다.");
+                    return false;
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        alert("비밀번호가 이전과 같습니다.");
+        return false;
+      }
+    } else if (data.tel !== null) {
       axios
-        .post("http://localhost:8080/api/users/checkPass", {
-          userNo: loggedUser.userNo,
-          password: data.presentPassword,
-        })
+        .put(
+          "http://localhost:8080/api/users/",
+          {
+            userNo: loggedUser.userNo,
+            password: data.password,
+            phone: data.tel,
+          },
+          {
+            // headers: { Authorization: "Bearer " + savedToken }
+          }
+        )
         .then((res) => {
-          console.log(res);
-          console.log(res.data);
-          if (res.status === 200 && res.data === true) {
-            // 비밀번호 수정
-            axios
-              .put("http://localhost:8080/api/users/", {
-                userNo: loggedUser.userNo,
-                password: data.password,
-                phone: data.tel,
-              })
-              .then((res) => {
-                console.log(res);
-                console.log(res.data);
-                console.log(data);
-                if (res.status === 200 && res.data === true) {
-                  alert("수정완료");
-                } else if (res.data === false) {
-                  alert("비밀번호 수정 실패");
-                  return false;
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+          // console.log(res);
+          // console.log(res.data);
+          if (res.status === 200 && res.data === "success") {
+            alert("수정되었습니다.");
+            navigate("/");
+          } else if (res.data === "fail") {
+            alert("수정에 실패하였습니다.");
+            return false;
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else if (data.tel !== null) {
-      console.log(data);
-      //1 axios
-      //   .put("http://localhost:8080/api/users/", {
-      //     userNo: loggedUser.userNo,
-      //     password: data.password,
-      //   })
-      //   .then((res) => {
-      //     console.log(res);
-      //     console.log(res.data);
-      //     if (res.status === 200 && res.data === true) {
-      //     } else if (res.data === false) {
-      //       alert("변경한 정보가 없습니다.");
-      //       return false;
-      //     }
-      //   });
+        .catch((err) => {})
+        .finally(() => {});
     } else {
-      console.log("else");
+      console.log(data);
     }
   };
+
+  // 탈퇴하기
+  const deleteMe = () => {
+    if(loggedUser.userCode !== "ROLE_ADMIN") {
+      return (
+        <div className="flex justify_end">
+          <button type="button">탈퇴하기</button>
+        </div>
+      )
+    }
+  }
 
   return (
     <div className="updateInfo">
@@ -283,9 +321,7 @@ const UpdateInfo = () => {
         </ul>
         <button type="submit">수정하기</button>
       </form>
-      <div className="flex justify_end">
-        <button type="button">탈퇴하기</button>
-      </div>
+      {deleteMe()}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import "./index.css";
+import "./index.module.css";
 import React from "react";
 import Quick01 from "../../assets/images/icon/check-circle.png";
 import Quick02 from "../../assets/images/icon/dollar-sign.png";

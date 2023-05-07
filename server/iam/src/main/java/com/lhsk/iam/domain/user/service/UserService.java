@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
 import com.lhsk.iam.domain.user.model.mapper.UserMapper;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
@@ -163,6 +165,15 @@ public class UserService {
 		return decryptUser(userMapper.findByUserNo(userNo));
 	}
 	
+	// 메뉴 클릭 기록 집계
+	@Transactional
+	public void updateMenuClick(MenuClickRequestVO vo) {
+		userMapper.updateMenuClick("all_account", vo.getAllAccount());
+		userMapper.updateMenuClick("daily_report", vo.getDailyReport());
+		userMapper.updateMenuClick("inout_report", vo.getInoutReport());
+		userMapper.updateMenuClick("inout", vo.getInout());
+		userMapper.updateMenuClick("dashboard", vo.getDashboard());
+	}
 
 	
 //	------------------------------------------------------------------------------------

@@ -108,7 +108,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
        // 리프레시 토큰 발급(쿠키)
        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
        refreshTokenCookie.setHttpOnly(true);			// JS로 쿠키접근 불가능
-       refreshTokenCookie.setPath("/refreshToken");	// 프론트가 쿠키를 서버측으로 전송할때, 특정 url로 요청할 경우에만 전송가능
+       refreshTokenCookie.setPath("/");	// 프론트가 쿠키를 서버측으로 전송할때, 특정 url로 요청할 경우에만 전송가능
        refreshTokenCookie.setMaxAge(60 * 30); 			// 30 min
        
 //       refreshTokenCookie.setSecure(true);			// https에서만 전송되도록 설정
@@ -132,6 +132,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	try {
 		vo = LoginHistoryVO.builder()
 				   .userNo(user.getUserNo())
+				   .dept(user.getDept())
 				   .name(aesGcmEncrypt.encrypt(user.getName(), key, iv))
 				   .email(aesGcmEncrypt.encrypt(user.getEmail(), key, iv))
 				   .loginDt(LocalDateTime.now())
@@ -139,7 +140,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	} catch (GeneralSecurityException e) {
 		e.printStackTrace();
 	}
-       
+       System.out.println("dt : "+vo.getLoginDt());
+       System.out.println("dept : "+vo.getDept());
        loginMapper.insertLoginHistory(vo);
    }
    
