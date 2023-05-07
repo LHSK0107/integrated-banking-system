@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
+import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 
 @Mapper
@@ -42,4 +43,9 @@ public interface UserMapper {
 	int updateDept(String newDept, String oldDept);
 	// 부서 삭제
 	int deleteDept(String dept);
+	
+	// 메뉴 클릭 스케쥴링
+	void insertMenuClick(String menuNm);
+	// 메뉴 클릭 기록 집계
+	void updateMenuClick(String menuNm, int cnt);
 }

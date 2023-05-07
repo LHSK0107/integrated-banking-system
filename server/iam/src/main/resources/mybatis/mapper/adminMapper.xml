@@ -8,4 +8,34 @@
 		SELECT * FROM user_login ORDER BY login_dt DESC
 	</select>
 	
+	<select id="findMenuClickDay" resultType="MenuClickVO">
+		SELECT menu_nm,
+			   DATE(click_date) AS date,
+			   SUM(click_cnt) AS click_cnt
+		FROM menu_click
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+		GROUP BY menu_nm, date order by date desc;
+	</select>
+	
+	<select id="findMenuClickWeek" resultType="MenuClickVO">
+		SELECT menu_nm,
+		       STR_TO_DATE(CONCAT(YEARWEEK(click_date, 1), ' Monday'), '%X%V %W') AS date,
+		       SUM(click_cnt) AS click_cnt
+		FROM menu_click
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 WEEK)
+		GROUP BY menu_nm, STR_TO_DATE(CONCAT(YEARWEEK(click_date, 1), ' Monday'), '%X%V %W')
+		HAVING date IS NOT NULL
+		ORDER BY date DESC;	
+	</select>
+	
+	<select id="findMenuClickMonth" resultType="MenuClickVO">
+		SELECT menu_nm,
+		       DATE_FORMAT(click_date, '%Y-%m-01') AS date,
+		       SUM(click_cnt) AS click_cnt
+		FROM menu_click
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 MONTH)
+		GROUP BY menu_nm, DATE_FORMAT(click_date, '%Y-%m-01')
+		ORDER BY date DESC;
+	</select>
+	
 </mapper>
