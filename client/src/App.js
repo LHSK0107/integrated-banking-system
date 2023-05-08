@@ -18,6 +18,8 @@ import DailyReport from "./pages/DailyReport/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogInContext } from "./commons/LogInContext";
 import { useState } from "react";
+import LogHistory from "./pages/Admin/component/LogHistory";
+import ClickHistory from "./pages/Admin/component/ClickHistory";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -63,6 +65,8 @@ const App = () => {
                   <Route index element={<Admin />} />
                   <Route path=":userNo" element={<AdminDetail />} />
                 </Route>
+                <Route path="/logHistory" element={<LogHistory />} />
+                <Route path="/clickHistory" element={<ClickHistory />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
