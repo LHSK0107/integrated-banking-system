@@ -16,5 +16,5 @@ import lombok.Setter;
 public class MenuClickVO {
 	private String menuNm;			// 메뉴이름
 	private long clickCnt;			// 클릭횟수
-	private LocalDate date;			// 집계날짜
+	private String date;			// 집계날짜
 }
