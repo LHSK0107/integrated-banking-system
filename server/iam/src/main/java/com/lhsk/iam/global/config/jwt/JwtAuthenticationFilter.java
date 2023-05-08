@@ -1,35 +1,24 @@
 package com.lhsk.iam.global.config.jwt;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
-import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 import com.lhsk.iam.domain.user.model.vo.LoginRequestVO;
-import com.lhsk.iam.domain.user.model.vo.UserVO;
-import com.lhsk.iam.domain.user.service.UserService;
-import com.lhsk.iam.global.config.JwtConfig;
+import com.lhsk.iam.domain.user.service.LoginService;
 import com.lhsk.iam.global.config.auth.PrincipalDetails;
-import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,20 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
    
    private AuthenticationManager authenticationManager;
-   private JwtTokenProvider jwtTokenProvider;
-   private JwtConfig jwtConfig;
-   private LoginMapper loginMapper;
-   private String key;
-   private String ivString;
+   private LoginService loginService;
    
-   public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
-		    LoginMapper loginMapper, JwtConfig jwtConfig, JwtTokenProvider jwtTokenProvider, String key, String ivString) {
+   public JwtAuthenticationFilter(AuthenticationManager authenticationManager, LoginService loginService) {
        this.authenticationManager = authenticationManager;
-       this.loginMapper = loginMapper;
-       this.jwtTokenProvider = jwtTokenProvider;
-       this.jwtConfig = jwtConfig;
-       this.key = key;
-       this.ivString = ivString;
+       this.loginService = loginService;
    }
    
    // Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
@@ -90,7 +70,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       Authentication authentication = 
             authenticationManager.authenticate(authenticationToken);
       
-      PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+//      PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
       
       return authentication;
    }
@@ -100,49 +80,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
    @Override
    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
          Authentication authResult) throws IOException, ServletException {
-	   
-       PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
-       String accessToken = jwtTokenProvider.createAccessToken(authResult);
-       String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
- 
-       // 리프레시 토큰 발급(쿠키)
-       Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-       refreshTokenCookie.setHttpOnly(true);			// JS로 쿠키접근 불가능
-       refreshTokenCookie.setPath("/");	// 프론트가 쿠키를 서버측으로 전송할때, 특정 url로 요청할 경우에만 전송가능
-       refreshTokenCookie.setMaxAge(60 * 30); 			// 30 min
-       
-//       refreshTokenCookie.setSecure(true);			// https에서만 전송되도록 설정
-       response.addCookie(refreshTokenCookie);
-       
-       // 액세스 토큰 발급(헤더)
-       response.addHeader(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix()+accessToken);
-       response.addHeader("Access-Control-Expose-Headers", jwtConfig.getHeaderString());
-       
-       // 로그인 기록 저장
-       UserVO user = principalDetailis.getUserVO();
-       AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
-       byte[] iv = new byte[12];
-       String[] ivStringArray = ivString.split(", ");
-		// String[] -> byte[]로 번환
-		for (int i = 0; i < iv.length; i++) {
-		    iv[i] = Byte.parseByte(ivStringArray[i]);
-		}
-       
-       LoginHistoryVO vo = null;
-	try {
-		vo = LoginHistoryVO.builder()
-				   .userNo(user.getUserNo())
-				   .dept(user.getDept())
-				   .name(aesGcmEncrypt.encrypt(user.getName(), key, iv))
-				   .email(aesGcmEncrypt.encrypt(user.getEmail(), key, iv))
-				   .loginDt(LocalDateTime.now())
-				   .build();
-	} catch (GeneralSecurityException e) {
-		e.printStackTrace();
-	}
-       System.out.println("dt : "+vo.getLoginDt());
-       System.out.println("dept : "+vo.getDept());
-       loginMapper.insertLoginHistory(vo);
+	   log.debug("call successful login");
+	   loginService.processSuccessfulAuthentication(request, response, authResult);
    }
    
    // 로그인 실패시 상태코드와 응답 메시지를 담아준다.

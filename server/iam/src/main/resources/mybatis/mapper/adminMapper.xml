@@ -13,7 +13,7 @@
 			   DATE(click_date) AS date,
 			   SUM(click_cnt) AS click_cnt
 		FROM menu_click
-		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
 		GROUP BY menu_nm, date order by date desc;
 	</select>
 	
@@ -22,7 +22,7 @@
 		       STR_TO_DATE(CONCAT(YEARWEEK(click_date, 1), ' Monday'), '%X%V %W') AS date,
 		       SUM(click_cnt) AS click_cnt
 		FROM menu_click
-		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 WEEK)
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 6 WEEK)
 		GROUP BY menu_nm, STR_TO_DATE(CONCAT(YEARWEEK(click_date, 1), ' Monday'), '%X%V %W')
 		HAVING date IS NOT NULL
 		ORDER BY date DESC;	
@@ -33,7 +33,7 @@
 		       DATE_FORMAT(click_date, '%Y-%m-01') AS date,
 		       SUM(click_cnt) AS click_cnt
 		FROM menu_click
-		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 MONTH)
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
 		GROUP BY menu_nm, DATE_FORMAT(click_date, '%Y-%m-01')
 		ORDER BY date DESC;
 	</select>

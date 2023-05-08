@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.lhsk.iam.domain.user.model.mapper.LoginMapper;
-import com.lhsk.iam.domain.user.service.UserService;
+import com.lhsk.iam.domain.user.service.LoginService;
 import com.lhsk.iam.global.config.jwt.JwtAuthenticationFilter;
 import com.lhsk.iam.global.config.jwt.JwtAuthorizationFilter;
 import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
@@ -33,6 +32,8 @@ public class SecurityConfig {
 	private JwtTokenProvider jwtTokenProvider;
 	@Autowired
 	private JwtConfig jwtConfig;
+	@Autowired
+	private LoginService loginService;
 	
     @Value("${aes.secret}")
     private String key;
@@ -87,7 +88,7 @@ public class SecurityConfig {
 		    AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 		    http
 		            .addFilter(corsConfig.corsFilter())
-		            .addFilter(new JwtAuthenticationFilter(authenticationManager, loginMapper, jwtConfig, jwtTokenProvider, key, ivString))
+		            .addFilter(new JwtAuthenticationFilter(authenticationManager, loginService))
 		            .addFilter(new JwtAuthorizationFilter(authenticationManager, loginMapper, jwtConfig, jwtTokenProvider));
 		}
 	}
