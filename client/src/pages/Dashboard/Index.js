@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Balance from "../../hooks/useBalance";
-import "./dashboard.module.css";
+import "./dashboard.css";
 import Pie from "./component/Pie";
 import Bar from "./component/Bar";
 import Point from "./component/Point";

@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
-import "./dailyreport.module.css";
+import "./dailyreport.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
-import useAxiosAcctInquiry from "../../api/useAxiosAcctInquiry";
+import useCommonAxios from "../../api/useCommonAxios";
 import { Link, useNavigate } from "react-router-dom";
 import decodeJwt from "../../hooks/decodeJwt";
 import { LogInContext } from "../../commons/LogInContext";
