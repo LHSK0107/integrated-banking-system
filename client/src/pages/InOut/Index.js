@@ -1,11 +1,11 @@
 /* eslint-disable */
 import React, {useState, useRef, useCallback, useEffect}  from "react";
 import ReactDOMServer from 'react-dom/server'
-import "./inout.module.css";
+import "./inout.css";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
-import useAxiosAccTInquiry from "../../api/useAxiosAcctInquiry";
+import useCommonAxios from "../../api/useCommonAxios";
 import useAxios from "../../api/useAxios";
 import BankName from '../../hooks/useBankName';
 import useCurrentTime from "../../hooks/useCurrentTime";

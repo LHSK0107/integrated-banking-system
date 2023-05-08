@@ -8,9 +8,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { LogInContext } from "../../commons/LogInContext";
 import decodeJwt from "../../hooks/decodeJwt";
-// import jwt_decode from 'jsonwebtoken';
-
+import useAuth from "../../hooks/useAuth";
+import useCommonAxios from "../../api/useCommonAxios";
 const Index = () => {
+  // context
+  const {setIsAuth,setLoggedUserInfo, setToken2} = useAuth();
+
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
 
   const navigate = useNavigate();
@@ -39,51 +42,40 @@ const Index = () => {
     resolver: yupResolver(schema),
     mode: "onChange", // 바뀔 때마다
   });
-
-  // input value 관리를 위한 state
-  // const [userInputValue, setUserInputValue] = useState({
-  //   username:"",
-  //   password:""
-  // });
-  // input name별 onChange 관리
-  // const onChange = ((e) => {
-  //   const {name, value} = e.target;
-  //   // console.log(e.target.name, e.target.value);
-  //   setUserInputValue({...userInputValue,[name]:value});
-  // });
-
   const onSubmit = (data) => {
-    // json 보내기
-    console.log(data);
     axios
       .post("http://localhost:8080/login", {
         username: data.username,
         password: data.password,
       })
       .then((response) => {
-
-        // axios.defaults.withCredentials = true;
-        // axios.post("http://192.168.240.140:8080/refreshToken")
-
         // 로그인 성공 시
         if(response.status === 200 && response.headers.get("Authorization")) {
           const token = response.headers.get("Authorization").split(" ")[1];
           // header에 default로 token 싣기
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-
           // token을 decode
           const decodedPayload = decodeJwt(token);
           // 로컬스토리지에 jwt
           localStorage.setItem("jwt", token);
           // context api 설정
-          setLoggedUser({
+          // setLoggedUser({
+          //   id: decodedPayload.sub,
+          //   name: decodedPayload.name,
+          //   exp: decodedPayload.exp,
+          //   userCode: decodedPayload.userCode,
+          //   userNo: decodedPayload.userNo
+          // });
+          // setLoggedIn(true);
+          setToken2(token);
+          setLoggedUserInfo({
             id: decodedPayload.sub,
             name: decodedPayload.name,
             exp: decodedPayload.exp,
             userCode: decodedPayload.userCode,
             userNo: decodedPayload.userNo
           });
-          setLoggedIn(true);
+          setIsAuth(true);
         }
         // 대시보드로 리다이렉트
         navigate("/dashboard")
@@ -91,21 +83,20 @@ const Index = () => {
       .catch((error) => {
         alert(error);
         return false;
-      })
-      .finally(() => {
       });
   };
 
   return (
     <div className="login_section">
       <div className="inner flex justify_center">
-          <div className="login flex justify_center align_center">
-            <figure>
-              <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
-            </figure>
-          </div>
-
-          <div className="login_form_section">
+          <div className="login_wrap flex justify_between">
+            <div className="login_image_section flex justify_center align_center">
+              <figure>
+                <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
+              </figure>
+            </div>
+            
+            <div className="login_form_section flex flex_column justify_center">
             <h2>로그인</h2>
             <div>
               <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
@@ -115,10 +106,7 @@ const Index = () => {
                     type="text"
                     placeholder="아이디를 입력하세요."
                     {...register("username")}
-                    // value={userInputValue.username}
-                    // onChange={onChange}
                   />
-                  {/* {errors.id && <p>This field is required</p>} */}
                   <p>{errors.username?.message}</p>
                 </div>
                 <div className="flex flex_column">
@@ -127,8 +115,6 @@ const Index = () => {
                     type="password"
                     placeholder="패스워드를 입력하세요."
                     {...register("password")}
-                    // value={userInputValue.password}
-                    // onChange={onChange}
                   />
                   <p>{errors.password?.message}</p>
                 </div>
@@ -140,11 +126,13 @@ const Index = () => {
               </form>
             </div>
             <div className="form_bottom flex justify_center align_center">
-              {/* <Link to="">아이디 찾기</Link> */}
               <Link to="">비밀번호 찾기</Link>
               <Link to="">회원가입</Link>
             </div>
           </div>
+          </div>
+
+          
       </div>
     </div>
   );

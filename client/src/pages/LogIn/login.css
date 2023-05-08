@@ -3,7 +3,10 @@
 .login_section {
   /* overflow: hidden; */
   width: 100%;
-  /* height: calc(100vh - 120px); */
+  height: calc(100vh - 120px);
+  padding: 40px;
+  position: relative;
+  height: 100%;
 }
 .login_section > div > div {
   width: 48%;
@@ -36,6 +39,14 @@
 }
 .login_btn_wrap button {
   margin: 10px 10px 0;
+}
+.login_section .login_wrap{
+  width: 100%;
+}
+.login_section .login_image_section,
+.login_section .login_form_section
+{
+  width: 48%
 }
 
 /* 폼 아래 링크들 --- */
