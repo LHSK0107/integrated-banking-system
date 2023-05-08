@@ -18,14 +18,11 @@ import DailyReport from "./pages/DailyReport/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogInContext } from "./commons/LogInContext";
 import { useState } from "react";
-<<<<<<< HEAD
 import LogHistory from "./pages/Admin/component/LogHistory";
 import ClickHistory from "./pages/Admin/component/ClickHistory";
 
-=======
 import {UserContextProvider} from "./setup/context/UserContextProvider";
 import ApproveAuth from "./commons/ApproveAuth";
->>>>>>> fac18e527bd3fe180369ad1f695bd9eaafacd0e4
 const App = () => {
   const [token, setToken] = useState(null);
   const [loggedUser, setLoggedUser] = useState({
@@ -81,6 +78,8 @@ const App = () => {
                     <Route index element={<Admin />} />
                     <Route path=":userNo" element={<AdminDetail />} />
                   </Route>
+                  <Route path="/logHistory" element={<LogHistory />} />
+                  <Route path="/clickHistory" element={<ClickHistory />} />
 
                   {/* 404페이지 */}
                   <Route path="*" element={<NotFound />} />
