@@ -9,9 +9,7 @@ import com.lhsk.iam.domain.user.model.vo.UserVO;
 @Mapper
 public interface LoginMapper {
 	
-	
 	UserVO findUserById(String id);
-	@Transactional
 	void insertLoginHistory(LoginHistoryVO loginHistroryVO);
 	
 }

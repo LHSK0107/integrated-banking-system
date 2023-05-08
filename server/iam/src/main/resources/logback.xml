@@ -6,10 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.apache.ibatis" level="DEBUG">
-        <appender-ref ref="STDOUT" />
-    </logger>
-    <logger name="java.sql" level="DEBUG">
+    <logger name="org.mybatis" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
