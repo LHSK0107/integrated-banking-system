@@ -4,7 +4,7 @@ import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 import BankNM from "../../../hooks/useBankName";
 import ReactDomServer from 'react-dom/server';
 import ExcelIcon from "../../../assets/images/icon/excel.png";
-import "../inquiry.module.css";
+import "../inquiry.css";
 const ExcelExportComponent = ({ stateData, depAInsData, loadData, stateBal, depInsBal, loanBal }) => {
   
   const excelDownload = () => {
