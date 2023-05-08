@@ -7,7 +7,7 @@ import decodeJwt from "../../../hooks/decodeJwt";
 import { LogInContext } from "../../../commons/LogInContext";
 import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
-import "../mypage.module.css";
+import "../mypage.css";
 
 export default function ConfirmPw() {
   // 토큰 확인

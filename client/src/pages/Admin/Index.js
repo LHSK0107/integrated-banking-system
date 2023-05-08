@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { LogInContext } from "../../commons/LogInContext";
 import decodeJwt from "../../hooks/decodeJwt";
 import axios from "axios";
-import "./admin.module.css";
+import "./admin.css";
 
 const Index = () => {
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
