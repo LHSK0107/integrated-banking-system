@@ -37,7 +37,7 @@ const useCommonAxios = ( url ) => {
 
 export default useCommonAxios;
 
-export const useAuthGetAxios = (url) =>{
+export const AuthGetAxios = (url) =>{
   const [apiData, setApiData] = useState(null);
   const [isLoading, setIsLoading]=useState(false);
   const [error, setError]=useState(null);
@@ -52,6 +52,38 @@ export const useAuthGetAxios = (url) =>{
     const signal = fetchController.signal;
     instance
       .get(url, {
+         signal: signal
+      })
+      .then((res) => {
+        setApiData(res.data);
+      })
+      .catch((err) => setError(`에러 발생 ${err}`))
+      .finally(() => {
+        setIsLoading(false);
+      });
+      return () => {
+        fetchController.abort();
+      };
+  },[url]);
+    return { apiData, isLoading, error};
+};
+
+export const AuthPostAxios = (url) =>{
+  const [apiData, setApiData] = useState(null);
+  const [isLoading, setIsLoading]=useState(false);
+  const [error, setError]=useState(null);
+
+  useEffect(()=>{
+    const instance = axios.create({
+      baseURL: BASE_URL,
+      withCredentials: true
+    });
+    instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+    instance.defaults.headers.get['Content-Type'] = "application/json";
+    const fetchController = new AbortController();
+    const signal = fetchController.signal;
+    instance
+      .post(url, {
          signal: signal
       })
       .then((res) => {

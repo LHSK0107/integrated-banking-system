@@ -1,9 +1,9 @@
 import React, {createContext, useState} from 'react';
 
-export const UserContext = createContext(null);
+const UserContext = createContext(null);
 
 export const UserContextProvider = ({children}) => {
-    const [token, setToken] = useState(null);
+    const [token, setToken2] = useState(null);
     const [loggedUserInfo, setLoggedUserInfo] = useState({
       id: "",
       name: "",
@@ -14,7 +14,7 @@ export const UserContextProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false);
     const value = {
         token,
-        setToken,
+        setToken2,
         loggedUserInfo,
         setLoggedUserInfo,
         isAuth,
@@ -24,3 +24,5 @@ export const UserContextProvider = ({children}) => {
       <UserContext.Provider value={value}>{children}</UserContext.Provider>
     );
 }
+
+export default UserContext;
