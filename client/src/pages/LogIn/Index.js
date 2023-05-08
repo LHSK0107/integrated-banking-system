@@ -8,9 +8,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { LogInContext } from "../../commons/LogInContext";
 import decodeJwt from "../../hooks/decodeJwt";
-// import jwt_decode from 'jsonwebtoken';
-
+import useAuth from "../../hooks/useAuth";
+import useCommonAxios from "../../api/useCommonAxios";
 const Index = () => {
+  // context
+  const {setIsAuth,setLoggedUserInfo, setToken2} = useAuth();
+
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
 
   const navigate = useNavigate();
@@ -40,8 +43,6 @@ const Index = () => {
     mode: "onChange", // 바뀔 때마다
   });
   const onSubmit = (data) => {
-    // json 보내기
-    console.log(data);
     axios
       .post("http://localhost:8080/login", {
         username: data.username,
@@ -53,20 +54,28 @@ const Index = () => {
           const token = response.headers.get("Authorization").split(" ")[1];
           // header에 default로 token 싣기
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-
           // token을 decode
           const decodedPayload = decodeJwt(token);
           // 로컬스토리지에 jwt
           localStorage.setItem("jwt", token);
           // context api 설정
-          setLoggedUser({
+          // setLoggedUser({
+          //   id: decodedPayload.sub,
+          //   name: decodedPayload.name,
+          //   exp: decodedPayload.exp,
+          //   userCode: decodedPayload.userCode,
+          //   userNo: decodedPayload.userNo
+          // });
+          // setLoggedIn(true);
+          setToken2(token);
+          setLoggedUserInfo({
             id: decodedPayload.sub,
             name: decodedPayload.name,
             exp: decodedPayload.exp,
             userCode: decodedPayload.userCode,
             userNo: decodedPayload.userNo
           });
-          setLoggedIn(true);
+          setIsAuth(true);
         }
         // 대시보드로 리다이렉트
         navigate("/dashboard")
@@ -74,8 +83,6 @@ const Index = () => {
       .catch((error) => {
         alert(error);
         return false;
-      })
-      .finally(() => {
       });
   };
 

@@ -5,57 +5,56 @@ import logo from "../assets/brand/logo.png";
 import { LogInContext } from "./LogInContext";
 import decodeJwt from "../hooks/decodeJwt";
 import axios from "axios";
+import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  // const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
+  //   useContext(LogInContext);
+  const {token,loggedUserInfo,isAuth,setIsAuth,setLoggedUserInfo} = useAuth();
   const navigate = useNavigate();
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
+  // const savedToken = localStorage.getItem("jwt");
+  // setToken(savedToken);
 
-  useEffect(() => {
-    // 로컬스토리지에서 jwt 가져오기
-    if (savedToken === null) {
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-    }
-  }, [token, setLoggedUser, setLoggedIn]);
-  console.log(loggedUser);
-  console.log(loggedIn);
+  // useEffect(() => {
+  //   // 로컬스토리지에서 jwt 가져오기
+  //   if (savedToken === null) {
+  //     setLoggedUser({
+  //       id: "",
+  //       name: "",
+  //       exp: "",
+  //       userCode: "",
+  //       userNo: "",
+  //     });
+  //     setLoggedIn(false);
+  //   } else {
+  //     const decodedPayload = decodeJwt(savedToken);
+  //     setLoggedUser({
+  //       id: decodedPayload.sub,
+  //       name: decodedPayload.name,
+  //       exp: decodedPayload.exp,
+  //       userCode: decodedPayload.userCode,
+  //       userNo: decodedPayload.userNo,
+  //     });
+  //     setLoggedIn(true);
+  //   }
+  // }, [token, setLoggedUser, setLoggedIn]);
 
   // 로그아웃
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
-      // axios.post("http://localhost:8080/logout", {}).then((res) => console.log(res)).catch((err) => console.log(err));
       localStorage.removeItem("jwt");
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
           if (response.status === 200) {
-            setLoggedUser({
+            setLoggedUserInfo({
               id: "",
               name: "",
               exp: "",
               userCode: "",
               userNo: "",
             });
-            setLoggedIn(false);
+            setIsAuth(false);
             console.log("로그아웃 완료");
             navigate("/login");
           }
@@ -121,8 +120,8 @@ const Navbar = () => {
             </div>
             {/* 로그인 체크 부분 */}
             <div className="user_info_wrap">
-              {loggedIn ? (
-                <LogoutSection value={loggedUser} func={handleLogout} />
+              {token ? (
+                <LogoutSection value={loggedUserInfo} func={handleLogout} />
               ) : (
                 <LoginSection />
               )}
