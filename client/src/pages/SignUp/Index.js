@@ -1,5 +1,5 @@
 /* eslint-disable */
-import "./signup.module.css";
+import "./signup.css";
 import React, { useState, useRef, useEffect } from "react";
 
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
