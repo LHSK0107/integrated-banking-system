@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useContext } from "react";
 import "./inquiry.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
-import {useAuthGetAxios} from "../../api/useCommonAxios";
+import {AuthGetAxios} from "../../api/useCommonAxios";
 import { AcctList } from "./component/AcctList";
 import { Link, useNavigate } from "react-router-dom";
 import decodeJwt from "../../hooks/decodeJwt";
@@ -14,6 +14,8 @@ import Breadcrumb from '../../commons/Breadcrumb';
 import ExcelExportComponent from "./component/ExcelExportComponent";
 
 const Index = () => {
+    // const refresh = useRefreshToken();
+    // const axiosPrivate = useAxiosPrivate();
   // 토큰 확인
   const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
   const navigate=useNavigate();
@@ -47,7 +49,7 @@ const Index = () => {
   let depAInsArr = [];
   let loanArr = [];
 
-  const { apiData, isLoading, error } = useAuthGetAxios(
+  const { apiData, isLoading, error } = AuthGetAxios(
     "/api/accounts"
   );
   useEffect(() => {

@@ -1,4 +1,4 @@
-import "../index.module.css";
+import "../index.css";
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
