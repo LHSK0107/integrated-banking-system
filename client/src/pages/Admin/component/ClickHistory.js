@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
-import "../admin.module.css";
+import "../admin.css";
 import { LogInContext } from "../../../commons/LogInContext";
 import { useNavigate } from "react-router";
 import decodeJwt from "../../../hooks/decodeJwt";
