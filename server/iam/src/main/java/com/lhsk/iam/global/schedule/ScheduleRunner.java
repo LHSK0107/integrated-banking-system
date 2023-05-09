@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ScheduleRunner {
 
-	// testing.....
+	// testing........
 	@Bean
     public ApplicationRunner executeTaskOnStartup(Scheduler scheduler) {
         return args -> {
