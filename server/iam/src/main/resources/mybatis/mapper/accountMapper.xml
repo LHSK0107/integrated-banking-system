@@ -11,7 +11,7 @@
 	</select>
 		
 	<select id="findAvailableAccount" parameterType="int" resultType="AccountVO">
-		SELECT	UA.user_no, UA.acct_no, bank_cd, bal, ib_type, acct_dv, 
+		SELECT	UA.user_no, UA.acct_no, ACCT.bank_cd, bal, ib_type, acct_dv, 
 				loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, 
 				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
        			loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt

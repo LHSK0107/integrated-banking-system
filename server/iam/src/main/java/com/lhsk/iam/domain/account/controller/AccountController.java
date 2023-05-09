@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
 import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
-import com.lhsk.iam.domain.account.model.vo.InoutVO;
 import com.lhsk.iam.domain.account.service.AccountApiService;
 import com.lhsk.iam.domain.account.service.AccountService;
 import com.lhsk.iam.domain.account.service.InoutProcessingService;
@@ -28,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("api/accounts")
 public class AccountController {
 	
 	private final AccountService accountService;
@@ -38,7 +36,7 @@ public class AccountController {
 	private final JwtConfig jwtConfig;
 	
 	// 전체 계좌정보 조회 메서드(ROLE_MANAGER, ROLE_ADMIN)
-	@GetMapping("/api/accounts")
+	@GetMapping("/api/manager/accounts")
 	public ResponseEntity<List<AccountVO>> findAllAccount(HttpServletRequest request) {
 		log.info("AccountController.AccountList");
 		String accessToken = request.getHeader("Authorization")
@@ -55,7 +53,7 @@ public class AccountController {
 	}
 	
 	// 조회 가능 계좌정보 리스트(ROLE_USER)
-	@GetMapping("/api/accounts/available/{userNo}")
+	@GetMapping("/api/users/accounts/available/{userNo}")
 	public ResponseEntity<List<AccountVO>> findAllAvailableAccount(
 												HttpServletRequest request,
 												@PathVariable int userNo) {
@@ -70,12 +68,15 @@ public class AccountController {
 		if (userCode.equals("ROLE_USER") && TokenUserNo == userNo) {
 			List<AccountVO> accountList = accountService.findAllAvailableAccount(userNo);
 			return new ResponseEntity<>(accountList, HttpStatus.OK); 			
+		} else if(userCode.equals("ROLE_MANAGER") || userCode.equals("ROLE_ADMIN")) {
+			List<AccountVO> accountList = accountService.findAllAvailableAccount(userNo);
+			return new ResponseEntity<>(accountList, HttpStatus.OK); 						
 		}
 		else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
 		
-	// 회원 계좌의 입출금 내역
-	@PostMapping("api/accounts/inout/")
+	// 회원 계좌의 입출금 내역(ROLE_USER)
+	@PostMapping("api/users/accounts/inout/")
 	public ResponseEntity<Map<String, Object>> getUsersInout(@RequestBody InoutRequestVO vo, HttpServletRequest request) {
 		/*
 		 * {
@@ -107,6 +108,23 @@ public class AccountController {
 		
 		// 총 페이지 및 입출금 내역 조회 결과 Map 리턴(key : totalPage, list)
 		return new ResponseEntity<>(accountService.findUsersInout(vo, istoday), HttpStatus.OK);
+	}
+
+	// 관리자의 입출금 내역 조회(ROLE_MANAGER, ROLE_ADMIN)
+	@PostMapping("api/manager/accounts/inout/")
+	public ResponseEntity<Map<String, Object>> getAdminsInout(@RequestBody InoutRequestVO vo) {
+		log.info("AccountController.getAdminsInout");
+		
+		// 오늘이 포함되었는지 boolean값 반환
+		boolean istoday = inoutProcessingService.isTodayBetweenDates(vo.getStartDt(), vo.getEndDt());
+		
+		if(istoday) {
+			// 오늘이 포함되었을 경우 -> OpenApi를 통해 갱신을 해준다.
+			accountApiService.updateInoutToday(vo);
+		}
+		
+		// 총 페이지 및 입출금 내역 조회 결과 Map 리턴(key : totalPage, list)
+		return new ResponseEntity<>(accountService.findAdminsInout(vo, istoday), HttpStatus.OK);
 	}
 
 	

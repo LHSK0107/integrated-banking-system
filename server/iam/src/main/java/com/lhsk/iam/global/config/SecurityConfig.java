@@ -71,7 +71,7 @@ public class SecurityConfig {
 	                        response.setStatus(HttpServletResponse.SC_OK);
 	                    })
 	            )
-				.authorizeRequests(authroize -> authroize.antMatchers("/api/users/**", "/api/accounts/**") 
+				.authorizeRequests(authroize -> authroize.antMatchers("/api/users/**") 
 						.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 						.antMatchers("/api/manager/**")
 						.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
