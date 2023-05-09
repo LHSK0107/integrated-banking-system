@@ -61,11 +61,6 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- other add libs -->
-	    <dependency>
-	      <groupId>org.springframework.boot</groupId>
-	      <artifactId>spring-boot-starter-mustache</artifactId>
-	    </dependency>
 	    
 	    <!-- Depedency for Dynamic SQL(String utils) -->
 		<dependency>
