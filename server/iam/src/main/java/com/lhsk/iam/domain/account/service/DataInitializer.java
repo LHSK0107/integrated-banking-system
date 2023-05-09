@@ -14,6 +14,7 @@ import com.lhsk.iam.domain.account.api.AccountClient;
 import com.lhsk.iam.domain.account.model.mapper.AccountApiMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
+import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class DataInitializer {
    String bizNo;
    
    // 프로그램이 처음 시작되면 딱 한 번만 실행되는 메소드
-//   @PostConstruct
+   @PostConstruct
    @Transactional
    public void dataInit() {
       
@@ -48,8 +49,8 @@ public class DataInitializer {
       final int PAGE_SIZE = 1000;
         int page = 0;
         
-        
-        
+        // 회원별 조회 가능 계좌 리스트 백업
+        List<UserAccountVO> info = accountApiMapper.findAllUserAccount();
         // 거래내역 삭제
         accountApiMapper.deleteInoutPast();
         // 계좌목록 삭제
@@ -57,6 +58,8 @@ public class DataInitializer {
         // 계좌목록 추가
         List<AccountApiVO> accountList = accountClient.getAccounts();
         accountApiMapper.insertAccounts(accountList);
+        // 백업 데이터 재입력
+        accountApiMapper.insertBackupUserAccount(info);
         // 과거 거래내역 추가
         while (true) {
            log.info("page : "+page);
