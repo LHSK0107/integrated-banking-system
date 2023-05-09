@@ -62,4 +62,16 @@
 		SELECT COUNT(*) FROM inout_past WHERE trsc_dt = #{date};
 	</select>
 	
+	<select id="findAllUserAccount" resultType="UserAccountVO">
+		SELECT user_no, acct_no, bank_cd FROM user_account
+	</select>
+	
+	<insert id="insertBackupUserAccount" parameterType="java.util.List">
+		INSERT INTO user_account (user_no, acct_no, bank_cd) 
+		VALUES
+			<foreach collection="list" item="info" separator=",">
+				(#{info.userNo}, #{info.acctNo}, #{info.bankCd})
+			</foreach>
+	</insert>
+	
 </mapper>
