@@ -5,19 +5,19 @@ on:
     branches:
       - main
     paths:
-      - 'server/iam/**'
+      - 'integrated-banking-system/server/iam/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'server/iam/**'
+      - 'integrated-banking-system/server/iam/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server/iam
+        working-directory: integrated-banking-system/server/iam
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
