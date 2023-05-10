@@ -13,30 +13,6 @@ import Breadcrumb from '../../commons/Breadcrumb';
 import ExcelExportComponent from "./component/ExcelExportComponent";
 
 const Index = () => {
-  // 토큰 확인
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
-  const navigate=useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
-  
-  useEffect(() => {
-    if (savedToken === null) {
-      setLoggedIn(false);
-      // navigate("/login");
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.id,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo
-      });
-      setLoggedIn(true);
-    }
-  }, [token, setLoggedUser, setLoggedIn]);
-
   const [optionVal, setOptionVal] = useState({
     lang:"",
     selectDate:""
@@ -46,12 +22,10 @@ const Index = () => {
     const {name, value} = e.target;
     setOptionVal({...optionVal, [name]:value});
   }
-
   /** */
   const handleOnSubmit = () =>{
     return false;
   }
-
   const selectDateRef = useRef();
   // // 현재 date와 date 형식 가져오기
   // // 초기 기본 값으로 오늘 날짜로부터 30일간격의 날짜를 input value로 지정
