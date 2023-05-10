@@ -61,7 +61,11 @@ public class AdminService {
 	
 	// 7개월간의 메뉴 클릭 집계
 	public List<MenuClickVO> findMenuClickMonth() {
-		return adminMapper.findMenuClickMonth();
+		List<MenuClickVO> list = adminMapper.findMenuClickMonth();
+		for(int i = 0 ; i < list.size(); i++) {
+			list.get(i).setDate(list.get(i).getDate().substring(0,7));
+		}
+		return list;
 	}
 	
 	// iv property를 byte[]로 변환

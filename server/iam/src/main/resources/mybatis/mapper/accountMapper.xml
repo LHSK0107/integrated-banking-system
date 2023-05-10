@@ -11,7 +11,7 @@
 	</select>
 		
 	<select id="findAvailableAccount" parameterType="int" resultType="AccountVO">
-		SELECT	UA.user_no, UA.acct_no, bank_cd, bal, ib_type, acct_dv, 
+		SELECT	UA.user_no, UA.acct_no, ACCT.bank_cd, bal, ib_type, acct_dv, 
 				loan_nm, acct_nick_nm, agmt_amt, pyat_amt, pyat_dt, 
 				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
        			loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt
@@ -19,9 +19,367 @@
 		INNER JOIN account ACCT
 		on 		UA.acct_no = ACCT.acct_no
 		WHERE 	UA.user_no = #{userNo}
-		ORDER BY  acct_dv, bank_cd;
+		ORDER BY  acct_dv, bank_cd
 	</select>	
 	
+	<select id="findUsersInoutPast" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+		LIMIT #{start}, #{pageSize}
+	</select>	 
+	
+	<select id="findUsersInoutToday" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+		UNION
+		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+			    ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND IOT.trsc_dt = NOW() 
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+		LIMIT #{start}, #{pageSize}
+	</select>	 
+
+	<select id="CountUsersInoutPast" parameterType="InoutRequestVO" resultType="int">
+		SELECT COUNT(*) AS cnt
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+	</select>
+	
+	<select id="CountUsersInoutToday" parameterType="InoutRequestVO" resultType="int">
+		SELECT SUM(IO.cnt)
+		FROM (
+			SELECT COUNT(*) AS cnt
+			FROM inout_past IOP
+				INNER JOIN account ACCT
+					ON IOP.acct_no = ACCT.acct_no
+				INNER JOIN user_account UA
+					ON ACCT.acct_no = UA.acct_no
+			WHERE UA.user_no = #{userNo} 
+			<choose>
+				<when test="isLoan != null and isLoan">
+					AND (ACCT.acct_dv = "03")
+				</when>
+				<otherwise>
+					AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+				</otherwise>
+			</choose>
+			<if test='bankCd != null and !bankCd.equals("All")'>
+				AND UA.bank_cd = #{bankCd} 
+			</if>
+			<if test='acctNo != null and !acctNo.equals("All")'>
+				AND UA.acct_no = #{acctNo}
+			</if>
+			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+				AND inout_dv = #{inoutDv}
+			</if>
+				AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+			UNION
+			SELECT COUNT(*) AS cnt
+			FROM inout_today IOT
+				INNER JOIN account ACCT
+				    ON IOT.acct_no = ACCT.acct_no
+				INNER JOIN user_account UA
+					ON ACCT.acct_no = UA.acct_no
+			WHERE UA.user_no = #{userNo} 
+			<choose>
+				<when test="isLoan != null and isLoan">
+					AND (ACCT.acct_dv = "03")
+				</when>
+				<otherwise>
+					AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+				</otherwise>
+			</choose>
+			<if test='bankCd != null and !bankCd.equals("All")'>
+				AND UA.bank_cd = #{bankCd} 
+			</if>
+			<if test='acctNo != null and !acctNo.equals("All")'>
+				AND UA.acct_no = #{acctNo}
+			</if>
+			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+				AND inout_dv = #{inoutDv}
+			</if>
+				AND IOT.trsc_dt = NOW()
+		) AS IO
+	</select>
+
+	<select id="findAdminsInoutPast" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+			    ON IOP.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+		LIMIT #{start}, #{pageSize}
+	</select>
+
+	<select id="findAdminsInoutToday" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+			    ON IOP.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+		UNION
+		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+			    ON IOT.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND IOT.trsc_dt = NOW()
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+		LIMIT #{start}, #{pageSize}	
+	</select>
+	
+	<select id="CountAdminsInoutPast" parameterType="InoutRequestVO" resultType="int">
+		SELECT COUNT(*) AS cnt
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+			    ON IOP.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+	</select>
+	
+	<select id="CountAdminsInoutToday" parameterType="InoutRequestVO" resultType="int">
+		SELECT SUM(IO.cnt) 
+		FROM (
+			SELECT COUNT(*) AS cnt
+			FROM inout_past IOP
+				INNER JOIN account ACCT
+				    ON IOP.acct_no = ACCT.acct_no
+			WHERE 
+			<choose>
+				<when test="isLoan != null and isLoan">
+					ACCT.acct_dv = "03"
+				</when>
+				<otherwise>
+					(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+				</otherwise>
+			</choose>
+			<if test='bankCd != null and !bankCd.equals("All")'>
+				AND ACCT.bank_cd = #{bankCd} 
+			</if>
+			<if test='acctNo != null and !acctNo.equals("All")'>
+				AND ACCT.acct_no = #{acctNo}
+			</if>
+			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+				AND inout_dv = #{inoutDv}
+			</if>
+				AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+			UNION
+			SELECT COUNT(*) AS cnt
+			FROM inout_today IOT
+				INNER JOIN account ACCT
+				    ON IOP.acct_no = ACCT.acct_no
+			WHERE 
+			<choose>
+				<when test="isLoan != null and isLoan">
+					ACCT.acct_dv = "03"
+				</when>
+				<otherwise>
+					(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+				</otherwise>
+			</choose>
+			<if test='bankCd != null and !bankCd.equals("All")'>
+				AND ACCT.bank_cd = #{bankCd} 
+			</if>
+			<if test='acctNo != null and !acctNo.equals("All")'>
+				AND ACCT.acct_no = #{acctNo}
+			</if>
+			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+				AND inout_dv = #{inoutDv}
+			</if>
+			AND IOT.trsc_dt = NOW()
+		) AS IO
+	</select>
+
 	 <select id="checkByAcctNoToAccessibleUser" parameterType="java.util.HashMap" resultType="int">
 		SELECT EXISTS (
 			SELECT user_no 
@@ -31,51 +389,11 @@
 			) 
 		AS flag			 	
 	 </select>
-	
-	<select id="findOneInout" resultType="InoutVO">
-		SELECT a.*, b.acct_dv FROM inout_past a 
-		LEFT JOIN account b
-		ON a.acct_no = b.acct_no 
-		where (a.trsc_dt between #{startDt} and #{endDt}) and a.acct_no = #{acctNo}
-		<if test='inoutDv != null and (inoutDv.equals("1") or inoutDv.equals("2"))'>
-			and (inout_dv = #{inoutDv})
-		</if>
-		union
-		SELECT c.*, b.acct_dv FROM inout_today c 
-		INNER JOIN account b
-		ON c.acct_no = b.acct_no 
-		where c.acct_no = #{acctNo}
-		<if test='inoutDv != null and (inoutDv.equals("1") or inoutDv.equals("2"))'>
-			and (inout_dv = #{inoutDv})
-		</if>
-		order by trsc_dt ${sort} limit #{start}, #{pageSize};
-	</select>
-	
-	<select id="findAllInout" resultType="java.util.ArrayList">
-		SELECT a.*, b.acct_dv FROM inout_past a 
-		LEFT JOIN account b
-		ON a.acct_no = b.acct_no 
-		where (a.trsc_dt between #{startDt} and #{endDt}) 
-		union
-		SELECT c.*, b.acct_dv FROM inout_today c 
-		INNER JOIN account b
-		ON c.acct_no = b.acct_no 
-		where (c.trsc_dt = now()) 
-		<choose>
-			<when test="isLoan != null and isLoan">
-				and (b.acct_dv="01" or b.acct_dv="02")
-			</when>
-			<otherwise>
-				and (b.acct_dv="03")
-			</otherwise>
-		</choose>
-		order by trsc_dt ${sort} limit #{start}, #{pageSize};
-	</select>
-	
+
 	<select id="findAllBankCodeAndBankName" resultType="java.util.HashMap">
 		SELECT bank_cd, bank_nm FROM bank_code ORDER BY bank_cd ASC
 	</select>
-	
+
 	<select id="findByBankCodeToBankName" parameterType="String" resultType="String">
 		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
 	</select>

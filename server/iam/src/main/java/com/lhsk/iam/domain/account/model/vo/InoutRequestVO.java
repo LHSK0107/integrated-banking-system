@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Builder
@@ -17,6 +16,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InoutRequestVO {
+	private int userNo;								// 회원번호
+	private String bankCd;							// 은행코드
 	private String acctNo;							// 계좌번호
 	private LocalDate startDt;						// 시작날짜
 	private LocalDate endDt;						// 끝날짜

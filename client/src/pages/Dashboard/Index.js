@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Balance from "../../hooks/useBalance";
 import "./dashboard.css";
-import Pie from "./component/pie/Pie";
-import Bar from "./component/bar/Bar";
-import Point from "./component/point/Point";
-import useAuth from "../../hooks/useAuth";
-import {AuthAxios} from "../../api/useCommonAxios";
-import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
+
+import Pie from "./component/Pie";
+import Bar from "./component/Bar";
+import Point from "./component/Point";
+import { LogInContext } from "../../commons/LogInContext";
+
 const Index = () => {
   const {loggedUserInfo} = useAuth();
   // const AuthAxios = useAxiosInterceptor();

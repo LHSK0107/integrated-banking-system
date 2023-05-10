@@ -61,11 +61,6 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- other add libs -->
-	    <dependency>
-	      <groupId>org.springframework.boot</groupId>
-	      <artifactId>spring-boot-starter-mustache</artifactId>
-	    </dependency>
 	    
 	    <!-- Depedency for Dynamic SQL(String utils) -->
 		<dependency>
@@ -108,6 +103,11 @@
 		</dependency>
 
 		<!--Logback-->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.30</version>
+		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
