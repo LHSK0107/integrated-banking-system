@@ -7,58 +7,30 @@ import { useNavigate } from "react-router";
 import decodeJwt from "../../../hooks/decodeJwt";
 import axios from "axios";
 import { StepContext } from "../context/StepContext";
+import {AuthAxios} from "../../../api/useCommonAxios";
+import useAuth from "../../../hooks/useAuth";
 
 const UpdateInfo = () => {
-  // 토큰 확인
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  const { loggedUserInfo } = useAuth();
   const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
-
-  // 토큰으로 로그인 context api 세팅
-  useEffect(() => {
-    // 서버에서 회원정보 가져오기
-    getUserInfo();
-    if (savedToken === null) {
-      // 토큰이 없다면
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-    }
-  }, [token, setLoggedUser, setLoggedIn]);
 
   // 페이지 확인 및 설정
   const { stepNum, setStepNum, userInfo, setUserInfo } =
     useContext(StepContext);
 
-  // 회원정보 가져오기
-  const getUserInfo = () => {
-    axios
-      .get(`http://localhost:8080/api/users/${loggedUser.userNo}`, {
-        headers: { Authorization: "Bearer " + savedToken },
-      })
-      .then((res) => {
-        setUserInfo({
-          userNo: res.data.userNo,
-          userCode: res.data.userCode,
-          name: res.data.name,
-          id: res.data.id,
-          email: res.data.email,
-          tel: res.data.phone,
-          dept: res.data.dept,
-        });
+  useEffect(() => {
+    const { apiData } = AuthAxios(`/api/users/${loggedUserInfo.userNo}`,{},"get");
+    apiData &&
+      setUserInfo({
+        userNo: apiData?.userNo,
+        userCode: apiData?.userCode,
+        name: apiData?.name,
+        id: apiData?.id,
+        email: apiData?.email,
+        tel: apiData?.phone,
+        dept: apiData?.dept,
       });
-  };
+  }, [loggedUserInfo]);
 
   // value 관리
   const [prePwValue, setPrePwValue] = useState("");
@@ -107,7 +79,6 @@ const UpdateInfo = () => {
     register,
     handleSubmit,
     formState: { errors },
-    unregister,
   } = useForm({
     resolver: yupResolver(schema),
     // mode: "onChange",
@@ -142,97 +113,54 @@ const UpdateInfo = () => {
     ) {
       // 비밀번호 쪽을 하나라도 건들였다면 현재 비밀번호 확인
       if (data.presentPassword !== data.password) {
-        axios
-          .post(
-            "http://localhost:8080/api/users/checkPass",
-            {
-              userNo: loggedUser.userNo,
-              password: data.presentPassword,
-              phone: data.tel,
-            },
-            {
-              headers: { Authorization: "Bearer " + savedToken },
-            }
-          )
-          .then((res) => {
-            if (res.status === 200 && res.data === true) {
-              axios
-                .put(
-                  "http://localhost:8080/api/users/",
-                  {
-                    userNo: loggedUser.userNo,
-                    password: data.password,
-                    phone: data.tel,
-                  },
-                  {
-                    headers: { Authorization: "Bearer " + savedToken },
-                  }
-                )
-                .then((res) => {
-                  console.log(res);
-                  // console.log(res.data);
-                  // console.log(data);
-                  if (res.status === 200 && res.data === "success") {
-                    alert("수정되었습니다.");
-                    navigate("/");
-                  } else if (res.data === "fail") {
-                    alert("수정에 실패하였습니다.");
-                    return false;
-                  }
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        alert("비밀번호가 이전과 같습니다.");
-        return false;
-      }
-    } else if (data.tel !== null) {
-      axios
-        .put(
-          "http://localhost:8080/api/users/",
-          {
-            userNo: loggedUser.userNo,
+        const { apiData } = AuthAxios("/api/users/checkPass", {
+          userNo: loggedUserInfo.userNo,
+          password: data.presentPassword,
+          phone: data.tel,
+        },"post");
+        if (apiData) {
+          const { apiData } = AuthAxios("/api/users", {
+            userNo: loggedUserInfo.userNo,
             password: data.password,
             phone: data.tel,
-          },
-          {
-            // headers: { Authorization: "Bearer " + savedToken }
-          }
-        )
-        .then((res) => {
-          // console.log(res);
-          // console.log(res.data);
-          if (res.status === 200 && res.data === "success") {
+          },"put");
+          if (apiData === "success") {
             alert("수정되었습니다.");
             navigate("/");
-          } else if (res.data === "fail") {
+          } else {
             alert("수정에 실패하였습니다.");
             return false;
           }
-        })
-        .catch((err) => {})
-        .finally(() => {});
-    } else {
-      console.log(data);
+        }
+      } else if (data.tel !== null) {
+        const { apiData } = AuthAxios("/api/users/", {
+          userNo: loggedUserInfo.userNo,
+          password: data.password,
+          phone: data.tel,
+        },"put");
+        if (apiData === "success") {
+          alert("수정되었습니다.");
+          navigate("/");
+        } else {
+          alert("수정에 실패하였습니다.");
+          return false;
+        }
+      } else {
+        console.log(data);
+      }
     }
   };
 
   // 탈퇴하기
   const deleteMe = () => {
-    if(loggedUser.userCode !== "ROLE_ADMIN") {
+    if (loggedUserInfo.userCode !== "ROLE_ADMIN") {
       return (
         <div className="flex justify_end">
           <button type="button">탈퇴하기</button>
         </div>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className="updateInfo">
