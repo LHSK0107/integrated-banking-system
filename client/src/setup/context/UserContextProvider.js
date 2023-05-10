@@ -4,13 +4,7 @@ const UserContext = createContext(null);
 
 export const UserContextProvider = ({children}) => {
     const [token, setToken2] = useState(null);
-    const [loggedUserInfo, setLoggedUserInfo] = useState({
-      id: "",
-      name: "",
-      exp: "",
-      userCode: "",
-      userNo: "",
-    });
+    const [loggedUserInfo, setLoggedUserInfo] = useState(null);
     const [isAuth, setIsAuth] = useState(false);
     const value = {
         token,
@@ -24,5 +18,6 @@ export const UserContextProvider = ({children}) => {
       <UserContext.Provider value={value}>{children}</UserContext.Provider>
     );
 }
+
 
 export default UserContext;

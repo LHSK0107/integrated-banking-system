@@ -1,45 +1,19 @@
 /* eslint-disable */
 import React, { useState, useEffect, useCallback, useContext } from "react";
+import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import "./inquiry.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
-import {AuthGetAxios} from "../../api/useCommonAxios";
 import { AcctList } from "./component/AcctList";
-import { Link, useNavigate } from "react-router-dom";
-import decodeJwt from "../../hooks/decodeJwt";
-import { LogInContext } from "../../commons/LogInContext";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
 import ExcelExportComponent from "./component/ExcelExportComponent";
-
+import useAuth from "../../hooks/useAuth";
+import useRefreshToken from "../../hooks/useRefreshToken";
 const Index = () => {
-    // const refresh = useRefreshToken();
-    // const axiosPrivate = useAxiosPrivate();
-  // 토큰 확인
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
-  const navigate=useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
-  
-  useEffect(() => {
-    if (savedToken === null) {
-      setLoggedIn(false);
-      // navigate("/login");
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo
-      });
-      setLoggedIn(true);
-    }
-  }, [token, setLoggedUser, setLoggedIn]);
-
+  // const refresh = useRefreshToken();
+  const {loggedUserInfo} = useAuth();
   // 계좌 구현
   const [statementList, setStatementList] = useState([]);
   const [depAInsList, setDepAInsList] = useState([]);
@@ -49,13 +23,39 @@ const Index = () => {
   let depAInsArr = [];
   let loanArr = [];
 
-  const { apiData, isLoading, error } = AuthGetAxios(
-    "/api/accounts"
-  );
+  const AuthAxios = useAxiosInterceptor();
+  const [apiData, setApiData] = useState(null);
+  useEffect(()=>{
+    let isMounted = true;
+    // cancellation token
+    const controller = new AbortController();
+
+    const getUsers = async () => {
+      try{
+        console.log("실행");
+        const response = await AuthAxios.get('/api/accounts',{
+          signal: controller.signal
+        });
+        response && console.log(response);
+        setApiData(response.data);
+      } catch (err) {
+        // console.error(err);
+        console.log(`error 발생: ${err}`);
+      }
+    }
+    getUsers();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    }
+  },[]);
+
+  // const { apiData, isLoading, error } = AuthAxios("/api/accounts",{},"get");
   useEffect(() => {
     apiData && clearData(apiData);
   }, [apiData]);
-
+ 
   // api 요소 중, 계좌 구분에 따라 분리
   const clearData = (apiData) => {
     apiData.map((ele) => {
@@ -96,6 +96,7 @@ const Index = () => {
   const tabClickHandler = (index) => {
     setActiveIndex(index);
   };
+  const refresh = useRefreshToken();
   const tabContArr = [
     {
       tabTitile: (
@@ -117,6 +118,7 @@ const Index = () => {
             </div>
             <div className="flex align_center">
               <h4>
+                <button onClick={refresh}>refresh</button>
                 <Balance balance={calcTotalBal().stateBal} />
               </h4>
               <p></p>
