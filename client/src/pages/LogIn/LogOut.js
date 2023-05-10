@@ -5,33 +5,35 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
 export default function LogOut() {
-  const { setIsAuth, setLoggedUserInfo } = useAuth();
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  const { setIsAuth, setLoggedUserInfo, setToken2, token } = useAuth();
   const navigate = useNavigate();
 
   if (token === null) {
     navigate("/login");
   } else {
-    localStorage.removeItem("jwt");
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // 확인 버튼 클릭시
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((res) => {
-          setLoggedUserInfo({
-            id: "",
-            name: "",
-            exp: "",
-            userCode: "",
-            userNo: "",
-          });
+          localStorage.removeItem("jwt");
+          setLoggedUserInfo(null);
           setIsAuth(false);
-          setToken(null);
+          setToken2(null);
           console.log("로그아웃 완료");
           navigate("/login");
         })
-        .catch((err) => console.log(err));
+        .catch(
+          (err) => {
+            console.log(`logout axios error ${err}`);
+            localStorage.removeItem("jwt");
+            setLoggedUserInfo(null);
+            setIsAuth(false);
+            setToken2(null);
+            console.log("로그아웃 완료");
+            navigate("/login");
+          }
+        );
     } else {
       // 취소 버튼 클릭시
       console.log("로그아웃 취소");

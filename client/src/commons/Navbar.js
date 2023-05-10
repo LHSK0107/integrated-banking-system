@@ -1,43 +1,43 @@
 import "./Common.css";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
-import { LogInContext } from "./LogInContext";
-import decodeJwt from "../hooks/decodeJwt";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
-
+import decodeJwt from "../hooks/decodeJwt";
 const Navbar = () => {
-  // const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-  //   useContext(LogInContext);
-  const {token,loggedUserInfo,isAuth,setIsAuth,setLoggedUserInfo} = useAuth();
+  const {
+    token,
+    setToken2,
+    loggedUserInfo,
+    isAuth,
+    setIsAuth,
+    setLoggedUserInfo,
+  } = useAuth();
+  useEffect(() => {
+    const AUTH_TOKEN = localStorage.getItem("jwt");
+    const decodedPayload = AUTH_TOKEN && decodeJwt(AUTH_TOKEN);
+    if (AUTH_TOKEN) {
+      console.log("있음");
+      setLoggedUserInfo((prev) => {
+        prev && LogoutSection(prev);
+        console.log(prev);
+        return {
+          id: decodedPayload.sub,
+          name: decodedPayload.name,
+          exp: decodedPayload.exp,
+          userCode: decodedPayload.userCode,
+          userNo: decodedPayload.userNo,
+        };
+      });
+    } else {
+      setToken2(null);
+      setLoggedUserInfo(
+        null);
+    }
+  }, []);
+  // useEffect(()=>{console.log(loggedUserInfo)},[setLoggedUserInfo]);
   const navigate = useNavigate();
-  // const savedToken = localStorage.getItem("jwt");
-  // setToken(savedToken);
-
-  // useEffect(() => {
-  //   // 로컬스토리지에서 jwt 가져오기
-  //   if (savedToken === null) {
-  //     setLoggedUser({
-  //       id: "",
-  //       name: "",
-  //       exp: "",
-  //       userCode: "",
-  //       userNo: "",
-  //     });
-  //     setLoggedIn(false);
-  //   } else {
-  //     const decodedPayload = decodeJwt(savedToken);
-  //     setLoggedUser({
-  //       id: decodedPayload.sub,
-  //       name: decodedPayload.name,
-  //       exp: decodedPayload.exp,
-  //       userCode: decodedPayload.userCode,
-  //       userNo: decodedPayload.userNo,
-  //     });
-  //     setLoggedIn(true);
-  //   }
-  // }, [token, setLoggedUser, setLoggedIn]);
 
   // 로그아웃
   const handleLogout = () => {
@@ -46,27 +46,69 @@ const Navbar = () => {
       axios
         .post("http://localhost:8080/api/logout", {})
         .then((response) => {
-          if (response.status === 200) {
-            setLoggedUserInfo({
-              id: "",
-              name: "",
-              exp: "",
-              userCode: "",
-              userNo: "",
-            });
+          if (response.status === 200 || response.status === 401) {
+            setToken2(null);
+            setLoggedUserInfo(null);
             setIsAuth(false);
             console.log("로그아웃 완료");
             navigate("/login");
           }
         })
         .catch((error) => {
-          if (error) console.log(error);
+          if (error) {
+            setToken2(null);
+            setLoggedUserInfo(null);
+            setIsAuth(false);
+            console.log("로그아웃 완료");
+            navigate("/login");
+          }
         })
         .finally(() => {});
     } else {
       console.log("로그아웃 취소");
       return false;
     }
+  };
+
+  const LoginSection = () => {
+    return (
+      <div className="login flex align_center">
+        <p>
+          <Link to="./signup">회원가입</Link>
+        </p>
+        <p>
+          <Link to="./login">로그인</Link>
+        </p>
+      </div>
+    );
+  };
+
+  const LogoutSection = (props) => {
+    return (
+      <div className="login flex align_center">
+        <p className="login_username">
+          안녕하세요 <span>{props?.value?.name}</span>님
+        </p>
+        <p className="login_exp">{props?.value?.exp}</p>
+        {/* <p>
+        <Link to="/logout">로그아웃</Link>
+      </p> */}
+        <button className="logout_btn" onClick={props?.func}>
+          로그아웃
+        </button>
+        <p>
+          <Link to="/mypage">개인정보수정</Link>
+        </p>
+        {props?.value?.userCode === "ROLE_ADMIN" ||
+        props?.value?.userCode === "ROLE_MANAGER" ? (
+          <p>
+            <Link to="/admin">관리자 페이지</Link>
+          </p>
+        ) : (
+          <></>
+        )}
+      </div>
+    );
   };
 
   const [scrollData, setScrollData] = useState(0);
@@ -120,7 +162,7 @@ const Navbar = () => {
             </div>
             {/* 로그인 체크 부분 */}
             <div className="user_info_wrap">
-              {token ? (
+              {loggedUserInfo ? (
                 <LogoutSection value={loggedUserInfo} func={handleLogout} />
               ) : (
                 <LoginSection />
@@ -154,47 +196,6 @@ const Navbar = () => {
         </div>
       </nav>
     </header>
-  );
-};
-
-const LoginSection = () => {
-  return (
-    <div className="login flex align_center">
-      <p>
-        <Link to="./signup">회원가입</Link>
-      </p>
-      <p>
-        <Link to="./login">로그인</Link>
-      </p>
-    </div>
-  );
-};
-
-const LogoutSection = (props) => {
-  return (
-    <div className="login flex align_center">
-      <p className="login_username">
-        안녕하세요 <span>{props.value.name}</span>님
-      </p>
-      <p className="login_exp">{props.value.exp}</p>
-      {/* <p>
-        <Link to="/logout">로그아웃</Link>
-      </p> */}
-      <button className="logout_btn" onClick={props.func}>
-        로그아웃
-      </button>
-      <p>
-        <Link to="/mypage">개인정보수정</Link>
-      </p>
-      {props.value.userCode === "ROLE_ADMIN" ||
-      props.value.userCode === "ROLE_MANAGER" ? (
-        <p>
-          <Link to="/admin">관리자 페이지</Link>
-        </p>
-      ) : (
-        <></>
-      )}
-    </div>
   );
 };
 
