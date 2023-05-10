@@ -1,47 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StepContext } from "../context/StepContext";
 import * as yup from "yup";
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import decodeJwt from "../../../hooks/decodeJwt";
-import { LogInContext } from "../../../commons/LogInContext";
-import { useNavigate } from "react-router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "../mypage.css";
+import useAuth from "../../../hooks/useAuth";
+import {AuthAxios} from "../../../api/useCommonAxios";
 
 export default function ConfirmPw() {
-  // 토큰 확인
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
-  const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
 
-  // 토큰으로 로그인 context api 세팅
-  useEffect(() => {
-    if (savedToken === null) {
-      // 토큰이 없다면
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-    }
-  }, [token, setLoggedUser, setLoggedIn]);
-  console.log(loggedUser, loggedIn);
-  console.log(loggedUser.userNo);
-
+  const {loggedUserInfo} = useAuth();
   // 페이지 확인 및 설정
   const { stepNum, setStepNum, userInfo, setUserInfo } =
     useContext(StepContext);
-  console.log(stepNum, userInfo);
 
   // form 유효성 검사
   const schema = yup
@@ -63,28 +34,24 @@ export default function ConfirmPw() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema), mode: "onChange" });
 
+  const getData = (data) => {
+    return AuthAxios("/api/users/checkPass",{
+      userNo: loggedUserInfo.userNo,
+      password: data.password,
+    },"post");
+  }
+
   // axios
   const onSubmit = (data) => {
-    console.log(data);
-    axios
-      .post("http://localhost:8080/api/users/checkPass", {
-        userNo: loggedUser.userNo,
-        password: data.password,
-      },
-      {
-        headers: {Authorization: "Bearer "+savedToken,},
-      }
-      )
-      .then((res) => {
-        console.log(res);
-        console.log(res.data);
-        if (res.status === 200 && res.data === true) {
-          setStepNum(stepNum + 1);
-        } else if (res.data === false) {
-          alert("비밀번호가 맞지 않습니다.");
-          return false;
-        }
-      });
+    const apiData = getData(data);
+    apiData && console.log(apiData);
+
+    // if(apiData){
+    //   setStepNum(stepNum+1);
+    // } else {
+    //   alert("비밀번호가 맞지 않습니다.");
+    //   return false;
+    // }
   };
 
   return (

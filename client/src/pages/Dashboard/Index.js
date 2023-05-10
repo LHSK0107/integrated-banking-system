@@ -2,39 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Balance from "../../hooks/useBalance";
 import "./dashboard.css";
+
 import Pie from "./component/Pie";
 import Bar from "./component/Bar";
 import Point from "./component/Point";
 import { LogInContext } from "../../commons/LogInContext";
-import decodeJwt from "../../hooks/decodeJwt";
-import { useNavigate } from "react-router";
 
 const Index = () => {
-  // 토큰 확인
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
-  const navigate = useNavigate();
-
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
-
-  useEffect(() => {
-    if (savedToken === null) {
-      navigate("/login");
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-    }
-  }, [token, setLoggedUser, setLoggedIn]);
+  const {loggedUserInfo} = useAuth();
+  // const AuthAxios = useAxiosInterceptor();
 
   // 대시보드 구현
   const [statementList, setStatementList] = useState([]); // 입출금
@@ -69,6 +45,14 @@ const Index = () => {
     //   })
     //   .catch((err) => console.log(err))
     //   .finally(() => {});
+    const getList = async () => {
+      try{
+        const response = await AuthAxios("/api/accounts",{},"get");
+        response && console.log(response);
+      } catch(err){
+        console.log(err);
+      }
+    }
   }, []);
 
   const clearData = (allAccount) => {
@@ -182,12 +166,12 @@ const Index = () => {
         <div className="inner flex">
           <div className="member">
             <p>
-              {loggedUser.userCode !== "" && loggedUser.userCode.split("_")[1]}
+              {loggedUserInfo.userCode !== "" && loggedUserInfo.userCode.split("_")[1]}
             </p>
             <h2>
               안녕하세요,
               <br />
-              <span>{loggedUser.name}</span>님
+              <span>{loggedUserInfo.name}</span>님
             </h2>
             <div className="flex justify_between">
               <a className="flex btn" href="../AllAccount/index.html">
