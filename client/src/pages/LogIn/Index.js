@@ -1,21 +1,17 @@
 import "./login.css";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { LogInContext } from "../../commons/LogInContext";
 import decodeJwt from "../../hooks/decodeJwt";
 import useAuth from "../../hooks/useAuth";
-import useCommonAxios from "../../api/useCommonAxios";
+import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
+
 const Index = () => {
-  // context
+  // useAuth context 호출
   const {setIsAuth,setLoggedUserInfo, setToken2} = useAuth();
-
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } = useContext(LogInContext);
-
   const navigate = useNavigate();
 
   // login form 유효성 검사
@@ -37,10 +33,9 @@ const Index = () => {
     register,
     handleSubmit,
     formState: { errors },
-    //   } = useForm({ resolver: yupResolver(schema) });
   } = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange", // 바뀔 때마다
+    mode: "onChange",
   });
   const onSubmit = (data) => {
     axios
@@ -54,19 +49,11 @@ const Index = () => {
           const token = response.headers.get("Authorization").split(" ")[1];
           // header에 default로 token 싣기
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-          // token을 decode
+          // token 정보를 가져오기 위해 decode 호출
           const decodedPayload = decodeJwt(token);
-          // 로컬스토리지에 jwt
+          // 로컬스토리지에 jwt 저장
           localStorage.setItem("jwt", token);
           // context api 설정
-          // setLoggedUser({
-          //   id: decodedPayload.sub,
-          //   name: decodedPayload.name,
-          //   exp: decodedPayload.exp,
-          //   userCode: decodedPayload.userCode,
-          //   userNo: decodedPayload.userNo
-          // });
-          // setLoggedIn(true);
           setToken2(token);
           setLoggedUserInfo({
             id: decodedPayload.sub,
@@ -81,11 +68,10 @@ const Index = () => {
         navigate("/dashboard")
       })
       .catch((error) => {
-        alert(error);
+        alert("네트워크 통신에 문제가 발생했습니다. 잠시 후, 이용해주세요.");
         return false;
       });
   };
-
   return (
     <div className="login_section">
       <div className="inner flex justify_center">

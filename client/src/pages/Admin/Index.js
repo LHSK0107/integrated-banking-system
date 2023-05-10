@@ -1,69 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
-import Breadcrumb from "../../commons/Breadcrumb";
-import { Link, useNavigate } from "react-router-dom";
-import { LogInContext } from "../../commons/LogInContext";
-import decodeJwt from "../../hooks/decodeJwt";
-import axios from "axios";
 import "./admin.css";
-import Aside from "./component/Aside";
+import React, { useEffect, useState } from "react";
+import Breadcrumb from "../../commons/Breadcrumb";
+import { Link } from "react-router-dom";
+import {AuthAxios} from "../../api/useCommonAxios";
 
 const Index = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
-  const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
-  
-  useEffect(() => {
-    if (savedToken === null) {
-        setLoggedUser({
-            id: "",
-            name: "",
-            exp: "",
-            userCode: "",
-            userNo: "",
-        });
-        setLoggedIn(false);
-    } else {
-        const decodedPayload = decodeJwt(savedToken);
-        setLoggedUser({
-            id: decodedPayload.sub,
-            name: decodedPayload.name,
-            exp: decodedPayload.exp,
-            userCode: decodedPayload.userCode,
-            userNo: decodedPayload.userNo,
-        });
-        setLoggedIn(true);
-        // 회원 목록 불러오기
-        memberList();
-    }
-}, [setLoggedUser]);
+  // 회원 목록
+  const [members, setMembers] = useState(null);
+  // 회원 목록 불러오기
+  const response = AuthAxios("/api/manager/users",{},"get");
 
-// 회원 목록
-const [members, setMembers] = useState(null);
-// 회원 목록 불러오기
-const memberList = () => {
-  axios
-    .get("http://localhost:8080/api/manager/users", 
-      {
-      headers: {Authorization: "Bearer "+ savedToken},
-      }
-    )
-    .then((res) => {
-      console.log(res);
-      if (res.status === 200) {
-        setMembers(res.data);
-        console.log(res);
-      }
-    })
-    .catch((err) => console.log(err))
-    .finally(() => {});
-};
-
+  useEffect(()=>{
+    response && console.log(response);
+  },[response]);
   const memberInfoList =
     members &&
-    members.map((ele) => {
+    members?.map((ele) => {
       return (
         <li key={ele.userNo}>
           <Link className="flex" to={`/admin/${ele.userNo}`}>
