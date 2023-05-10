@@ -11,7 +11,6 @@ const Index = () => {
   const response = AuthAxios("/api/manager/users",{},"get");
 
   useEffect(()=>{
-
     response && console.log(response);
   },[response]);
   const memberInfoList =
@@ -35,28 +34,7 @@ const Index = () => {
       <div className="inner">
         <Breadcrumb title={"관리자 페이지"} subMenu={"회원 목록"} />
         <div className="flex">
-          <aside>
-            <div className="aside_wrap">
-              <h2>관리자 페이지</h2>
-              <ul className="aside_nav">
-                <li className="aside_active">
-                  <Link to="/">회원 목록</Link>
-                </li>
-                <li>
-                  <Link to="/">계좌 열람 권한 관리</Link>
-                </li>
-                <li>
-                  <Link to="/">로그인 기록 조회</Link>
-                </li>
-                <li>
-                  <Link to="/">메뉴 클릭 기록 조회</Link>
-                </li>
-                <li>
-                  <Link to="/">부서 관리</Link>
-                </li>
-              </ul>
-            </div>
-          </aside>
+          <Aside now={"회원 목록"}/>
           <section className="admin_list">
             <h3>회원 목록</h3>
             <div className="list_wrap">

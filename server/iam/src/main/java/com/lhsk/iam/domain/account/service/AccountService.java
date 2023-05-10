@@ -1,12 +1,9 @@
 package com.lhsk.iam.domain.account.service;
 
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,8 +12,6 @@ import com.lhsk.iam.domain.account.model.mapper.AccountMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
 import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
 import com.lhsk.iam.domain.account.model.vo.InoutVO;
-import com.lhsk.iam.domain.user.service.UserService;
-import com.lhsk.iam.global.config.jwt.JwtPermissionVerifier;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
 import lombok.RequiredArgsConstructor;
@@ -56,7 +51,7 @@ public class AccountService {
 		return accountList;
 	}
 
-	// 특정 사용자의 조회 가능한 계좌정보 리스트 
+	// 특정 사용자의 조회 가능한 계좌정보 리스트 (ROLE_USER)
 	public List<AccountVO> findAllAvailableAccount(int userNo) {
 		// 회원번호를 토대로 해당 회원이 열람 가능한 계좌정보 목록 조회
 		List<AccountVO> accountList = accountMapper.findAvailableAccount(userNo);
@@ -73,37 +68,98 @@ public class AccountService {
 		return accountList;
 	}
 	
-	// 해당 계좌에 접근(조회) 가능한 사용자인지 확인
-	public int checkByAcctNoToAccessibleUser(HashMap<String, Object> userInfo) {
-		return accountMapper.checkByAcctNoToAccessibleUser(userInfo);
-	}
-	
-	// 한 계좌의 거래내역 조회
-	public List<InoutVO> findOneInout(InoutRequestVO vo, int userNo) {
-		// mapper에 전달할 hashMap 객체 생성
-		HashMap<String, Object> userInfo = new HashMap<>();
-		userInfo.put("userNo", userNo);
-		userInfo.put("acctNo", vo.getAcctNo());
+	// 계좌 입출금내역 조회 (ROLE_USER)
+	public Map<String, Object> findUsersInout(InoutRequestVO vo, boolean isToday) {
+		// 총 페이지 수와 입출금 리스트를 담는 map 객체 생성
+		Map<String, Object> info = new HashMap<>();
+		// map에 들어가 value 선언
+		List<InoutVO> inoutList = null;
+		int totalPage = 0;
 		
-		// 토큰 보유자의 userNo와 조회할 계좌의 acctNo를 넘겨 해당 사용자가 조회할 수 있는 계좌인지 판별
-		if (checkByAcctNoToAccessibleUser(userInfo) > 0) {
-			vo.setStart((vo.getPage()-1)*vo.getPageSize());
-			List<InoutVO> list = accountMapper.findOneInout(vo);
-			// 거래 내역에서 계좌번호 복호화
-			for (InoutVO inout : list) {
-				try {
-					inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
-				} catch (GeneralSecurityException e) {
-					throw new RuntimeException("Failed to encrypt acctNo", e); 
-				}
+		// 계좌번호 암호화
+		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
+			try {
+				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
 			}
-			return list;
 		}
-		return null;
+		// Page 값 변환
+		vo.setPage(vo.getPage()-1);
+		// limit start 값 지정(조회할 페이지 * 페이지당 건수)
+		vo.setStart(vo.getPage()*vo.getPageSize());
+		
+		
+		// 조회기간에 오늘이 포함되면 당일 포함 입출금내역 조회 쿼리 수행
+		if (isToday) {
+			// count 값으로 page 수 계산
+			double count = accountMapper.CountUsersInoutToday(vo);
+			log.info(count+"");
+			if (count != 0) totalPage = (int)Math.ceil(count/vo.getPageSize());
+			inoutList = accountMapper.findUsersInoutToday(vo);
+			if (inoutList == null) return null;
+		}else {
+			// count 값으로 page 수 계산
+			double count = accountMapper.CountUsersInoutPast(vo);
+			log.info(count+"");
+			if (count != 0) totalPage = (int)Math.ceil(count/vo.getPageSize());
+			inoutList = accountMapper.findUsersInoutPast(vo);
+			if (inoutList == null) return null;
+		}
+		// 총 페이지 수와 입출금 리스트를 map에 담아 반환
+		info.put("totalPage", totalPage);
+		info.put("list", inoutList);
+		return info;
 	}
 	
+	// 계좌 입출금내역 조회 (ROLE_MANAGER, ROLE_ADMIN)
+	public Map<String, Object> findAdminsInout(InoutRequestVO vo, boolean isToday) {
+		// 총 페이지 수와 입출금 리스트를 담는 map 객체 생성
+		Map<String, Object> info = new HashMap<>();
+		// map에 들어가 value 선언
+		List<InoutVO> inoutList = null;
+		int totalPage = 0;
+		
+		// 계좌번호 암호화
+		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
+			try {
+				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		// Page 값 변환
+		vo.setPage(vo.getPage()-1);
+		// limit start 값 지정(조회할 페이지 * 페이지당 건수)
+		vo.setStart(vo.getPage()*vo.getPageSize());
+		
+		// 조회기간에 오늘이 포함되면 당일 포함 입출금내역 조회 쿼리 수행
+		if (isToday) {
+			// count 값으로 page 수 계산
+			double count = accountMapper.CountAdminsInoutToday(vo);
+			log.info(count+"");
+			if (count != 0) totalPage = (int)Math.ceil(count/vo.getPageSize());
+			inoutList = accountMapper.findAdminsInoutToday(vo);
+			if (inoutList == null) return null;
+		}else {
+			// count 값으로 page 수 계산
+			double count = accountMapper.CountAdminsInoutPast(vo);
+			log.info(count+"");
+			if (count != 0) totalPage = (int)Math.ceil(count/vo.getPageSize());
+			inoutList = accountMapper.findAdminsInoutPast(vo);
+			if (inoutList == null) return null;
+		}
+		// 총 페이지 수와 입출금 리스트를 map에 담아 반환
+		info.put("totalPage", totalPage);
+		info.put("list", inoutList);
+		return info;
+	}
 	
-	
+//	// 해당 계좌에 접근(조회) 가능한 사용자인지 확인
+//	public int checkByAcctNoToAccessibleUser(HashMap<String, Object> userInfo) {
+//		return accountMapper.checkByAcctNoToAccessibleUser(userInfo);
+//	}
+		
 	
 //	---------------------------------------------------------------------------------------
 	
@@ -117,4 +173,5 @@ public class AccountService {
 		}
 		return iv;
 	}
+
 }

@@ -29,7 +29,6 @@ public class TokenController {
 	private JwtConfig jwtConfig;
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
-	private PrincipalDetailsService principalDetailsService;
 	
 	/*
 	 * 리프레시 토큰 검증

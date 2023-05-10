@@ -44,7 +44,7 @@ public class JwtTokenProvider {
 	// 엑세스토큰 발급
 	public String createAccessToken(Authentication authentication) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
-        log.info(jwtConfig.getSecret());
+//        log.info(jwtConfig.getSecret());
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtConfig.getExpirationTime());
 
