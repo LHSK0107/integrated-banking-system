@@ -31,7 +31,7 @@ const UserInfo = () => {
     const verifyCode = `${getValues("emailCode1")}${getValues("emailCode2")}${getValues("emailCode3")}${getValues("emailCode4")}${getValues("emailCode5")}${getValues("emailCode6")}`;
     sendVerifyCode
       ? axios
-          .post("http://localhost:8080/api/email/verification", {
+          .post("https://localhost:8080/api/email/verification", {
             email: formData.email,
             code: verifyCode
           })
@@ -53,7 +53,7 @@ const UserInfo = () => {
   };
   useEffect(() => {
     axios
-      .post("http://localhost:8080/api/email/", { email: formData.email })
+      .post("https://localhost:8080/api/email/", { email: formData.email })
       .then((res) => {
         console.log("이메일 전송 ok");
         SetsendVerifyCode(true);

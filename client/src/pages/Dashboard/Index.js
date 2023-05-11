@@ -12,7 +12,7 @@ import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
 
   useEffect(()=>{
-    axios.post("http://localhost:8080/reAccessToken",{
+    axios.post("https://localhost:8080/reAccessToken",{
       withCredential: true
     }).then((res) => {
       console.log(`res는 ${res.headers.get("Authorization")}`);
