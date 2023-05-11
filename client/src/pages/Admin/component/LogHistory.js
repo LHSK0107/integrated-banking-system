@@ -6,40 +6,19 @@ import { useNavigate } from "react-router";
 import { LogInContext } from "../../../commons/LogInContext";
 import decodeJwt from "../../../hooks/decodeJwt";
 import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
 
 const LogHistory = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  // 
+  const {loggedUserInfo} = useAuth();
   const [log, setLog] = useState(null);
   const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
+  const savedToken = window.localStorage.getItem("jwt");
 
-  useEffect(() => {
-    if (savedToken === null) {
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-      logRecord();
-    }
-  }, [setLoggedUser]);
-
+  useEffect = () => {
+    logRecord();
+  }
+  
   // 로그인 기록 가져오기
   const logRecord = () => {
     axios
