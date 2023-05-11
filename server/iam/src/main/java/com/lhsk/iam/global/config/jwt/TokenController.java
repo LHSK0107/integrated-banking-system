@@ -64,7 +64,10 @@ public class TokenController {
 	    Authentication authentication = jwtTokenProvider.getAuthenticationFromRefreshToken(refreshToken);
 	    String newAccessToken = jwtTokenProvider.createAccessToken(authentication);
 	    log.info("재발급한 액세스토큰 : "+newAccessToken);
-	    return ResponseEntity.ok().header(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix() + newAccessToken).build();
+	    return ResponseEntity.ok()
+	    		.header(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix() + newAccessToken)
+	    		.header("Access-Control-Expose-Headers", jwtConfig.getHeaderString())
+	    		.build();
 	}
 	
 	@PostMapping("/refreshToken")
