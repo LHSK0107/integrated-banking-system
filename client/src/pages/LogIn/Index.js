@@ -39,10 +39,11 @@ const Index = () => {
   });
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:8080/login", {
+      .post("https://localhost:8080/login", {
         username: data.username,
         password: data.password,
-      })
+      },
+      {withCredentials: true})
       .then((response) => {
         // 로그인 성공 시
         if(response.status === 200 && response.headers.get("Authorization")) {
