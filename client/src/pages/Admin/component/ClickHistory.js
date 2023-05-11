@@ -148,7 +148,15 @@ const ClickHistory = () => {
           <section className="click_list">
             <h3>메뉴 클릭 기록 조회</h3>
             <div className="list_wrap">
-              <p>조회일시</p>
+              <p>
+                조회일시{" "}
+                <span>
+                  {new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+                    .toISOString()
+                    .replace("T", " ")
+                    .slice(0, -5)}
+                </span>
+              </p>
               <ul className="tab flex">
                 {tabContList.map((ele) => {
                   return ele.tabTit;
