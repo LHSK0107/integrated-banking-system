@@ -1,13 +1,12 @@
 import React from "react";
 import ReactPaginate from "react-paginate";
 
-const Paging = ({ currentItems, count, handlePageChange }) => {
-  console.log(currentItems, count, handlePageChange);
+const Paging = ({ itemsPerPage }) => {
+//   console.log(currentItems, count, handlePageChange);
+  
   return (
-    <>
-      <Items currentItems={currentItems} />
       <ReactPaginate
-        pageCount={count}
+        // pageCount={count}
         //   activePage={page}
         //   itemsCountPerPage={10} // 한 페이지당 보여줄 리스트 아이템의 개수
         //   totalItemsCount={count} // 총 아이템의 개수
@@ -16,14 +15,13 @@ const Paging = ({ currentItems, count, handlePageChange }) => {
         breakLabel={""}
         previousLabel={"이전"}
         nextLabel={"다음"}
-        onPageChange={handlePageChange}
+        // onPageChange={handlePageChange}
         // containerClassName={"pagination-ul"}
         // activeClassName={"currentPage"}
         // previousClassName={"pageLabel-btn"}
         // nextClassName={"pageLabel-btn"}
         renderOnZeroPageCount={null}
       />
-    </>
   );
 };
 

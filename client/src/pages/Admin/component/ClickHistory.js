@@ -1,34 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
 import { useNavigate } from "react-router";
 import Chart from "./Chart";
-import axios from "axios";
-import useAuth from "../../../hooks/useAuth";
-import { useRef } from "react";
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 const ClickHistory = () => {
-  const { loggedUserInfo } = useAuth();
+  const AuthAxios = useAxiosInterceptor();
   const [click, setClick] = useState([]);
-  // const [xDate, setXDate] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
 
   // day 버튼 잡기
   const dayBtn = useRef();
 
   useEffect(() => {
-    // clickRecordDay();
-    // setXDate(click.reduce((acc, { date }) => {
-    //   if (!acc.includes(date)) {
-    //     acc.unshift(date);
-    //   }
-    //   return acc;
-    // }, []));
-    // console.log(xDate);
     dayBtn.current.click();
   }, []);
 
@@ -60,20 +47,10 @@ const ClickHistory = () => {
   // 탭
   const tabClickHandler = (index) => {
     setActiveIndex(index);
-
     const period = ["day", "week", "month"][index];
-    axios
-      .post(
-        "http://localhost:8080/api/admin/menu",
-        { period: period },
-        { headers: { Authorization: "Bearer " + savedToken } }
-      )
+    AuthAxios.post("/api/admin/menu", { period: period })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
-          // setClick(prev => {
-          //   return res.data;
-          // });
           setClick(res.data);
         }
       })
