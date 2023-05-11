@@ -1,70 +1,43 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
-import { LogInContext } from "../../../commons/LogInContext";
 import { useNavigate } from "react-router";
-import decodeJwt from "../../../hooks/decodeJwt";
-import axios from "axios";
 import Chart from "./Chart";
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 const ClickHistory = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  const AuthAxios = useAxiosInterceptor();
   const [click, setClick] = useState([]);
   const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
 
   useEffect(() => {
-    if (savedToken === null) {
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-      clickRecord();
-    }
-  }, [setLoggedUser, setClick]);
-
-  // 메뉴 클릭 기록 가져오기
-  const clickRecord = () => {
-    axios
-      .post(
-        "http://localhost:8080/api/admin/menu",
+    const controller = new AbortController();
+    const clickRecord = async () => {
+      try{
+        const response = await AuthAxios.get("/api/admin/logins",
         {
           period: "day",
         },
         {
-          headers: { Authorization: "Bearer " + savedToken },
+          signal: controller.signal
+        });
+        if (response.status === 200) {
+          setClick(response.data);
+          console.log(response.data);
         }
-      )
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          setClick(res.data);
-        }
-      })
-      .catch((err) => {
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
         alert(err.response.data.message);
         navigate("/");
-      })
-      .finally(() => {});
-  };
+      }
+    }
+    // 메뉴 클릭 기록 가져오기
+    clickRecord();
+    return () => {
+      controller.abort();
+    }
+  }, [AuthAxios]);
 
   // groupBy 함수
 //   const groupBy = (array, key) =>
@@ -82,7 +55,7 @@ const ClickHistory = () => {
   //   console.log(...clickArr);
   //   const middleArr = groupBy(click, "clickCnt");
   //   const resultArr = JSON.parse(JSON.stringify(middleArr));
-  const series = click.reduce((acc, { menuNm, clickCnt, date }) => {
+  const series = click && click.reduce((acc, { menuNm, clickCnt, date }) => {
     const index = acc.findIndex(({ name }) => name === menuNm);
     if (index !== -1) {
       acc[index].data.unshift(clickCnt);
@@ -94,7 +67,6 @@ const ClickHistory = () => {
     }
     return acc;
   }, []);
-//   console.log(series);
 
   return (
     <div id="wrap">

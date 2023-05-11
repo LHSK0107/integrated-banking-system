@@ -1,65 +1,37 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
 import { useNavigate } from "react-router";
-import { LogInContext } from "../../../commons/LogInContext";
-import decodeJwt from "../../../hooks/decodeJwt";
-import axios from "axios";
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 const LogHistory = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
   const [log, setLog] = useState(null);
   const navigate = useNavigate();
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
+  const AuthAxios = useAxiosInterceptor();
 
-  useEffect(() => {
-    if (savedToken === null) {
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-      logRecord();
-    }
-  }, [setLoggedUser]);
-
-  // 로그인 기록 가져오기
-  const logRecord = () => {
-    axios
-      .get("http://localhost:8080/api/admin/logins", {
-        headers: { Authorization: "Bearer " + savedToken },
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          setLog(res.data);
-          console.log(res);
+  useEffect(()=>{
+    const controller = new AbortController();
+    const logRecord = async () => {
+      try{
+        const response = await AuthAxios.get("/api/admin/logins",{
+          signal: controller.signal
+        });
+        if (response.status === 200) {
+          setLog(response.data);
         }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {});
-  };
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    }
+    logRecord();
+    return () => {
+      controller.abort();
+    }
+  },[AuthAxios]);
   // 로그인 목록 뿌리기
   const logList =
-    log &&
-    log.map((ele, i) => {
+    log && log.map((ele, i) => {
       return (
         <li key={i} className="flex">
           <p className="list_name">{ele.name}</p>
