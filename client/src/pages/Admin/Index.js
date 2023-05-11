@@ -4,27 +4,39 @@ import Breadcrumb from "../../commons/Breadcrumb";
 import { Link } from "react-router-dom";
 import {AuthAxios} from "../../api/useCommonAxios";
 import Aside from "./component/Aside";
-
+import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
   // 회원 목록
   const [members, setMembers] = useState(null);
   // 회원 목록 불러오기
-  const response = AuthAxios("/api/manager/users",{},"get");
-
+  const AuthAxios = useAxiosInterceptor();
   useEffect(()=>{
-    response && console.log(response);
-  },[response]);
-  const memberInfoList =
-    members &&
-    members?.map((ele) => {
+    const controller = new AbortController();
+    const getUsers = async () => {
+      try{
+        const response = await AuthAxios.get("/api/manager/users",{
+          signal: controller.signal
+        });
+          response && console.log(response.data);
+          response && setMembers(response.data);
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    }
+    getUsers();
+    return () => {
+      controller.abort();
+    }
+  },[AuthAxios]);
+  const memberInfoList = members?.map((ele) => {
       return (
-        <li key={ele.userNo}>
-          <Link className="flex" to={`/admin/${ele.userNo}`}>
-            <p className="list_userCode">{ele?.userCode.split("_")[1]}</p>
-            <p className="list_userNo">{ele.userNo}</p>
-            <p className="list_name">{ele.name}</p>
-            <p className="list_dept">{ele.dept}</p>
-            <p className="list_email">{ele.email}</p>
+        <li key={ele?.userNo}>
+          <Link className="flex" to={`/admin/${ele?.userNo}`}>
+            <p className="list_userCode">{ele?.userCode?.split("_")[1]}</p>
+            <p className="list_userNo">{ele?.userNo}</p>
+            <p className="list_name">{ele?.name}</p>
+            <p className="list_dept">{ele?.dept}</p>
+            <p className="list_email">{ele?.email}</p>
           </Link>
         </li>
       );
@@ -47,7 +59,7 @@ const Index = () => {
                   <p className="list_dept">부서</p>
                   <p className="list_email">이메일</p>
                 </li>
-                {memberInfoList}
+                {members && memberInfoList}
               </ul>
             </div>
           </section>

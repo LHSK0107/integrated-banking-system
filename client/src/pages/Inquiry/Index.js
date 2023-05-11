@@ -33,13 +33,13 @@ const Index = () => {
     const getUsers = async () => {
       try{
         console.log("실행");
-        const response = await AuthAxios.get('/api/accounts',{
+        console.log(loggedUserInfo?.userNo);
+        const response = await AuthAxios.get(`/api/users/accounts/available/3`,{
           signal: controller.signal
         });
         response && console.log(response);
         setApiData(response.data);
       } catch (err) {
-        // console.error(err);
         console.log(`error 발생: ${err}`);
       }
     }
@@ -51,14 +51,15 @@ const Index = () => {
     }
   },[]);
 
-  // const { apiData, isLoading, error } = AuthAxios("/api/accounts",{},"get");
   useEffect(() => {
+    apiData && console.log(apiData);
     apiData && clearData(apiData);
   }, [apiData]);
  
   // api 요소 중, 계좌 구분에 따라 분리
   const clearData = (apiData) => {
     apiData.map((ele) => {
+      console.log(ele);
       if (ele.acctDv === "01") {
         stateArr.push(ele);
         setStatementList(stateArr);
@@ -74,9 +75,9 @@ const Index = () => {
   // 현재 시간 조회
   const currentTime = useCurrentTime();
   // 잔액 합산
-  const calcTotalBal = useCallback(() => {
+  const calcTotalBal = ()=> {
     let [stateBal, depInsBal, loanBal] = [0, 0, 0];
-    statementList.map((ele) => {
+    statementList?.map((ele) => {
       stateBal += Number(ele?.bal);
     });
     depAInsList?.map((ele) => {
@@ -86,8 +87,7 @@ const Index = () => {
       loanBal += Number(ele?.bal);
     });
     return { stateBal, depInsBal, loanBal };
-  }, [loanList]);
-
+  };
   // 탭 + 아코디언
   const [activeIndex, setActiveIndex] = useState(0);
   const [stateOn, setStateOn] = useState(true);
