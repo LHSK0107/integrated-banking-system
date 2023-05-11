@@ -2,8 +2,9 @@ import "./admin.css";
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../commons/Breadcrumb";
 import { Link } from "react-router-dom";
-import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
+import {AuthAxios} from "../../api/useCommonAxios";
 import Aside from "./component/Aside";
+import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
   // 회원 목록
   const [members, setMembers] = useState(null);
@@ -16,7 +17,6 @@ const Index = () => {
         const response = await AuthAxios.get("/api/manager/users",{
           signal: controller.signal
         });
-          response && console.log(response.data);
           response && setMembers(response.data);
       } catch (err) {
         console.log(`error 발생: ${err}`);
