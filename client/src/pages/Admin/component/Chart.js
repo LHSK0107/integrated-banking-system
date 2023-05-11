@@ -3,7 +3,7 @@ import Highcharts from "highcharts";
 import React from "react";
 import useCurrentTime from "../../../hooks/useCurrentTime";
 
-const getOptions = ({ data, dates }) => ({
+const getOptions = ({data, dates}) => ({
   colors: ["#FFC209", "#2196F3", "#FF3F4C", "#008345", "#151c62"],
   title: {
     text: "",
@@ -30,24 +30,9 @@ const getOptions = ({ data, dates }) => ({
     backgroundColor: "rgba(255, 255, 255, 0)",
     marginTop: 50,
   },
-  xAxis: [
-    {
-      dates,
-      labels: {
-        y: 20,
-        style: {
-          fontFamily: "Noto Sans KR",
-          fontSize: "12px",
-        },
-      },
-      lineColor: "#cfcfcf", //x축 선 색상 지정.
-      gridLineWidth: 0, // x축 그래프 뒤에 깔리는 선 굵기 지정.(0으로 지정 시 사라짐)
-      tickWidth: 1, //x축 label 사이 표지자 너비(0으로 지정 시 사라지며, 차트 타입에 따라 default로 지정되어 있을 수 있음)
-      tickColor: "#cfcfcf",
-      tickPosition: "inside", // outside가 default 이며, x축 선 기준 아래를 바라봄. inside는 위를 바라봄.
-      //   crosshair: true
-    },
-  ],
+  xAxis: [{
+    categories: dates,
+  }],
   yAxis: {
     title: {
       text: "횟수",
@@ -97,14 +82,16 @@ const getOptions = ({ data, dates }) => ({
   },
 });
 
-const Chart = ({ data }) => {
+const Chart = ({data, dates}) => {
 //     console.log(data);
 //   Object.keys(data).forEach((key) => {
 //     console.log(key, data[key]);
 //   })
+// console.log(data);
+// console.log(dates);
   return (
     <div>
-      <HighchartsReact highcharts={Highcharts} options={getOptions({ data })} />
+      <HighchartsReact highcharts={Highcharts} options={getOptions({data, dates})} />
     </div>
   );
 };
