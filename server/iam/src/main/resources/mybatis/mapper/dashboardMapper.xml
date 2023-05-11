@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lhsk.iam.domain.dashboard.model.mapper.DashboardMapper">
 	<select id="findByAdminsAcctDvToBalSum" resultType="AcctDvByBalSumVO">
-		SELECT acct_dv, SUM(bal) 
+		SELECT acct_dv, SUM(bal) AS balSum 
 		FROM account 
 		GROUP BY acct_dv
 		HAVING acct_dv != '04'
@@ -23,7 +23,7 @@
 	</select>
 	
 	<select id="findByUsersAcctDvToBalSum" parameterType="int" resultType="AcctDvByBalSumVO">
-		SELECT acct_dv, SUM(bal)
+		SELECT acct_dv, SUM(bal) AS balSum
 		FROM account ACCT
 			INNER JOIN user_account UA
 				ON UA.acct_no = ACCT.acct_no
