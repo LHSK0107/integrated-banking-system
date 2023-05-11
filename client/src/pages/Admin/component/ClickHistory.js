@@ -148,7 +148,7 @@ const ClickHistory = () => {
           <section className="click_list">
             <h3>메뉴 클릭 기록 조회</h3>
             <div className="list_wrap">
-              <p>
+              <p className="dateTime">
                 조회일시{" "}
                 <span>
                   {new Date(new Date().getTime() + 9 * 60 * 60 * 1000)

@@ -8,6 +8,15 @@ import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
   // 회원 목록
   const [members, setMembers] = useState(null);
+  // 로컬스토리지에서 jwt 가져오기
+  const savedToken = localStorage.getItem("jwt");
+  
+  // pagination
+  const [current, setCurrent] = useState([]); // 보여줄 데이터 
+  const [page, setPage] = useState(1); // 현재 페이지
+  const indexLast = page * 10;
+  const indexFirst = indexLast - 10;
+
   // 회원 목록 불러오기
   const AuthAxios = useAxiosInterceptor();
   useEffect(()=>{
@@ -28,6 +37,7 @@ const Index = () => {
       controller.abort();
     }
   },[AuthAxios]);
+  
   const memberInfoList = members?.map((ele) => {
       return (
         <li key={ele?.userNo}>
