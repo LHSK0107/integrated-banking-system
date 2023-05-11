@@ -26,7 +26,7 @@ const PersonalInfo = () => {
         phone: data.phone
       }
       setFormData({...formData, ...values});
-      axios.post("http://localhost:8080/api/signup", {
+      axios.post("https://localhost:8080/api/signup", {
         id: formData.id,
         password: formData.password,
         name: data.name,

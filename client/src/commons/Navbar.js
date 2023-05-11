@@ -32,8 +32,7 @@ const Navbar = () => {
       });
     } else {
       setToken2(null);
-      setLoggedUserInfo(
-        null);
+      setLoggedUserInfo(null);
     }
   }, []);
   // useEffect(()=>{console.log(loggedUserInfo)},[setLoggedUserInfo]);
@@ -44,7 +43,17 @@ const Navbar = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       localStorage.removeItem("jwt");
       axios
-        .post("http://localhost:8080/api/logout", {})
+        .post(
+          "https://localhost:8080/api/logout",
+          {
+            allAccount: 1,
+            inout: 2,
+            inoutReport: 3,
+            dailyReport: 4,
+            dashboard: 5,
+          },
+          { withCredentials: true }
+        )
         .then((response) => {
           if (response.status === 200 || response.status === 401) {
             setToken2(null);
