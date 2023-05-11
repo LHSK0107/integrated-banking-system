@@ -17,7 +17,7 @@ public class CorsConfig {
 		config.setAllowCredentials(true);	
 		// 모든 ip에 응답을 허용하겠다.
 //		config.addAllowedOrigin("https://localhost:3000");
-		config.addAllowedOrigin("http://localhost:3000");
+		config.addAllowedOrigin("https://localhost:3000");
 //		config.addAllowedOriginPattern("*");
 		// 모든 header에 응답을 허용하겠다.
 		config.addAllowedHeader("*");		
