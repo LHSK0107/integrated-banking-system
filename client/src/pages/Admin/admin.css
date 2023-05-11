@@ -77,10 +77,18 @@
   flex: 0 0 30%;
 }
 .log_list .list_time {
-    flex: 0 0 30%;
-  }
+  flex: 0 0 30%;
+}
 /* --- 로그인 기록 조회 */
 
 /* 메뉴 클릭 기록 조회 --- */
-
+.click_list h3 {
+  margin-bottom: 50px;
+}
+.list_wrap p {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--color-darkgray);
+  text-align: right;
+}
 /* --- 메뉴 클릭 기록 조회 */

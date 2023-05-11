@@ -10,11 +10,20 @@
 	
 	<select id="findMenuClickDay" resultType="MenuClickVO">
 		SELECT menu_nm,
-			   DATE(click_date) AS date,
-			   SUM(click_cnt) AS click_cnt
+		       DATE(click_date) AS date,
+		       SUM(click_cnt) AS click_cnt
 		FROM menu_click
 		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-		GROUP BY menu_nm, date order by date desc;
+		GROUP BY menu_nm, date 
+		ORDER BY date DESC,
+		         CASE menu_nm
+		             WHEN 'all_account' THEN 1
+		             WHEN 'inout' THEN 2
+		             WHEN 'inout_report' THEN 3
+		             WHEN 'daily_report' THEN 4
+		             WHEN 'dashboard' THEN 5
+		             ELSE 6
+		         END;
 	</select>
 	
 	<select id="findMenuClickWeek" resultType="MenuClickVO">
@@ -22,20 +31,36 @@
 		       STR_TO_DATE(CONCAT(YEARWEEK(click_date, 1), ' Monday'), '%X%V %W') AS date,
 		       SUM(click_cnt) AS click_cnt
 		FROM menu_click
-		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 6 WEEK)
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 WEEK)
 		GROUP BY menu_nm, STR_TO_DATE(CONCAT(YEARWEEK(click_date, 1), ' Monday'), '%X%V %W')
 		HAVING date IS NOT NULL
-		ORDER BY date DESC;	
+		ORDER BY date DESC,
+		         CASE menu_nm
+		             WHEN 'all_account' THEN 1
+		             WHEN 'inout' THEN 2
+		             WHEN 'inout_report' THEN 3
+		             WHEN 'daily_report' THEN 4
+		             WHEN 'dashboard' THEN 5
+		             ELSE 6
+		         END;
 	</select>
 	
 	<select id="findMenuClickMonth" resultType="MenuClickVO">
 		SELECT menu_nm,
-		       DATE_FORMAT(click_date, '%Y-%m-01') AS date,
+		       DATE_FORMAT(click_date, '%Y-%m') AS date,
 		       SUM(click_cnt) AS click_cnt
 		FROM menu_click
-		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
-		GROUP BY menu_nm, DATE_FORMAT(click_date, '%Y-%m-01')
-		ORDER BY date DESC;
+		WHERE click_date >= DATE_SUB(CURDATE(), INTERVAL 7 MONTH)
+		GROUP BY menu_nm, DATE_FORMAT(click_date, '%Y-%m')
+		ORDER BY date DESC,
+		         CASE menu_nm
+		             WHEN 'all_account' THEN 1
+		             WHEN 'inout' THEN 2
+		             WHEN 'inout_report' THEN 3
+		             WHEN 'daily_report' THEN 4
+		             WHEN 'dashboard' THEN 5
+		             ELSE 6
+		         END;
 	</select>
 	
 </mapper>
