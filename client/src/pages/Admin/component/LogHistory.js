@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
-// import ReactPaginate from "react-paginate";
-// import Paging from "./Paging";
+import ReactPaginate from "react-paginate";
+import Paging from "./Paging";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 const LogHistory = () => {
@@ -12,43 +12,77 @@ const LogHistory = () => {
   const [log, setLog] = useState(null);
 
   // pagination
-  const [current, setCurrent] = useState([]); // 보여줄 데이터
-  const [page, setPage] = useState(1); // 현재 페이지
-  const indexLast = page * 10;
-  const indexFirst = indexLast - 10;
+  // const [current, setCurrent] = useState([]); // 보여줄 데이터
+  // const [page, setPage] = useState(1); // 현재 페이지
+  // const indexLast = page * 10;
+  // const indexFirst = indexLast - 10;
 
-  const handlePageChange = (page) => {
-    setPage(page);
+  // const handlePageChange = (page) => {
+  //   setPage(page);
+  // };
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + 10;
+  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  const currentItems = log?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(log?.length / 10);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 10) % log.length;
+    console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+    setItemOffset(newOffset);
   };
 
   useEffect(() => {
-    logRecord();
-    setCurrent(log?.slice(indexFirst, indexLast));
-  }, [page, indexFirst, indexLast]);
-
-  // 로그인 기록 가져오기
-  const logRecord = () => {
-    AuthAxios.get("http://localhost:8080/api/admin/logins")
-      .then((res) => {
-        if (res.status === 200) {
-          setLog(res.data);
+    const controller = new AbortController();
+    const logRecord = async () => {
+      try {
+        const response = await AuthAxios.get("/api/admin/logins", {
+          signal: controller.signal,
+        });
+        if (response.status === 200) {
+          setLog(response.data);
         }
-      })
-      .catch((err) => console.log(err));
-  };
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    };
+
+    logRecord();
+    // setCurrent(log?.slice(indexFirst, indexLast));
+
+    return () => {
+      controller.abort();
+    };
+  }, [AuthAxios]);
+
   // 로그인 목록 뿌리기
-  const logList =
-    current &&
-    current.map((ele, i) => {
-      return (
-        <li key={i} className="flex">
-          <p className="list_name">{ele.name}</p>
-          <p className="list_dept">{ele.dept}</p>
-          <p className="list_email">{ele.email}</p>
-          <p className="list_email">{ele.loginDt.replace("T", "\t")}</p>
-        </li>
-      );
-    });
+  // const logList =
+  //   log &&
+  //   log.map((ele, i) => {
+  //     return (
+  //       <li key={i} className="flex">
+  //         <p className="list_name">{ele.name}</p>
+  //         <p className="list_dept">{ele.dept}</p>
+  //         <p className="list_email">{ele.email}</p>
+  //         <p className="list_email">{ele.loginDt.replace("T", "\t")}</p>
+  //       </li>
+  //     );
+  //   });
+  function Items({ currentItems }) {
+    return (
+      <>
+        {currentItems &&
+          currentItems.map((ele) => (
+            <li className="flex">
+              <p className="list_name">{ele.name}</p>
+              <p className="list_dept">{ele.dept}</p>
+              <p className="list_email">{ele.email}</p>
+              <p className="list_email">{ele.loginDt.replace("T", "\t")}</p>
+            </li>
+          ))}
+      </>
+    );
+  }
 
   return (
     <div id="wrap">
@@ -66,13 +100,24 @@ const LogHistory = () => {
                   <p className="list_email">이메일</p>
                   <p className="list_time">로그인 시간</p>
                 </li>
-                {logList}
+                {/* {logList} */}
+                <Items currentItems={currentItems} />
               </ul>
               {/* <Paging
-                page={page}
+                currentItems={page}
                 count={log?.length}
                 handlePageChange={handlePageChange}
               /> */}
+              <ReactPaginate
+                itemsPerPage={10}
+                breakLabel="..."
+                nextLabel="next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="< previous"
+                renderOnZeroPageCount={null}
+              />
             </div>
           </section>
         </div>

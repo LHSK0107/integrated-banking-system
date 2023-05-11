@@ -48,7 +48,7 @@ const ClickHistory = () => {
   const tabClickHandler = (index) => {
     setActiveIndex(index);
     const period = ["day", "week", "month"][index];
-    AuthAxios.post("http://localhost:8080/api/admin/menu", { period: period })
+    AuthAxios.post("/api/admin/menu", { period: period })
       .then((res) => {
         if (res.status === 200) {
           setClick(res.data);
