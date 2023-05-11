@@ -20,7 +20,7 @@ const EmailCheckStep = () => {
   });
   // 다음 버튼 클릭 시, formData에 각 입력값 전달
   const onSubmit = (data) => {
-    axios.post("http://localhost:8080/api/signup/email",{"email":data.email})
+    axios.post("https://localhost:8080/api/signup/email",{"email":data.email})
     .then((res)=>{
       console.log(`결과값:${res.data}`);
       if(res.data===false){
