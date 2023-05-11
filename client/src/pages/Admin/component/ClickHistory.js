@@ -6,9 +6,10 @@ import { useNavigate } from "react-router";
 import Chart from "./Chart";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
+import { useRef } from "react";
 
 const ClickHistory = () => {
-  const {loggedUserInfo} = useAuth();
+  const { loggedUserInfo } = useAuth();
   const [click, setClick] = useState([]);
   // const [xDate, setXDate] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -16,49 +17,56 @@ const ClickHistory = () => {
   // 로컬스토리지에서 jwt 가져오기
   const savedToken = localStorage.getItem("jwt");
 
+  // day 버튼 잡기
+  const dayBtn = useRef();
+
   useEffect(() => {
-      // clickRecordDay();
-      // setXDate(click.reduce((acc, { date }) => {
-        //   if (!acc.includes(date)) {
-          //     acc.unshift(date);
-          //   }
-          //   return acc;
-          // }, []));
-          // console.log(xDate);
+    // clickRecordDay();
+    // setXDate(click.reduce((acc, { date }) => {
+    //   if (!acc.includes(date)) {
+    //     acc.unshift(date);
+    //   }
+    //   return acc;
+    // }, []));
+    // console.log(xDate);
+    dayBtn.current.click();
   }, []);
 
-  // chart에 전달해줄 data 정제
-  const series = click&&click.reduce((acc, { menuNm, clickCnt, date }) => {
-    const index = acc.findIndex(({ name }) => name === menuNm);
-    if (index !== -1) {
-      acc[index].data.unshift(clickCnt);
-    } else {
-      acc.push({
-        name: menuNm,
-        data: [clickCnt],
-      });
-    }
-    return acc;
-  }, []);
+  // chart에 전달해줄 series 정제
+  const series =
+    click &&
+    click.reduce((acc, { menuNm, clickCnt, date }) => {
+      const index = acc.findIndex(({ name }) => name === menuNm);
+      if (index !== -1) {
+        acc[index].data.unshift(clickCnt);
+      } else {
+        acc.push({
+          name: menuNm,
+          data: [clickCnt],
+        });
+      }
+      return acc;
+    }, []);
 
   // chart에 전달해줄 dates 정제
   const xDate = [];
-  click&&click.map((ele) => {
-    if(!xDate.includes(ele.date)) {
-      xDate.unshift(ele.date);
-    }
-  });
-  
+  click &&
+    click.map((ele) => {
+      if (!xDate.includes(ele.date)) {
+        xDate.unshift(ele.date);
+      }
+    });
+
   // 탭
   const tabClickHandler = (index) => {
     setActiveIndex(index);
-    
+
     const period = ["day", "week", "month"][index];
     axios
-    .post(
-      "http://localhost:8080/api/admin/menu",
-      { period: period },
-      { headers: { Authorization: "Bearer " + savedToken } }
+      .post(
+        "http://localhost:8080/api/admin/menu",
+        { period: period },
+        { headers: { Authorization: "Bearer " + savedToken } }
       )
       .then((res) => {
         console.log(res);
@@ -74,7 +82,7 @@ const ClickHistory = () => {
         navigate("/");
       })
       .finally(() => {});
-    };
+  };
 
   const tabContList = [
     {
@@ -82,6 +90,7 @@ const ClickHistory = () => {
         <li
           className={activeIndex === 0 ? "active" : ""}
           onClick={() => tabClickHandler(0)}
+          ref={dayBtn}
         >
           DAY
         </li>
@@ -89,7 +98,7 @@ const ClickHistory = () => {
       tabCont: (
         <>
           <div className="chart">
-            {series&&<Chart data={series} dates={xDate} />}
+            {series && <Chart data={series} dates={xDate} />}
           </div>
         </>
       ),
@@ -106,7 +115,7 @@ const ClickHistory = () => {
       tabCont: (
         <>
           <div className="chart">
-            {series&&<Chart data={series} dates={xDate} />}
+            {series && <Chart data={series} dates={xDate} />}
           </div>
         </>
       ),
@@ -123,7 +132,7 @@ const ClickHistory = () => {
       tabCont: (
         <>
           <div className="chart">
-            {series&&<Chart data={series} dates={xDate} />}
+            {series && <Chart data={series} dates={xDate} />}
           </div>
         </>
       ),
