@@ -13,7 +13,7 @@ const NewsSlider = () => {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    const url = "http://localhost:8080/api/news";
+    const url = "https://localhost:8080/api/news";
     axios
       .get(url)
       .then((response) => {
