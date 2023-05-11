@@ -2,70 +2,30 @@ import React, { useContext, useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
-import { LogInContext } from "../../../commons/LogInContext";
 import { useNavigate } from "react-router";
-import decodeJwt from "../../../hooks/decodeJwt";
-import axios from "axios";
 import Chart from "./Chart";
+import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
 
 const ClickHistory = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  const {loggedUserInfo} = useAuth();
   const [click, setClick] = useState([]);
   // const [xDate, setXDate] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   // 로컬스토리지에서 jwt 가져오기
   const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
 
   useEffect(() => {
-    if (savedToken === null) {
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
       // clickRecordDay();
       // setXDate(click.reduce((acc, { date }) => {
-      //   if (!acc.includes(date)) {
-      //     acc.unshift(date);
-      //   }
-      //   return acc;
-      // }, []));
-      // console.log(xDate);
-      
-    }
-  }, [setLoggedUser, setClick, activeIndex]);
-
-  // groupBy 함수
-  //   const groupBy = (array, key) =>
-  //     array.reduce((result, currentValue) => {
-  //       // key 값으로 그룹화하여 object 생성
-  //       (result[currentValue[key]] = result[currentValue[key]] || []).push(
-  //         currentValue
-  //       );
-  //       return result;
-  //     }, {});
-  // 클릭 기록 날짜별로 묶기
-  //   const clickArr = [];
-  //   clickArr.push(groupBy(click, "date"));
-  //   console.log(...clickArr);
-  //   const middleArr = groupBy(click, "clickCnt");
-  //   const resultArr = JSON.parse(JSON.stringify(middleArr));
+        //   if (!acc.includes(date)) {
+          //     acc.unshift(date);
+          //   }
+          //   return acc;
+          // }, []));
+          // console.log(xDate);
+  }, []);
 
   // chart에 전달해줄 data 정제
   const series = click&&click.reduce((acc, { menuNm, clickCnt, date }) => {
@@ -107,13 +67,6 @@ const ClickHistory = () => {
           //   return res.data;
           // });
           setClick(res.data);
-          // const xDate = [...new Set(click.map(({date}) => date))];
-          // setXDate(click.reduce((acc, { date }) => {
-          //   if (!acc.includes(date)) {
-          //     acc.unshift(date);
-          //   }
-          //   return acc;
-          // }, []));
         }
       })
       .catch((err) => {

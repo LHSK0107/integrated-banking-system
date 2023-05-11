@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../commons/Breadcrumb";
 import { Link } from "react-router-dom";
 import {AuthAxios} from "../../api/useCommonAxios";
+import Aside from "./component/Aside";
 
 const Index = () => {
   // 회원 목록

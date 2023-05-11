@@ -7,6 +7,8 @@ import Pie from "./component/Pie";
 import Bar from "./component/Bar";
 import Point from "./component/Point";
 import { LogInContext } from "../../commons/LogInContext";
+import useAuth from "../../hooks/useAuth";
+import { AuthAxios } from "../../api/useCommonAxios";
 
 const Index = () => {
   const {loggedUserInfo} = useAuth();
@@ -166,12 +168,12 @@ const Index = () => {
         <div className="inner flex">
           <div className="member">
             <p>
-              {loggedUserInfo.userCode !== "" && loggedUserInfo.userCode.split("_")[1]}
+              {loggedUserInfo?.userCode !== "" && loggedUserInfo?.userCode.split("_")[1]}
             </p>
             <h2>
               안녕하세요,
               <br />
-              <span>{loggedUserInfo.name}</span>님
+              <span>{loggedUserInfo?.name}</span>님
             </h2>
             <div className="flex justify_between">
               <a className="flex btn" href="../AllAccount/index.html">
