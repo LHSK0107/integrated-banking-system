@@ -2,36 +2,44 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
-import { useNavigate } from "react-router";
+// import ReactPaginate from "react-paginate";
+// import Paging from "./Paging";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 const LogHistory = () => {
-  const [log, setLog] = useState(null);
-  const navigate = useNavigate();
   const AuthAxios = useAxiosInterceptor();
+  // api에서 받아온 데이터
+  const [log, setLog] = useState(null);
 
-  useEffect(()=>{
-    const controller = new AbortController();
-    const logRecord = async () => {
-      try{
-        const response = await AuthAxios.get("/api/admin/logins",{
-          signal: controller.signal
-        });
-        if (response.status === 200) {
-          setLog(response.data);
-        }
-      } catch (err) {
-        console.log(`error 발생: ${err}`);
-      }
-    }
+  // pagination
+  const [current, setCurrent] = useState([]); // 보여줄 데이터
+  const [page, setPage] = useState(1); // 현재 페이지
+  const indexLast = page * 10;
+  const indexFirst = indexLast - 10;
+
+  const handlePageChange = (page) => {
+    setPage(page);
+  };
+
+  useEffect(() => {
     logRecord();
-    return () => {
-      controller.abort();
-    }
-  },[AuthAxios]);
+    setCurrent(log?.slice(indexFirst, indexLast));
+  }, [page, indexFirst, indexLast]);
+
+  // 로그인 기록 가져오기
+  const logRecord = () => {
+    AuthAxios.get("http://localhost:8080/api/admin/logins")
+      .then((res) => {
+        if (res.status === 200) {
+          setLog(res.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   // 로그인 목록 뿌리기
   const logList =
-    log && log.map((ele, i) => {
+    current &&
+    current.map((ele, i) => {
       return (
         <li key={i} className="flex">
           <p className="list_name">{ele.name}</p>
@@ -60,6 +68,11 @@ const LogHistory = () => {
                 </li>
                 {logList}
               </ul>
+              {/* <Paging
+                page={page}
+                count={log?.length}
+                handlePageChange={handlePageChange}
+              /> */}
             </div>
           </section>
         </div>

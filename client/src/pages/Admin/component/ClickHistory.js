@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
@@ -9,64 +9,112 @@ import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 const ClickHistory = () => {
   const AuthAxios = useAxiosInterceptor();
   const [click, setClick] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
 
+  // day 버튼 잡기
+  const dayBtn = useRef();
+
   useEffect(() => {
-    const controller = new AbortController();
-    const clickRecord = async () => {
-      try{
-        const response = await AuthAxios.get("/api/admin/logins",
-        {
-          period: "day",
-        },
-        {
-          signal: controller.signal
+    dayBtn.current.click();
+  }, []);
+
+  // chart에 전달해줄 series 정제
+  const series =
+    click &&
+    click.reduce((acc, { menuNm, clickCnt, date }) => {
+      const index = acc.findIndex(({ name }) => name === menuNm);
+      if (index !== -1) {
+        acc[index].data.unshift(clickCnt);
+      } else {
+        acc.push({
+          name: menuNm,
+          data: [clickCnt],
         });
-        if (response.status === 200) {
-          setClick(response.data);
-          console.log(response.data);
+      }
+      return acc;
+    }, []);
+
+  // chart에 전달해줄 dates 정제
+  const xDate = [];
+  click &&
+    click.map((ele) => {
+      if (!xDate.includes(ele.date)) {
+        xDate.unshift(ele.date);
+      }
+    });
+
+  // 탭
+  const tabClickHandler = (index) => {
+    setActiveIndex(index);
+    const period = ["day", "week", "month"][index];
+    AuthAxios.post("http://localhost:8080/api/admin/menu", { period: period })
+      .then((res) => {
+        if (res.status === 200) {
+          setClick(res.data);
         }
-      } catch (err) {
-        console.log(`error 발생: ${err}`);
+      })
+      .catch((err) => {
         alert(err.response.data.message);
         navigate("/");
-      }
-    }
-    // 메뉴 클릭 기록 가져오기
-    clickRecord();
-    return () => {
-      controller.abort();
-    }
-  }, [AuthAxios]);
+      })
+      .finally(() => {});
+  };
 
-  // groupBy 함수
-//   const groupBy = (array, key) =>
-//     array.reduce((result, currentValue) => {
-//       // key 값으로 그룹화하여 object 생성
-//       (result[currentValue[key]] = result[currentValue[key]] || []).push(
-//         currentValue
-//       );
-//       return result;
-//     }, {});
-
-  // 클릭 기록 날짜별로 묶기
-  //   const clickArr = [];
-  //   clickArr.push(groupBy(click, "date"));
-  //   console.log(...clickArr);
-  //   const middleArr = groupBy(click, "clickCnt");
-  //   const resultArr = JSON.parse(JSON.stringify(middleArr));
-  const series = click && click.reduce((acc, { menuNm, clickCnt, date }) => {
-    const index = acc.findIndex(({ name }) => name === menuNm);
-    if (index !== -1) {
-      acc[index].data.unshift(clickCnt);
-    } else {
-      acc.push({
-        name: menuNm,
-        data: [clickCnt],
-      });
-    }
-    return acc;
-  }, []);
+  const tabContList = [
+    {
+      tabTit: (
+        <li
+          className={activeIndex === 0 ? "active" : ""}
+          onClick={() => tabClickHandler(0)}
+          ref={dayBtn}
+        >
+          DAY
+        </li>
+      ),
+      tabCont: (
+        <>
+          <div className="chart">
+            {series && <Chart data={series} dates={xDate} />}
+          </div>
+        </>
+      ),
+    },
+    {
+      tabTit: (
+        <li
+          className={activeIndex === 1 ? "active" : ""}
+          onClick={() => tabClickHandler(1)}
+        >
+          WEEK
+        </li>
+      ),
+      tabCont: (
+        <>
+          <div className="chart">
+            {series && <Chart data={series} dates={xDate} />}
+          </div>
+        </>
+      ),
+    },
+    {
+      tabTit: (
+        <li
+          className={activeIndex === 2 ? "active" : ""}
+          onClick={() => tabClickHandler(2)}
+        >
+          MONTH
+        </li>
+      ),
+      tabCont: (
+        <>
+          <div className="chart">
+            {series && <Chart data={series} dates={xDate} />}
+          </div>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div id="wrap">
@@ -77,7 +125,21 @@ const ClickHistory = () => {
           <section className="click_list">
             <h3>메뉴 클릭 기록 조회</h3>
             <div className="list_wrap">
-              <Chart data={series} />
+              <p className="dateTime">
+                조회일시{" "}
+                <span>
+                  {new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+                    .toISOString()
+                    .replace("T", " ")
+                    .slice(0, -5)}
+                </span>
+              </p>
+              <ul className="tab flex">
+                {tabContList.map((ele) => {
+                  return ele.tabTit;
+                })}
+              </ul>
+              <div className="cont">{tabContList[activeIndex].tabCont}</div>
             </div>
           </section>
         </div>
