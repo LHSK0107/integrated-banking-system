@@ -3,21 +3,18 @@ import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
 import { useNavigate } from "react-router";
-import { LogInContext } from "../../../commons/LogInContext";
-import decodeJwt from "../../../hooks/decodeJwt";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
 
 const LogHistory = () => {
-  // 
   const {loggedUserInfo} = useAuth();
   const [log, setLog] = useState(null);
   const navigate = useNavigate();
   const savedToken = window.localStorage.getItem("jwt");
 
-  useEffect = () => {
+  useEffect(() => {
     logRecord();
-  }
+  }, [])
   
   // 로그인 기록 가져오기
   const logRecord = () => {
@@ -26,7 +23,6 @@ const LogHistory = () => {
         headers: { Authorization: "Bearer " + savedToken },
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           setLog(res.data);
           console.log(res);
