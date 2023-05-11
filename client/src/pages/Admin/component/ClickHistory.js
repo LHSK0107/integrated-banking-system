@@ -2,60 +2,78 @@ import React, { useContext, useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
-import { LogInContext } from "../../../commons/LogInContext";
 import { useNavigate } from "react-router";
-import decodeJwt from "../../../hooks/decodeJwt";
-import axios from "axios";
 import Chart from "./Chart";
+import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
+import { useRef } from "react";
 
 const ClickHistory = () => {
-  const { token, setToken, loggedUser, setLoggedUser, loggedIn, setLoggedIn } =
-    useContext(LogInContext);
+  const { loggedUserInfo } = useAuth();
   const [click, setClick] = useState([]);
+  // const [xDate, setXDate] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
   // 로컬스토리지에서 jwt 가져오기
   const savedToken = localStorage.getItem("jwt");
-  setToken(savedToken);
+
+  // day 버튼 잡기
+  const dayBtn = useRef();
 
   useEffect(() => {
-    if (savedToken === null) {
-      setLoggedUser({
-        id: "",
-        name: "",
-        exp: "",
-        userCode: "",
-        userNo: "",
-      });
-      setLoggedIn(false);
-    } else {
-      const decodedPayload = decodeJwt(savedToken);
-      setLoggedUser({
-        id: decodedPayload.sub,
-        name: decodedPayload.name,
-        exp: decodedPayload.exp,
-        userCode: decodedPayload.userCode,
-        userNo: decodedPayload.userNo,
-      });
-      setLoggedIn(true);
-      clickRecord();
-    }
-  }, [setLoggedUser, setClick]);
+    // clickRecordDay();
+    // setXDate(click.reduce((acc, { date }) => {
+    //   if (!acc.includes(date)) {
+    //     acc.unshift(date);
+    //   }
+    //   return acc;
+    // }, []));
+    // console.log(xDate);
+    dayBtn.current.click();
+  }, []);
 
-  // 메뉴 클릭 기록 가져오기
-  const clickRecord = () => {
+  // chart에 전달해줄 series 정제
+  const series =
+    click &&
+    click.reduce((acc, { menuNm, clickCnt, date }) => {
+      const index = acc.findIndex(({ name }) => name === menuNm);
+      if (index !== -1) {
+        acc[index].data.unshift(clickCnt);
+      } else {
+        acc.push({
+          name: menuNm,
+          data: [clickCnt],
+        });
+      }
+      return acc;
+    }, []);
+
+  // chart에 전달해줄 dates 정제
+  const xDate = [];
+  click &&
+    click.map((ele) => {
+      if (!xDate.includes(ele.date)) {
+        xDate.unshift(ele.date);
+      }
+    });
+
+  // 탭
+  const tabClickHandler = (index) => {
+    setActiveIndex(index);
+
+    const period = ["day", "week", "month"][index];
     axios
       .post(
         "http://localhost:8080/api/admin/menu",
-        {
-          period: "day",
-        },
-        {
-          headers: { Authorization: "Bearer " + savedToken },
-        }
+        { period: period },
+        { headers: { Authorization: "Bearer " + savedToken } }
       )
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
+          // setClick(prev => {
+          //   return res.data;
+          // });
           setClick(res.data);
         }
       })
@@ -66,35 +84,60 @@ const ClickHistory = () => {
       .finally(() => {});
   };
 
-  // groupBy 함수
-//   const groupBy = (array, key) =>
-//     array.reduce((result, currentValue) => {
-//       // key 값으로 그룹화하여 object 생성
-//       (result[currentValue[key]] = result[currentValue[key]] || []).push(
-//         currentValue
-//       );
-//       return result;
-//     }, {});
-
-  // 클릭 기록 날짜별로 묶기
-  //   const clickArr = [];
-  //   clickArr.push(groupBy(click, "date"));
-  //   console.log(...clickArr);
-  //   const middleArr = groupBy(click, "clickCnt");
-  //   const resultArr = JSON.parse(JSON.stringify(middleArr));
-  const series = click.reduce((acc, { menuNm, clickCnt, date }) => {
-    const index = acc.findIndex(({ name }) => name === menuNm);
-    if (index !== -1) {
-      acc[index].data.unshift(clickCnt);
-    } else {
-      acc.push({
-        name: menuNm,
-        data: [clickCnt],
-      });
-    }
-    return acc;
-  }, []);
-//   console.log(series);
+  const tabContList = [
+    {
+      tabTit: (
+        <li
+          className={activeIndex === 0 ? "active" : ""}
+          onClick={() => tabClickHandler(0)}
+          ref={dayBtn}
+        >
+          DAY
+        </li>
+      ),
+      tabCont: (
+        <>
+          <div className="chart">
+            {series && <Chart data={series} dates={xDate} />}
+          </div>
+        </>
+      ),
+    },
+    {
+      tabTit: (
+        <li
+          className={activeIndex === 1 ? "active" : ""}
+          onClick={() => tabClickHandler(1)}
+        >
+          WEEK
+        </li>
+      ),
+      tabCont: (
+        <>
+          <div className="chart">
+            {series && <Chart data={series} dates={xDate} />}
+          </div>
+        </>
+      ),
+    },
+    {
+      tabTit: (
+        <li
+          className={activeIndex === 2 ? "active" : ""}
+          onClick={() => tabClickHandler(2)}
+        >
+          MONTH
+        </li>
+      ),
+      tabCont: (
+        <>
+          <div className="chart">
+            {series && <Chart data={series} dates={xDate} />}
+          </div>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div id="wrap">
@@ -105,7 +148,21 @@ const ClickHistory = () => {
           <section className="click_list">
             <h3>메뉴 클릭 기록 조회</h3>
             <div className="list_wrap">
-              <Chart data={series} />
+              <p>
+                조회일시{" "}
+                <span>
+                  {new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+                    .toISOString()
+                    .replace("T", " ")
+                    .slice(0, -5)}
+                </span>
+              </p>
+              <ul className="tab flex">
+                {tabContList.map((ele) => {
+                  return ele.tabTit;
+                })}
+              </ul>
+              <div className="cont">{tabContList[activeIndex].tabCont}</div>
             </div>
           </section>
         </div>

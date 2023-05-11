@@ -13,23 +13,24 @@ const NewsSlider = () => {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    // const url = "http://localhost:3001/news/getNews";
-    // axios
-    //   .get(url)
-    //   .then((response) => {
-    //     clearData(response.data.items);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
-    //   });
+    const url = "http://localhost:8080/api/news";
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(response);
+        clearData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
+      });
   }, []);
 
   let newsArr = [];
   const day = ["일", "월", "화", "수", "목", "금", "토"];
   const clearData = (items) => {
     items.map((ele, idx) => {
-    //   console.log(ele);
+      console.log(ele);
       ele.pubDate = updateDateFormat(ele.pubDate);
       newsArr.push(ele);
       setNews(newsArr);
