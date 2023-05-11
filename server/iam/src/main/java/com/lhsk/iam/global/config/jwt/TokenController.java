@@ -40,10 +40,12 @@ public class TokenController {
 	public ResponseEntity<?> reAccessToken(HttpServletRequest req) {
 		// 쿠키에서 리프레시 토큰 추출
 	    String refreshToken = getRefreshTokenFromCookies(req);
-
+	    System.out.println("refresh = "+refreshToken);
+	    
     	// 리프레시 토큰 유효성 검사
 	    try {
 	    	if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+	    		System.out.println("try 안에서 쿠키 없음");
 	    		log.info("리프레시 토큰 : " + refreshToken);
 	    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
 	    	}
@@ -114,6 +116,7 @@ public class TokenController {
 	    if (cookies != null) {
 	        for (Cookie cookie : cookies) {
 	            if (cookie.getName().equals("refreshToken")) {
+	            	System.out.println("쿠키 있음");
 	            	log.info("리프레시 토큰 : "+cookie.getValue());
 	                return cookie.getValue();
 	            }
