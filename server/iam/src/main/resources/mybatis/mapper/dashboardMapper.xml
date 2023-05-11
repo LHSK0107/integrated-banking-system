@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhsk.iam.domain.dashboard.model.mapper.DashboardMapper">
+	<select id="findByAdminsAcctDvToBalSum" resultType="AcctDvByBalSumVO">
+		SELECT acct_dv, SUM(bal) 
+		FROM account 
+		GROUP BY acct_dv
+		HAVING acct_dv != '04'
+		ORDER BY acct_dv ASC
+	</select>
+	
+	<select id="findByAdminsAllAccountToBalSum" resultType="BigDecimal">
+		SELECT SUM(
+			CASE 
+				WHEN acct_dv = '03' 
+				THEN -bal
+				ELSE bal
+		    END
+		) AS ALL_ACCT_SUM
+		FROM account
+		WHERE acct_dv IN ('01', '02', '03')
+	</select>
+	
+	<select id="findByUsersAcctDvToBalSum" parameterType="int" resultType="AcctDvByBalSumVO">
+		SELECT acct_dv, SUM(bal)
+		FROM account ACCT
+			INNER JOIN user_account UA
+				ON UA.acct_no = ACCT.acct_no
+		WHERE user_no = #{userNo}
+		GROUP BY acct_dv 
+		HAVING acct_dv != '04'
+		ORDER BY acct_dv ASC		
+	</select>
+	
+	<select id="findByUsersAllAccountToBalSum" parameterType="int" resultType="BigDecimal">
+		SELECT SUM(
+			CASE 
+				WHEN acct_dv = '03'
+				THEN -bal
+		        ELSE bal
+			END
+		) AS ALL_ACCT_SUM
+		FROM account ACCT
+			INNER JOIN user_account UA
+				ON UA.acct_no = ACCT.acct_no
+		WHERE user_no = #{userNO} 
+			AND acct_dv IN ('01', '02', '03')
+	</select>
+
+</mapper>
