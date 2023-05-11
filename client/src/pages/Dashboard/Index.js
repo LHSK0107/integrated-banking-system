@@ -2,17 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Balance from "../../hooks/useBalance";
 import "./dashboard.css";
-
+import useAuth from "../../hooks/useAuth";
 import Pie from "./component/Pie";
 import Bar from "./component/Bar";
 import Point from "./component/Point";
 import { LogInContext } from "../../commons/LogInContext";
-import useAuth from "../../hooks/useAuth";
 import { AuthAxios } from "../../api/useCommonAxios";
-
+import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
   const {loggedUserInfo} = useAuth();
-  // const AuthAxios = useAxiosInterceptor();
+  const AuthAxios = useAxiosInterceptor();
 
   // 대시보드 구현
   const [statementList, setStatementList] = useState([]); // 입출금
