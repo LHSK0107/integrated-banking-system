@@ -110,7 +110,6 @@
 		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 			AND inout_dv = #{inoutDv}
 		</if>
-			AND IOT.trsc_dt = NOW() 
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
 				ORDER BY trsc_dt DESC, trsc_tm DESC
@@ -203,7 +202,6 @@
 			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 				AND inout_dv = #{inoutDv}
 			</if>
-				AND IOT.trsc_dt = NOW()
 		) AS IO
 	</select>
 
@@ -289,7 +287,6 @@
 		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 			AND inout_dv = #{inoutDv}
 		</if>
-			AND IOT.trsc_dt = NOW()
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
 				ORDER BY trsc_dt DESC, trsc_tm DESC
@@ -376,7 +373,6 @@
 			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 				AND inout_dv = #{inoutDv}
 			</if>
-			AND IOT.trsc_dt = NOW()
 		) AS IO
 	</select>
 
@@ -398,7 +394,6 @@
 		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
 	</select>
 </mapper>
-
 
 
 
