@@ -59,7 +59,7 @@ public class DataInitializer {
         List<AccountApiVO> accountList = accountClient.getAccounts();
         accountApiMapper.insertAccounts(accountList);
         // 백업 데이터 재입력
-        accountApiMapper.insertBackupUserAccount(info);
+        if (info.size() > 0) accountApiMapper.insertBackupUserAccount(info);
         // 과거 거래내역 추가
         while (true) {
            log.info("page : "+page);

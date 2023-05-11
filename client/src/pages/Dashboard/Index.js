@@ -10,6 +10,14 @@ import { LogInContext } from "../../commons/LogInContext";
 import { AuthAxios } from "../../api/useCommonAxios";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
+
+  useEffect(()=>{
+    axios.post("http://localhost:8080/reAccessToken",{
+      withCredential: true
+    }).then((res) => {
+      console.log(`res는 ${res.headers.get("Authorization")}`);
+    }).catch((err)=>console.error(err));
+  },[]);
   const {loggedUserInfo} = useAuth();
   const AuthAxios = useAxiosInterceptor();
 

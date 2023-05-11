@@ -17,7 +17,6 @@ const Index = () => {
         const response = await AuthAxios.get("/api/manager/users",{
           signal: controller.signal
         });
-          response && console.log(response.data);
           response && setMembers(response.data);
       } catch (err) {
         console.log(`error 발생: ${err}`);
