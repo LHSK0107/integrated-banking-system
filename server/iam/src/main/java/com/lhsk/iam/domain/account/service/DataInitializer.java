@@ -36,7 +36,7 @@ public class DataInitializer {
    String bizNo;
    
    // 프로그램이 처음 시작되면 딱 한 번만 실행되는 메소드
-   @PostConstruct
+//   @PostConstruct
    @Transactional
    public void dataInit() {
       
@@ -59,7 +59,7 @@ public class DataInitializer {
         List<AccountApiVO> accountList = accountClient.getAccounts();
         accountApiMapper.insertAccounts(accountList);
         // 백업 데이터 재입력
-        accountApiMapper.insertBackupUserAccount(info);
+        if (info.size() > 0) accountApiMapper.insertBackupUserAccount(info);
         // 과거 거래내역 추가
         while (true) {
            log.info("page : "+page);
