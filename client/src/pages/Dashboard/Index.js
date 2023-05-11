@@ -7,8 +7,17 @@ import Pie from "./component/Pie";
 import Bar from "./component/Bar";
 import Point from "./component/Point";
 import { LogInContext } from "../../commons/LogInContext";
+import { AuthAxios } from "../../api/useCommonAxios";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 const Index = () => {
+
+  useEffect(()=>{
+    axios.post("http://localhost:8080/reAccessToken",{
+      withCredential: true
+    }).then((res) => {
+      console.log(`res는 ${res.headers.get("Authorization")}`);
+    }).catch((err)=>console.error(err));
+  },[]);
   const {loggedUserInfo} = useAuth();
   const AuthAxios = useAxiosInterceptor();
 
@@ -166,12 +175,12 @@ const Index = () => {
         <div className="inner flex">
           <div className="member">
             <p>
-              {loggedUserInfo.userCode !== "" && loggedUserInfo.userCode.split("_")[1]}
+              {loggedUserInfo?.userCode !== "" && loggedUserInfo?.userCode.split("_")[1]}
             </p>
             <h2>
               안녕하세요,
               <br />
-              <span>{loggedUserInfo.name}</span>님
+              <span>{loggedUserInfo?.name}</span>님
             </h2>
             <div className="flex justify_between">
               <a className="flex btn" href="../AllAccount/index.html">

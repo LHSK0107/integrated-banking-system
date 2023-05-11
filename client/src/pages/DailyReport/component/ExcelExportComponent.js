@@ -299,6 +299,7 @@ const ExcelExportComponent = ({selectDate, lang}) =>{
                 });
             });
             // 파일 링크 생성
+            console.log(URL);
             return workbook.outputAsync().then(workbookBlob => URL.createObjectURL(workbookBlob));
         })
     };
