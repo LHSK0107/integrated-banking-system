@@ -48,4 +48,26 @@
 			AND acct_dv IN ('01', '02', '03')
 	</select>
 
+	<select id="AdminsAcctDv01InoutSum" parameterType="LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT inout_dv, trsc_dt, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_FORMAT(CURDATE()-1, '%Y-%m-%d'))
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01'
+		UNION
+		SELECT inout_dv, trsc_dt, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01'
+		ORDER BY trsc_dt DESC, inout_dv ASC
+	</select>
+	
+	<select id="UsersAcctDv01InoutSum" parameterType="Map" resultType="AcctDv01InoutSumVo">
+	
+	</select>
+	
 </mapper>

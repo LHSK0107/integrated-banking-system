@@ -1,6 +1,7 @@
 package com.lhsk.iam.domain.dashboard.controller;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +61,7 @@ public class DashboardController {
 	// 관리자의 자산 비율 메서드
 	@GetMapping("/api/manager/dashboard/acctDvRatio")
 	public ResponseEntity<Map<String, BigDecimal>> adminsEachAcctDvRatio() {
-		log.info("DashboardService adminsEachAcctDvRatio");
+		log.info("DashboardController adminsEachAcctDvRatio");
 		// key : 01, 02, 03
 		Map<String, BigDecimal> acctDvRatioInfo = dashboardService.adminsEachAcctDvRatio();
 		return new ResponseEntity<>(acctDvRatioInfo, HttpStatus.OK);
@@ -70,7 +71,7 @@ public class DashboardController {
 	@GetMapping("/api/users/dashboard/acctDvRatio/{userNo}")
 	public ResponseEntity<Map<String, BigDecimal>> usersEachAcctDvRatio(@PathVariable int userNo, 
 																		HttpServletRequest request) {
-		log.info("DashboardService usersEachAcctDvRatio");
+		log.info("DashboardController usersEachAcctDvRatio");
 		
 		// JWT에서 userNo을 parsing
 		String accessToken = request.getHeader("Authorization")
@@ -84,6 +85,16 @@ public class DashboardController {
 			return new ResponseEntity<>(acctDvRatioInfo, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+
+	// 관리자의 수시입출금 계좌 기간별(일/월/년) 입/출금 합계
+	@GetMapping("/api/manager/dashboard/acctDv01InoutSum")
+	public ResponseEntity<Map<String, List<BigDecimal>>> adminsAcctDv01InoutSum() {
+		log.info("DashboardController adminsAcctDv01InoutSum");
+		// key: day, month, year / value(List) : (index) 0 - 입금액, 1 - 출금액
+		Map<String, List<BigDecimal>> inoutSumInfo = dashboardService.adminsAcctDv01InoutSum();
+		
+		return new ResponseEntity<>(inoutSumInfo, HttpStatus.OK);
 	}
 
 }

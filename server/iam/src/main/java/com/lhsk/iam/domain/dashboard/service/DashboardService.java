@@ -2,6 +2,7 @@ package com.lhsk.iam.domain.dashboard.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +97,21 @@ public class DashboardService {
 		}
 		// key: acctDv, value: ratio 
 		return acctDvRatioInfo;
+	}
+
+	// 관리자의 수시입출금 계좌 기간별(일/월/년) 입/출금 합계
+	public Map<String, List<BigDecimal>> adminsAcctDv01InoutSum() {
+		Map<String, List<BigDecimal>> InoutSumInfo = new HashMap<>();
+		
+		List<BigDecimal> daliyList = new ArrayList<>();
+		List<BigDecimal> monthlyList = new ArrayList<>();
+		List<BigDecimal> yearlyList = new ArrayList<>();
+		
+		InoutSumInfo.put("day", daliyList);
+		InoutSumInfo.put("month", monthlyList);
+		InoutSumInfo.put("year", yearlyList);
+		
+		return InoutSumInfo;
 	}
 
 
