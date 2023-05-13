@@ -41,7 +41,6 @@ public class AccountApiService {
 		secret.put("orgNo", orgNo);
 		secret.put("bizNo", bizNo);	
 		
-		List<InoutVO> inouts = new ArrayList<>();
 		final int PAGE_SIZE = 1000;
 		int page = 0;
 		
@@ -76,7 +75,7 @@ public class AccountApiService {
 		if(inoutTodayList.size() == 0) return;
 		
 		// 모두 담았으면 DB에 입력후 메소드 종료
-		accountApiMapper.insertTodayPast(inoutTodayList);
+		accountApiMapper.insertInoutToday(inoutTodayList);
 	}
 	
 }

@@ -1,7 +1,7 @@
 package com.lhsk.iam.domain.account.model.vo;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -21,6 +21,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class InoutApiVO {
+	private BigInteger trscNo;		// 거래번호
 	
 	@JsonProperty("ACCT_NO")
 	private String acctNo;			// 계좌번호
@@ -37,7 +38,7 @@ public class InoutApiVO {
 	
 	@JsonProperty("TRSC_TM")
 	private String trscTmApi;
-	private LocalTime trscTm;			// 거래시간
+	private LocalTime trscTm;		// 거래시간
 	
 	@JsonProperty("BAL")
 	private BigDecimal bal;			// 잔액

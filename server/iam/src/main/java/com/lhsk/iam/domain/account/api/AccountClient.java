@@ -143,8 +143,8 @@ public class AccountClient {
 		
 		String date = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 		Map<String, Object> reqData = new HashMap<>();
-		reqData.put("INQ_STR_DT", vo.getStartDt());
-		reqData.put("INQ_END_DT", vo.getEndDt());
+		reqData.put("INQ_STR_DT", date);
+		reqData.put("INQ_END_DT", date);
 		reqData.put("PAGE_CNT", vo.getPageSize());
 		reqData.put("INQ_PAGE_NO", vo.getPage());
 		
@@ -164,7 +164,6 @@ public class AccountClient {
                     .bodyToMono(String.class)
                     .block();
             JsonNode jsonNode = objectMapper.readTree(response);
-            
             // 토탈 카운트를 뽑아낸다.
             JsonNode totalCntJson = jsonNode.get("RESP_DATA").get("TOT_CNT");
 //            int totalCnt = Integer.parseInt(totalCntJson.toString());
