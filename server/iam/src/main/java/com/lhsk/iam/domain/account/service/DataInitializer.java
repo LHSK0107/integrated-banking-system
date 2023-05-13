@@ -14,6 +14,7 @@ import com.lhsk.iam.domain.account.api.AccountClient;
 import com.lhsk.iam.domain.account.model.mapper.AccountApiMapper;
 import com.lhsk.iam.domain.account.model.vo.AccountApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
+import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
 import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
 
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class DataInitializer {
    String bizNo;
    
    // 프로그램이 처음 시작되면 딱 한 번만 실행되는 메소드
-//   @PostConstruct
+   @PostConstruct
    @Transactional
    public void dataInit() {
       
@@ -51,8 +52,10 @@ public class DataInitializer {
         
         // 회원별 조회 가능 계좌 리스트 백업
         List<UserAccountVO> info = accountApiMapper.findAllUserAccount();
-        // 거래내역 삭제
+        // 과거 거래내역 삭제
         accountApiMapper.deleteInoutPast();
+        // 금일 거래내역 삭제
+        accountApiMapper.deleteInoutToday();
         // 계좌목록 삭제
         accountApiMapper.deleteAccounts();
         // 계좌목록 추가
@@ -62,7 +65,7 @@ public class DataInitializer {
         if (info.size() > 0) accountApiMapper.insertBackupUserAccount(info);
         // 과거 거래내역 추가
         while (true) {
-           log.info("page : "+page);
+           log.info("inout_past page : "+page);
            List<InoutApiVO> inoutPastList = accountClient.getPastInouts(page,PAGE_SIZE, secret);   // API요청으로 얻은 계좌 목록 JSON
            if (inoutPastList.isEmpty()) {
                break;
@@ -71,5 +74,27 @@ public class DataInitializer {
             
            page++;
         }
+        // 페이지 초기화
+        page = 0;
+        // 금일 거래내역 추가
+        while (true) {
+        	log.info("inout_today page : "+page);
+        	// getTodayInouts()의 매개변수 생성
+            InoutRequestVO req = new InoutRequestVO();
+            int total = 0;    		
+    		// 요청 VO 생성
+    		req.setSecret(secret);
+    		req.setApiPageSize(PAGE_SIZE);
+    		req.setApiPage(page);
+    		// api에서 금일 내역 조회한 결과를 리스트에 담음 
+            List<InoutApiVO> inoutTodayList = accountClient.getTodayInouts(req, total);   // API요청으로 얻은 입출금 목록 JSON
+            if (inoutTodayList.isEmpty()) {
+                break;
+            }
+            accountApiMapper.insertInoutToday(inoutTodayList);
+             
+            page++;
+         }
+        
     }
 }
