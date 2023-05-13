@@ -1,6 +1,7 @@
 package com.lhsk.iam.domain.account.model.vo;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -19,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class InoutVO {
+	private BigInteger trscNo;		// 거래번호
 	private String acctNo;			// 계좌번호
 	private String bankCd;			// 은행이름
 	private String inoutDv;			// 입,출 구분
