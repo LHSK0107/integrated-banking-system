@@ -36,17 +36,16 @@
 }
 
 .notFound_cont h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: lighter;
     color: var(--color-main);
-    margin-bottom: 1rem;
+    margin-bottom: 30px;
 }
 
 .notFound_cont h3 {
     font-family: 'SBAggroL';
     font-weight: lighter;
-    font-size: 1.5rem;
-    line-height: 2.2rem;
+    line-height: 2rem;
 }
 
 .notFound_btn_wrap .more_btn {

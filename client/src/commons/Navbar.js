@@ -44,7 +44,7 @@ const Navbar = () => {
       localStorage.removeItem("jwt");
       axios
         .post(
-          "https://localhost:8080/api/logout",
+          "http://localhost:8080/api/logout",
           {
             allAccount: 1,
             inout: 2,

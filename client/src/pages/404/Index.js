@@ -30,8 +30,8 @@ export default function Index() {
                 감사합니다.</h3>
             </div>
             <div className="notFound_btn_wrap flex">
-                <button className="more_btn" onClick={goMain}>메인으로</button>
-                <button className="more_btn" onClick={goBack}>이전으로</button>
+                <button className="btn" onClick={goMain}>메인으로</button>
+                <button className="btn" onClick={goBack}>이전으로</button>
             </div>
         </div>
     </div>

@@ -3,7 +3,6 @@ import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
 import ReactPaginate from "react-paginate";
-import Paging from "./Paging";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 const LogHistory = () => {
@@ -12,26 +11,20 @@ const LogHistory = () => {
   const [log, setLog] = useState(null);
 
   // pagination
-  // const [current, setCurrent] = useState([]); // 보여줄 데이터
-  // const [page, setPage] = useState(1); // 현재 페이지
-  // const indexLast = page * 10;
-  // const indexFirst = indexLast - 10;
-
-  // const handlePageChange = (page) => {
-  //   setPage(page);
-  // };
-
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + 10;
+  const [itemOffset, setItemOffset] = useState(0); // 페이지에서 시작할 인덱스
+  const endOffset = itemOffset + 10; // 페이지에서 끝날 인덱스
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   const currentItems = log?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(log?.length / 10);
   const handlePageClick = (event) => {
     const newOffset = (event.selected * 10) % log.length;
-    console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
     setItemOffset(newOffset);
   };
 
+  // 로그인 기록 가져오기
   useEffect(() => {
     const controller = new AbortController();
     const logRecord = async () => {
@@ -46,10 +39,7 @@ const LogHistory = () => {
         console.log(`error 발생: ${err}`);
       }
     };
-
     logRecord();
-    // setCurrent(log?.slice(indexFirst, indexLast));
-
     return () => {
       controller.abort();
     };
@@ -103,20 +93,20 @@ const LogHistory = () => {
                 {/* {logList} */}
                 <Items currentItems={currentItems} />
               </ul>
-              {/* <Paging
-                currentItems={page}
-                count={log?.length}
-                handlePageChange={handlePageChange}
-              /> */}
+            </div>
+            <div className="pagingBtn flex justify_center">
               <ReactPaginate
-                itemsPerPage={10}
-                breakLabel="..."
-                nextLabel="next >"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
                 pageCount={pageCount}
-                previousLabel="< previous"
+                marginPagesDisplayed={3} // 1 2 3 ... ~
+                pageRangeDisplayed={3} // 1 2 3 ... 6 7 8 ... ~
+                itemsPerPage={10}
+                breakLabel="..." // Label for ellipsis.
+                previousLabel="< 이전"
+                nextLabel="다음 >"
+                onPageChange={handlePageClick} // The method to call when a page is changed. Exposes the current page object as an argument.
                 renderOnZeroPageCount={null}
+                className={"flex"}
+                activeClassName={"pagingBtnActive"} // active page
               />
             </div>
           </section>

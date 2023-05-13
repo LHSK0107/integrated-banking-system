@@ -39,7 +39,7 @@ const Index = () => {
   });
   const onSubmit = (data) => {
     axios
-      .post("https://localhost:8080/login", {
+      .post("http://localhost:8080/login", {
         username: data.username,
         password: data.password,
       },
