@@ -2,61 +2,82 @@ import "./admin.css";
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../commons/Breadcrumb";
 import { Link } from "react-router-dom";
-import {AuthAxios} from "../../api/useCommonAxios";
 import Aside from "./component/Aside";
+import ReactPaginate from "react-paginate";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
+
 const Index = () => {
-  // 회원 목록
+  const AuthAxios = useAxiosInterceptor();
+  // api에서 받아온 데이터
   const [members, setMembers] = useState(null);
-  // 로컬스토리지에서 jwt 가져오기
-  const savedToken = localStorage.getItem("jwt");
-  
+
   // pagination
-  const [current, setCurrent] = useState([]); // 보여줄 데이터 
-  const [page, setPage] = useState(1); // 현재 페이지
-  const indexLast = page * 10;
-  const indexFirst = indexLast - 10;
+  const [itemOffset, setItemOffset] = useState(0); // 페이지에서 시작할 인덱스
+  const endOffset = itemOffset + 10; // 페이지에서 끝날 인덱스
+  const currentItems = members?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(members?.length / 10);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 10) % members.length;
+    setItemOffset(newOffset);
+  };
 
   // 회원 목록 불러오기
-  const AuthAxios = useAxiosInterceptor();
-  useEffect(()=>{
+  useEffect(() => {
     const controller = new AbortController();
     const getUsers = async () => {
-      try{
-        const response = await AuthAxios.get("/api/manager/users",{
-          signal: controller.signal
+      try {
+        const response = await AuthAxios.get("/api/manager/users", {
+          signal: controller.signal,
         });
-          response && setMembers(response.data);
+        response && setMembers(response.data);
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(`error 발생: ${err}`);
       }
-    }
+    };
     getUsers();
     return () => {
       controller.abort();
-    }
-  },[AuthAxios]);
-  
-  const memberInfoList = members?.map((ele) => {
-      return (
-        <li key={ele?.userNo}>
-          <Link className="flex" to={`/admin/${ele?.userNo}`}>
-            <p className="list_userCode">{ele?.userCode?.split("_")[1]}</p>
-            <p className="list_userNo">{ele?.userNo}</p>
-            <p className="list_name">{ele?.name}</p>
-            <p className="list_dept">{ele?.dept}</p>
-            <p className="list_email">{ele?.email}</p>
-          </Link>
-        </li>
-      );
-    });
+    };
+  }, [AuthAxios]);
+
+  // const memberInfoList = members?.map((ele) => {
+  //     return (
+  //       <li key={ele?.userNo}>
+  //         <Link className="flex" to={`/admin/${ele?.userNo}`}>
+  //           <p className="list_userCode">{ele?.userCode?.split("_")[1]}</p>
+  //           <p className="list_userNo">{ele?.userNo}</p>
+  //           <p className="list_name">{ele?.name}</p>
+  //           <p className="list_dept">{ele?.dept}</p>
+  //           <p className="list_email">{ele?.email}</p>
+  //         </Link>
+  //       </li>
+  //     );
+  //   });
+  function Items({ currentItems }) {
+    return (
+      <>
+        {currentItems &&
+          currentItems.map((ele) => (
+            <li key={ele?.userNo}>
+              <Link className="flex" to={`/admin/${ele?.userNo}`}>
+                <p className="list_userCode">{ele?.userCode?.split("_")[1]}</p>
+                <p className="list_userNo">{ele?.userNo}</p>
+                <p className="list_name">{ele?.name}</p>
+                <p className="list_dept">{ele?.dept}</p>
+                <p className="list_email">{ele?.email}</p>
+              </Link>
+            </li>
+          ))}
+      </>
+    );
+  }
 
   return (
     <div id="wrap">
       <div className="inner">
         <Breadcrumb title={"관리자 페이지"} subMenu={"회원 목록"} />
         <div className="flex">
-          <Aside now={"회원 목록"}/>
+          <Aside now={"회원 목록"} />
           <section className="admin_list">
             <h3>회원 목록</h3>
             <div className="list_wrap">
@@ -68,8 +89,23 @@ const Index = () => {
                   <p className="list_dept">부서</p>
                   <p className="list_email">이메일</p>
                 </li>
-                {members && memberInfoList}
+                {/* {members && memberInfoList} */}
+                <Items currentItems={currentItems} />
               </ul>
+            </div>
+            <div className="pagingBtn flex justify_center">
+              <ReactPaginate
+                itemsPerPage={10}
+                breakLabel="..." // Label for ellipsis.
+                nextLabel="다음"
+                onPageChange={handlePageClick} // The method to call when a page is changed. Exposes the current page object as an argument.
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="이전"
+                renderOnZeroPageCount={null}
+                className={"flex"}
+                activeClassName={"pagingBtnActive"} // active page
+              />
             </div>
           </section>
         </div>

@@ -1,19 +1,43 @@
 import "../index.css";
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
+import axios from "axios";
 
 const NewsSlider = () => {
+  // const AuthAxios = useAxiosInterceptor();
   const news_wrap = useRef();
   const [news, setNews] = useState([]);
 
+  // useEffect(() => {
+  //   const controller = new AbortController();
+
+  //   const newsData= async () => {
+  //     try {
+  //       const response = await AuthAxios.get("/api/news");
+  //       if (response.status === 200) {
+  //         clearData(response.data);
+  //       }
+  //     } catch (err) {
+  //       console.log(`error 발생: ${err}`);
+  //       news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
+  //     }
+  //   };
+
+  //   newsData();
+
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [AuthAxios]);
   useEffect(() => {
-    const url = "https://localhost:8080/api/news";
+    // const url = "http://localhost:8080/api/news";
+    const url="https://iam-api.site/api/news";
     axios
       .get(url)
       .then((response) => {
@@ -29,8 +53,8 @@ const NewsSlider = () => {
   let newsArr = [];
   const day = ["일", "월", "화", "수", "목", "금", "토"];
   const clearData = (items) => {
-    items.map((ele, idx) => {
-      console.log(ele);
+    items.map((ele) => {
+      // console.log(ele);
       ele.pubDate = updateDateFormat(ele.pubDate);
       newsArr.push(ele);
       setNews(newsArr);
@@ -52,52 +76,52 @@ const NewsSlider = () => {
     return publicDate;
   };
 
-//   const pushElement = (items) => {
-//     const div_news = news_wrap.current; // swiper
-//     const child = div_news.children[0]; // swiper_wrapper
+  //   const pushElement = (items) => {
+  //     const div_news = news_wrap.current; // swiper
+  //     const child = div_news.children[0]; // swiper_wrapper
 
-//     child.innerHTML = ""; // 비우기
+  //     child.innerHTML = ""; // 비우기
 
-//     items.map((item, idx) => {
-//       const newAElement = document.createElement("a");
-//       newAElement.classList.add(
-//         "content",
-//         "main_news_cont",
-//         "flex",
-//         "flex_column",
-//         "justify_between",
-//         "swiper-slide"
-//       );
-//       const newH3Element = document.createElement("h3");
-//       newH3Element.innerHTML = item.title;
-//       const newPElement = document.createElement("p");
-//       newPElement.innerHTML = item.description;
-//       const newH4Element = document.createElement("h4");
-//       let publicDate = new Date(item.pubDate);
-//       const day = ["일", "월", "화", "수", "목", "금", "토"];
-//       // let dateFormat = publicDate.getFullYear() + "년" + (publicDate.getMonth() + 1) + "월" + publicDate.getDate() + "일" + day[publicDate.getDay()] + "요일";
-//       newH4Element.innerHTML =
-//         publicDate.getFullYear() +
-//         "년 " +
-//         (publicDate.getMonth() + 1) +
-//         "월 " +
-//         publicDate.getDate() +
-//         "일 " +
-//         day[publicDate.getDay()] +
-//         "요일";
+  //     items.map((item, idx) => {
+  //       const newAElement = document.createElement("a");
+  //       newAElement.classList.add(
+  //         "content",
+  //         "main_news_cont",
+  //         "flex",
+  //         "flex_column",
+  //         "justify_between",
+  //         "swiper-slide"
+  //       );
+  //       const newH3Element = document.createElement("h3");
+  //       newH3Element.innerHTML = item.title;
+  //       const newPElement = document.createElement("p");
+  //       newPElement.innerHTML = item.description;
+  //       const newH4Element = document.createElement("h4");
+  //       let publicDate = new Date(item.pubDate);
+  //       const day = ["일", "월", "화", "수", "목", "금", "토"];
+  //       // let dateFormat = publicDate.getFullYear() + "년" + (publicDate.getMonth() + 1) + "월" + publicDate.getDate() + "일" + day[publicDate.getDay()] + "요일";
+  //       newH4Element.innerHTML =
+  //         publicDate.getFullYear() +
+  //         "년 " +
+  //         (publicDate.getMonth() + 1) +
+  //         "월 " +
+  //         publicDate.getDate() +
+  //         "일 " +
+  //         day[publicDate.getDay()] +
+  //         "요일";
 
-//       child.appendChild(newAElement);
-//       newAElement.append(newH3Element);
-//       newAElement.append(newPElement);
-//       newAElement.append(newH4Element);
-//       newAElement.setAttribute("href", item.link);
-//       newAElement.setAttribute("target", "_blank");
-//     });
-//   };
+  //       child.appendChild(newAElement);
+  //       newAElement.append(newH3Element);
+  //       newAElement.append(newPElement);
+  //       newAElement.append(newH4Element);
+  //       newAElement.setAttribute("href", item.link);
+  //       newAElement.setAttribute("target", "_blank");
+  //     });
+  //   };
 
   return (
-      <div className="swiper_wrap">
-        {/* <div className="swiper_wrap">
+    <div className="swiper_wrap">
+      {/* <div className="swiper_wrap">
                 <Swiper
                   ref={news_wrap}
                   className="main_news_wrap flex justify_between"
@@ -140,13 +164,16 @@ const NewsSlider = () => {
               <Link className="" to={`${ele.link}`} target={"_blank"}>
                 <div className="main_news_cont card flex justify_between flex_column">
                   <h3>
-                    {ele.title.replace(/<[^>]+>/g, "").replace(/&apos;/g, "'").replace(/&quot;/g,"'")}
+                    {ele.title
+                      .replace(/<[^>]+>/g, "")
+                      .replace(/&apos;/g, "'")
+                      .replace(/&quot;/g, "'")}
                   </h3>
                   <p>
                     {ele.description
                       .replace(/<[^>]+>/g, "")
                       .replace(/&apos;/g, "'")
-                      .replace(/&quot;/g,"'")}
+                      .replace(/&quot;/g, "'")}
                   </p>
                   <h4>{ele.pubDate}</h4>
                 </div>

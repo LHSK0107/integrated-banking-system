@@ -105,7 +105,7 @@ select option:hover {
 #wrap {
     position: relative;
     min-height: 90vh;
-    top: 100px;
+    /* top: 100px; */
 }
 .inner > div {
   padding: 50px 0;
@@ -125,7 +125,7 @@ select option:hover {
   display: block;
   padding: 8px 40px 8px 30px;
   color: var(--color-black);
-  /* background: url(./images/arrow_b.png) no-repeat; */
+  background: url(./assets/images/icon/arrow_b.png) no-repeat;
   background-position: top 50% right 10%;
   border: 1px solid var(--color-darkgray);
   border-radius: 3px;
