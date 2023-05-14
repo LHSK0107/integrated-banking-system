@@ -36,7 +36,8 @@ const NewsSlider = () => {
   //   };
   // }, [AuthAxios]);
   useEffect(() => {
-    const url = "http://localhost:8080/api/news";
+    // const url = "http://localhost:8080/api/news";
+    const url="https://13.209.45.107/api/news";
     axios
       .get(url)
       .then((response) => {

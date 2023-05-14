@@ -105,12 +105,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-
-      <div className="section03">
-        <div className="inner">
-          
-        </div>
-      </div>
     </div>
   );
 };
