@@ -1,7 +1,7 @@
 package com.lhsk.iam.domain.dashboard.controller;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,15 +38,44 @@ public class DashboardController {
 		return new ResponseEntity<>(balSumInfo, HttpStatus.OK);
 	}
 	
+	// 관리자의 자산 비율 메서드
+	@GetMapping("/api/manager/dashboard/acctDvRatio")
+	public ResponseEntity<Map<String, BigDecimal>> adminsEachAcctDvRatio() {
+		log.info("DashboardController adminsEachAcctDvRatio");
+		// key : 01, 02, 03
+		Map<String, BigDecimal> acctDvRatioInfo = dashboardService.adminsEachAcctDvRatio();
+		return new ResponseEntity<>(acctDvRatioInfo, HttpStatus.OK);
+	}
+	
+
+	// 관리자의 수시입출금 계좌 기간별(일/월/년) 입/출금 합계
+	@GetMapping("/api/manager/dashboard/acctDv01InoutSum")
+	public ResponseEntity<Map<String, Map<String, Object>>> adminsAcctDv01InoutSum() {
+		log.info("DashboardController adminsAcctDv01InoutSum");
+		
+		Map<String, Map<String, Object>> data = new HashMap<>();
+		
+		// key: date, in, out / value는 배열
+		Map<String, Object> daily = dashboardService.adminsAcctDv01Daily();
+		Map<String, Object> monthly = dashboardService.adminsAcctDv01Monthly();
+		Map<String, Object> yearly = dashboardService.adminsAcctDv01Yearly();
+		
+		data.put("day", daily);
+		data.put("month", monthly);
+		data.put("year", yearly);
+		
+		return new ResponseEntity<>(data, HttpStatus.OK);
+	}
+	
 	// 회원의 보유 자산 잔액 합계 메서드
 	@GetMapping("/api/users/dashboard/totalBalances/{userNo}")
 	public ResponseEntity<Map<String, BigDecimal>> findByUsersBalSums(@PathVariable int userNo, 
-																	  HttpServletRequest request) {
+			HttpServletRequest request) {
 		log.info("DashboardController findByUsersBalSums");
 		
 		// JWT에서 userNo을 parsing
 		String accessToken = request.getHeader("Authorization")
-									.replace(jwtConfig.getTokenPrefix(), "");
+				.replace(jwtConfig.getTokenPrefix(), "");
 		int userNoByToken = jwtTokenProvider.getUserNoFromToken(accessToken);
 		
 		// 토큰 소유자와 PathVariable의 userNo가 같을 때 200 ok, 그 외에는 403 forbidden 
@@ -57,20 +86,11 @@ public class DashboardController {
 		}
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
-	
-	// 관리자의 자산 비율 메서드
-	@GetMapping("/api/manager/dashboard/acctDvRatio")
-	public ResponseEntity<Map<String, BigDecimal>> adminsEachAcctDvRatio() {
-		log.info("DashboardController adminsEachAcctDvRatio");
-		// key : 01, 02, 03
-		Map<String, BigDecimal> acctDvRatioInfo = dashboardService.adminsEachAcctDvRatio();
-		return new ResponseEntity<>(acctDvRatioInfo, HttpStatus.OK);
-	}
-	
+
 	// 회원의 자산 비율 메서드
 	@GetMapping("/api/users/dashboard/acctDvRatio/{userNo}")
 	public ResponseEntity<Map<String, BigDecimal>> usersEachAcctDvRatio(@PathVariable int userNo, 
-																		HttpServletRequest request) {
+			HttpServletRequest request) {
 		log.info("DashboardController usersEachAcctDvRatio");
 		
 		// JWT에서 userNo을 parsing
@@ -87,14 +107,37 @@ public class DashboardController {
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
 
-	// 관리자의 수시입출금 계좌 기간별(일/월/년) 입/출금 합계
-	@GetMapping("/api/manager/dashboard/acctDv01InoutSum")
-	public ResponseEntity<Map<String, List<BigDecimal>>> adminsAcctDv01InoutSum() {
-		log.info("DashboardController adminsAcctDv01InoutSum");
-		// key: day, month, year / value(List) : (index) 0 - 입금액, 1 - 출금액
-		Map<String, List<BigDecimal>> inoutSumInfo = dashboardService.adminsAcctDv01InoutSum();
+	// 회원의 수시입출금 계좌 기간별(일/월/년) 입/출금 합계
+	@GetMapping("/api/users/dashboard/acctDv01InoutSum/{userNo}")
+	public ResponseEntity<Map<String, Map<String, Object>>> usersAcctDv01InoutSum(@PathVariable int userNo, 
+																				HttpServletRequest request) {
+		log.info("DashboardController usersAcctDv01InoutSum");
 		
-		return new ResponseEntity<>(inoutSumInfo, HttpStatus.OK);
+		// JWT에서 userNo을 parsing
+		String accessToken = request.getHeader("Authorization")
+				.replace(jwtConfig.getTokenPrefix(), "");
+		int userNoByToken = jwtTokenProvider.getUserNoFromToken(accessToken);
+		
+		// 토큰 소유자와 PathVariable의 userNo가 같을 때 200 ok, 그 외에는 403 forbidden 
+		if (userNo == userNoByToken) {
+			// key : 01, 02, 03, total
+			Map<String, Map<String, Object>> data = new HashMap<>();
+			
+			// key: date, in, out / value는 배열
+			Map<String, Object> daily = dashboardService.usersAcctDv01Daily(userNo);
+			Map<String, Object> monthly = dashboardService.usersAcctDv01Monthly(userNo);
+			Map<String, Object> yearly = dashboardService.usersAcctDv01Yearly(userNo);
+			
+			data.put("day", daily);
+			data.put("month", monthly);
+			data.put("year", yearly);
+			
+			return new ResponseEntity<>(data, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		
+		
 	}
 
+	
 }

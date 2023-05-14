@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lhsk.iam.domain.dashboard.model.mapper.DashboardMapper">
+
 	<select id="findByAdminsAcctDvToBalSum" resultType="AcctDvByBalSumVO">
 		SELECT acct_dv, SUM(bal) AS balSum 
 		FROM account 
@@ -21,6 +22,116 @@
 		FROM account
 		WHERE acct_dv IN ('01', '02', '03')
 	</select>
+	
+	<select id="adminsAcctDv01DailyIn" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01' and inout_dv = '1'
+		UNION
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01' and inout_dv = '1'
+		ORDER BY trsc_dt DESC, inout_dv ASC
+	</select>
+	
+	<select id="adminsAcctDv01DailyOut" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01' and inout_dv = '2'
+		UNION
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01' and inout_dv = '2'
+		ORDER BY trsc_dt DESC, inout_dv ASC
+	</select>
+	
+	<select id="adminsAcctDv01MonthlyIn" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		ORDER BY trscDt DESC, inout_dv ASC;
+	</select>	
+	
+	<select id="adminsAcctDv01MonthlyOut" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		ORDER BY trscDt DESC, inout_dv ASC;
+	</select>	
+	
+	<select id="adminsAcctDv01YearlyIn" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		ORDER BY trscDt DESC, inout_dv ASC;
+	</select>
+
+	<select id="adminsAcctDv01YearlyOut" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		ORDER BY trscDt DESC, inout_dv ASC;
+	</select>
+	
+	
 	
 	<select id="findByUsersAcctDvToBalSum" parameterType="int" resultType="AcctDvByBalSumVO">
 		SELECT acct_dv, SUM(bal) AS balSum
@@ -48,26 +159,148 @@
 			AND acct_dv IN ('01', '02', '03')
 	</select>
 
-	<select id="AdminsAcctDv01InoutSum" parameterType="LocalDate" resultType="AcctDv01InoutSumVo">
-		SELECT inout_dv, trsc_dt, SUM(trsc_amt) AS amtSum
+	<select id="usersAcctDv01DailyIn" parameterType="Map" resultType="AcctDv01InoutSumVo">
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 				ON IOP.acct_no = ACCT.acct_no
-		WHERE (trsc_dt BETWEEN #{startDt} AND DATE_FORMAT(CURDATE()-1, '%Y-%m-%d'))
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+			AND (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 		GROUP BY trsc_dt, acct_dv, inout_dv
-		HAVING acct_dv = '01'
+		HAVING acct_dv = '01' AND inout_dv = '1'
 		UNION
-		SELECT inout_dv, trsc_dt, SUM(trsc_amt) AS amtSum
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
 		FROM inout_today IOT
 			INNER JOIN account ACCT
 				ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
 		GROUP BY trsc_dt, acct_dv, inout_dv
-		HAVING acct_dv = '01'
+		HAVING acct_dv = '01' AND inout_dv = '1'
 		ORDER BY trsc_dt DESC, inout_dv ASC
 	</select>
 	
-	<select id="UsersAcctDv01InoutSum" parameterType="Map" resultType="AcctDv01InoutSumVo">
+	<select id="usersAcctDv01DailyOut" parameterType="Map" resultType="AcctDv01InoutSumVo">
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+			AND (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		UNION
+		SELECT trsc_dt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+		GROUP BY trsc_dt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		ORDER BY trsc_dt DESC, inout_dv ASC
+	</select>
 	
+	<select id="usersAcctDv01MonthlyIn" parameterType="Map" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+			AND (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		ORDER BY trscDt DESC, inout_dv ASC
+	</select>
+	
+	<select id="usersAcctDv01MonthlyOut" parameterType="Map" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+			AND (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y-%m') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		ORDER BY trscDt DESC, inout_dv ASC
+	</select>
+
+	<select id="usersAcctDv01YearlyIn" parameterType="Map" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+			AND (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '1'
+		ORDER BY trscDt DESC, inout_dv ASC
+	</select>
+	
+	<select id="usersAcctDv01YearlyOut" parameterType="Map" resultType="AcctDv01InoutSumVo">
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+			AND (trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		UNION
+		SELECT DATE_FORMAT(trsc_dt, '%Y') AS trscDt, inout_dv, SUM(trsc_amt) AS amtSum
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+				ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo}
+		GROUP BY trscDt, acct_dv, inout_dv
+		HAVING acct_dv = '01' AND inout_dv = '2'
+		ORDER BY trscDt DESC, inout_dv ASC
 	</select>
 	
 </mapper>
