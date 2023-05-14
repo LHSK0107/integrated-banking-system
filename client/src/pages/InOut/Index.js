@@ -9,8 +9,10 @@ import useCommonAxios from "../../api/useCommonAxios";
 import useAxios from "../../api/useAxios";
 import BankName from '../../hooks/useBankName';
 import useCurrentTime from "../../hooks/useCurrentTime";
+import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 
 const Index = () => {
+  const AuthAxios = useAxiosInterceptor();
 
   /** 폼에 대한 각 요소 변수 저장 -> 변수명 차후 변경 */
   const [optionVal, setOptionVal] = useState({
@@ -24,11 +26,12 @@ const Index = () => {
     paging:"10"
   });
 
-  const {apiData}=useAxios("https://localhost:3001/api/getAccountList");
+  const {apiData}=useAxios("https://iam-api.site/api/accounts/inout");
+  
   /** 계좌 중, 은행코드 중복 제거 함수 */
   const getBankCD = () =>{
     let arr = [];
-    apiData.filter((val)=>arr.includes(val?.BANK_CD)===false && arr.push(val?.BANK_CD));
+    // apiData?.filter((val)=>arr.includes(val?.BANK_CD)===false && arr.push(val?.BANK_CD));
     return arr;
   }
   /** 은행별 계좌 요소를 option으로 리턴하는 함수 */
