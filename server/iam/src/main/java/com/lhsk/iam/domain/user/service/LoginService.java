@@ -1,5 +1,7 @@
 package com.lhsk.iam.domain.user.service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 
@@ -68,7 +70,7 @@ public class LoginService {
         	.sameSite("None")
         	.secure(true)
         	.httpOnly(true)
-        	.domain("localhost")
+        	.domain("iam-api.site")
         	.maxAge(60 * 30)
         	.build();
         response.addHeader("Set-Cookie", cookie.toString());

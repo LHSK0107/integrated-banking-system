@@ -113,6 +113,7 @@ public class TokenController {
 	// 쿠키로부터 리프레시 토큰을 추출하는 메소드
 	private String getRefreshTokenFromCookies(HttpServletRequest req) {
 	    Cookie[] cookies = req.getCookies();
+	    System.out.println("getRefreshTokenFromCookies : " + cookies);
 	    if (cookies != null) {
 	        for (Cookie cookie : cookies) {
 	            if (cookie.getName().equals("refreshToken")) {
