@@ -2,15 +2,14 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LogInContext } from "../../../commons/LogInContext";
 import { useNavigate } from "react-router";
-import decodeJwt from "../../../hooks/decodeJwt";
-import axios from "axios";
 import { StepContext } from "../context/StepContext";
-import {AuthAxios} from "../../../api/useCommonAxios";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
+import "../mypage.css";
 
 const UpdateInfo = () => {
+  const AuthAxios = useAxiosInterceptor();
   const { loggedUserInfo } = useAuth();
   const navigate = useNavigate();
 
@@ -19,25 +18,39 @@ const UpdateInfo = () => {
     useContext(StepContext);
 
   useEffect(() => {
-    const { apiData } = AuthAxios(`/api/users/${loggedUserInfo.userNo}`,{},"get");
-    apiData &&
-      setUserInfo({
-        userNo: apiData?.userNo,
-        userCode: apiData?.userCode,
-        name: apiData?.name,
-        id: apiData?.id,
-        email: apiData?.email,
-        tel: apiData?.phone,
-        dept: apiData?.dept,
-      });
-  }, [loggedUserInfo]);
+    const controller = new AbortController();
+    const getInfo = async () => {
+      try {
+        const response = await AuthAxios.get(
+          `/api/users/${loggedUserInfo.userNo}`
+        );
+        if (response.status === 200) {
+          setUserInfo({
+            userNo: response.data.userNo,
+            userCode: response.data.userCode,
+            name: response.data.name,
+            id: response.data.id,
+            email: response.data.email,
+            tel: response.data.phone,
+            dept: response.data.dept,
+          });
+        }
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    };
+    getInfo();
+    return () => {
+      controller.abort();
+    };
+  }, [AuthAxios]);
 
   // value 관리
-  const [prePwValue, setPrePwValue] = useState("");
-  const [pwValue, setPwValue] = useState("");
-  const [confirmPwValue, setConfirmPwValue] = useState("");
-  const [telValue, setTelValue] = useState("");
-  // console.log(prePwValue, pwValue, confirmPwValue, telValue);
+  const [prePwValue, setPrePwValue] = useState(null);
+  const [pwValue, setPwValue] = useState(null);
+  const [confirmPwValue, setConfirmPwValue] = useState(null);
+  const [telValue, setTelValue] = useState(null);
+  console.log(prePwValue, pwValue, confirmPwValue, telValue);
 
   // form 유효성 검사
   const schema = yup.object().shape({
@@ -86,17 +99,7 @@ const UpdateInfo = () => {
 
   // 수정사항 보내기
   const onSubmit = (data) => {
-    // const values = Object.values(data);
-    // const result = values.filter(val => {return val != null})
-
-    // console.log(values);
-
-    // if(result.length) {
-    //     console.log("result: ", result);
-    // }else {
-    //     console.log("모두 null");
-    // }
-
+    // 모두 null 이라면 땡!
     if (
       data.presentPassword === null &&
       data.password === null &&
@@ -105,49 +108,128 @@ const UpdateInfo = () => {
     ) {
       console.log("모두 null");
       alert("변경사항이 없습니다.");
-      // return false;
-    } else if (
+    }
+    // 패스워드만 null이고 전화번호는 변경했을 때
+    else if (
+      data.presentPassword === null &&
+      data.password === null &&
+      data.confirmPassword === null &&
+      data.tel !== null
+    ) {
+      // 전화번호만 업데이트
+      const updateTel = async () => {
+        try {
+          const response = await AuthAxios.put("/api/users", {
+            userNo: loggedUserInfo.userNo,
+            password: null,
+            phone: data.tel,
+          });
+          if (response.status === 200) {
+            alert("수정되었습니다.");
+            navigate("/");
+          }
+        } catch (err) {
+          console.log(`error 발생: ${err}`);
+        }
+      };
+      updateTel();
+    }
+    // 패스워드가 null은 아닐 때
+    else if (
       data.presentPassword !== null ||
       data.password !== null ||
       data.confirmPassword !== null
     ) {
-      // 비밀번호 쪽을 하나라도 건들였다면 현재 비밀번호 확인
-      if (data.presentPassword !== data.password) {
-        const { apiData } = AuthAxios("/api/users/checkPass", {
-          userNo: loggedUserInfo.userNo,
-          password: data.presentPassword,
-          phone: data.tel,
-        },"post");
-        if (apiData) {
-          const { apiData } = AuthAxios("/api/users", {
-            userNo: loggedUserInfo.userNo,
-            password: data.password,
-            phone: data.tel,
-          },"put");
-          if (apiData === "success") {
-            alert("수정되었습니다.");
-            navigate("/");
-          } else {
-            alert("수정에 실패하였습니다.");
-            return false;
+      // 패스워드 입력은 했는데, 이전과 같을 때
+      if (data.presentPassword === data.password) {
+        alert("비밀번호가 이전과 같습니다.");
+      }
+      // 모두 null은 아니지만 pw 중에 하나라도 null이 아니면 현재 pw 확인하는 api 후 업데이트
+      else if (data.presentPassword !== data.password) {
+        // 패스워드 확인
+        const checkPassword = async () => {
+          try {
+            const response = await AuthAxios.post("/api/users/checkPass", {
+              userNo: loggedUserInfo.userNo,
+              password: data.presentPassword,
+            });
+            // 맞으면 업데이트 api 호출
+            if (response.data === true) {
+              const updatePwTel = async () => {
+                try {
+                  const response = await AuthAxios.put("/api/users", {
+                    userNo: loggedUserInfo.userNo,
+                    password: data.password,
+                    phone: data.tel,
+                  });
+                  if (response.status === 200) {
+                    alert("수정되었습니다.");
+                    navigate("/");
+                  }
+                } catch (err) {
+                  alert(err.response.data.message);
+                  console.log(`error 발생: ${err}`);
+                }
+              };
+              updatePwTel();
+              // console.log("true",response);
+            } else if (response.data === false) {
+              alert("비밀번호가 잘못되었습니다.");
+            }
+          } catch (err) {
+            alert(err.response.data.message);
+            console.log(`error 발생: ${err}`);
           }
-        }
-      } else if (data.tel !== null) {
-        const { apiData } = AuthAxios("/api/users/", {
-          userNo: loggedUserInfo.userNo,
-          password: data.password,
-          phone: data.tel,
-        },"put");
-        if (apiData === "success") {
-          alert("수정되었습니다.");
-          navigate("/");
-        } else {
-          alert("수정에 실패하였습니다.");
-          return false;
-        }
+        };
+        checkPassword();
+        // 틀리면 땡!
       } else {
         console.log(data);
       }
+    }
+  };
+
+  const handleWithdraw = () => {
+    const controller = new AbortController();
+    const logout = async () => {
+      try {
+        const response = await AuthAxios.post(
+          "http://localhost:8080/api/logout",
+          {
+            allAccount: 1,
+            inout: 2,
+            inoutReport: 3,
+            dailyReport: 4,
+            dashboard: 5,
+          },
+          { withCredentials: true }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (window.confirm("탈퇴하시겠습니까?")) {
+      const callDelete = async () => {
+        try {
+          const controller = new AbortController();
+          const response = await AuthAxios.delete(
+            `/api/users/${loggedUserInfo.userNo}`,
+            {
+              signal: controller.signal,
+            }
+          );
+          if (response.status === 200) {
+            alert("탈퇴되었습니다.");
+            logout();
+          }
+        } catch (err) {
+          console.log(`error 발생: ${err}`);
+        }
+      };
+      callDelete();
+    } else {
+      return false;
     }
   };
 
@@ -156,7 +238,9 @@ const UpdateInfo = () => {
     if (loggedUserInfo.userCode !== "ROLE_ADMIN") {
       return (
         <div className="flex justify_end">
-          <button type="button">탈퇴하기</button>
+          <button type="button" className="withdraw" onClick={handleWithdraw}>
+            탈퇴하기
+          </button>
         </div>
       );
     }
@@ -166,10 +250,15 @@ const UpdateInfo = () => {
     <div className="updateInfo">
       <div className="userInfo">
         <ul>
-          <li className="flex">
-            <p>회원번호</p>
-            <p>{userInfo.userNo}</p>
-          </li>
+          {loggedUserInfo.userCode === "ROLE_USER" ? (
+            <></>
+          ) : (
+            <li className="flex">
+              <p>회원번호</p>
+              <p>{userInfo.userNo}</p>
+            </li>
+          )}
+
           <li className="flex">
             <p>이름</p>
             <p>{userInfo.name}</p>
@@ -201,7 +290,11 @@ const UpdateInfo = () => {
                 type="password"
                 value={prePwValue}
                 {...register("presentPassword")}
-                onChange={(e) => setPrePwValue(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value === "") {
+                    setPrePwValue(null);
+                  } else setPrePwValue(e.target.value);
+                }}
               />
             </div>
             {errors.presentPassword && (
@@ -215,7 +308,11 @@ const UpdateInfo = () => {
                 type="password"
                 value={pwValue}
                 {...register("password")}
-                onChange={(e) => setPwValue(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value === "") {
+                    setPwValue(null);
+                  } else setPwValue(e.target.value);
+                }}
               />
             </div>
             <span>{errors.password?.message}</span>
@@ -227,7 +324,11 @@ const UpdateInfo = () => {
                 type="password"
                 value={confirmPwValue}
                 {...register("confirmPassword")}
-                onChange={(e) => setConfirmPwValue(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value === "") {
+                    setConfirmPwValue(null);
+                  } else setConfirmPwValue(e.target.value);
+                }}
               />
             </div>
             <span>{errors.confirmPassword?.message}</span>
@@ -241,13 +342,19 @@ const UpdateInfo = () => {
                 type="tel"
                 value={telValue}
                 {...register("tel")}
-                onChange={(e) => setTelValue(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value === "") {
+                    setTelValue(null);
+                  } else setTelValue(e.target.value);
+                }}
               />
             </div>
             <span>{errors.tel?.message}</span>
           </li>
         </ul>
-        <button type="submit">수정하기</button>
+        <div className="flex justify_center">
+          <button type="submit">수정하기</button>
+        </div>
       </form>
       {deleteMe()}
     </div>

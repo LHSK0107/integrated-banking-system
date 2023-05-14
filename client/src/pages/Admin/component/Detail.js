@@ -1,12 +1,13 @@
-import React, {useEffect,useState,useMemo} from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import { Link } from "react-router-dom";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 import useAuth from "../../../hooks/useAuth";
+import Aside from "./Aside";
 const Detail = () => {
   const AuthAxios = useAxiosInterceptor();
-  const {loggedUserInfo} = useAuth();
+  const { loggedUserInfo } = useAuth();
   const [member, setMember] = useState(null);
   const [role, setRole] = useState(null);
   const [rename, setRename] = useState(null);
@@ -14,15 +15,17 @@ const Detail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   // userNo param
-  const userNo = useMemo(()=>location.pathname.split("/")[2],[location]);
-  const rerename = member && member.name;
+  const userNo = useMemo(() => location.pathname.split("/")[2], [location]);
+  // const rerename = member && member.name;
+  // const [rerename, setRerename] = useState(null);
+
   // 회원 한 명 정보 불러오기
-  useEffect(()=>{
+  useEffect(() => {
     const controller = new AbortController();
     const getUsers = async () => {
-      try{
-        const response = await AuthAxios.get(`/api/users/${userNo}`,{
-          signal: controller.signal
+      try {
+        const response = await AuthAxios.get(`/api/users/${userNo}`, {
+          signal: controller.signal,
         });
         if (response.status === 200) {
           setMember(response.data);
@@ -31,28 +34,32 @@ const Detail = () => {
       } catch (err) {
         console.log(`error 발생: ${err}`);
       }
-    }
+    };
     getUsers();
+    // console.log(rename, rerename);
+    setRename(rename === member?.name ? null : member?.name);
     return () => {
       controller.abort();
-    }
-  },[AuthAxios]);
+    };
+  }, [AuthAxios]);
 
-  /** 이용자 식별 코드 변경 관리 */
+  // 이용자 식별 코드 변경 관리
   const handleRole = (e) => {
     const value = e.target.value;
     if (member?.userCode === value) setRole(null);
     else setRole(value);
   };
-  console.log(role);
-  /** 이름 변경 관리 */
+  // 이름 변경 관리
   const handleRename = (e) => {
     const value = e.target.value;
-    if (value === rerename) setRename(null);
-    else setRename(value);
+    // if (member?.name === value) setRename(null);
+    // else {
+    setRename(value);
+    // setRerename(value);
+    // }
   };
   console.log(rename);
-  /** 부서 변경 관리 */
+  // 부서 변경 관리
   const handleTeam = (e) => {
     const value = e.target.value;
     if (member?.dept === value) setTeam(null);
@@ -62,31 +69,36 @@ const Detail = () => {
   // 임시 방편
   const dept = ["감사", "자금", "IR", "세무", "외환"];
 
-  /** 수정사항 보내기 */
+  // 수정사항 보내기
   const onSubmit = (e) => {
     e.preventDefault();
     if (role === null && rename === null && team === null) {
       alert("변경사항이 없습니다.");
     } else {
       const getUsers = async () => {
-        try{
+        try {
           const controller = new AbortController();
-          const response = await AuthAxios.put("/api/users",{
-            userNo: member.userNo,
-            userCode: role,
-            name: rename,
-            dept: team,
-          },{
-            signal: controller.signal
-          });
+          const response = await AuthAxios.put(
+            "/api/users",
+            {
+              userNo: member.userNo,
+              userCode: role,
+              name: rename,
+              dept: team,
+            },
+            {
+              signal: controller.signal,
+            }
+          );
           if (response.status === 200) {
             alert("회원정보가 수정되었습니다.");
             navigate(`/admin`);
           }
         } catch (err) {
-          console.log(`error 발생: ${err}`);
+          alert(`error 발생: ${err}`);
+          navigate("/admin");
         }
-      }
+      };
       getUsers();
     }
   };
@@ -94,10 +106,10 @@ const Detail = () => {
   const deleteMember = () => {
     if (window.confirm("탈퇴하시겠습니까?")) {
       const getUsers = async () => {
-        try{
+        try {
           const controller = new AbortController();
-          const response = await AuthAxios.delete(`/api/users/${userNo}`,{
-            signal: controller.signal
+          const response = await AuthAxios.delete(`/api/users/${userNo}`, {
+            signal: controller.signal,
           });
           if (response.status === 200) {
             alert("탈퇴되었습니다.");
@@ -106,7 +118,7 @@ const Detail = () => {
         } catch (err) {
           console.log(`error 발생: ${err}`);
         }
-      }
+      };
       getUsers();
     } else {
       return false;
@@ -129,28 +141,7 @@ const Detail = () => {
         <div className="inner">
           <Breadcrumb title={"관리자 페이지"} subMenu={"회원 정보"} />
           <div className="flex">
-            <aside>
-              <div className="aside_wrap">
-                <h2>관리자 페이지</h2>
-                <ul className="aside_nav">
-                  <li className="aside_active">
-                    <Link to="/admin">회원 목록</Link>
-                  </li>
-                  <li>
-                    <Link to="/">계좌 열람 권한 관리</Link>
-                  </li>
-                  <li>
-                    <Link to="/">로그인 기록 조회</Link>
-                  </li>
-                  <li>
-                    <Link to="/">메뉴 클릭 기록 조회</Link>
-                  </li>
-                  <li>
-                    <Link to="/">부서 관리</Link>
-                  </li>
-                </ul>
-              </div>
-            </aside>
+            <Aside now={"회원 목록"} />
             <section className="admin_detail">
               <h3>회원 정보</h3>
               <div>
@@ -254,7 +245,6 @@ const Detail = () => {
                 </form>
               </div>
               <div>
-                <button type="button">위임하기</button>
                 {changeRole()}
                 <button type="button" onClick={deleteMember}>
                   탈퇴하기
