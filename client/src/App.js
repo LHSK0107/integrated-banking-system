@@ -16,12 +16,12 @@ import AdminDetail from "./pages/Admin/component/Detail.js";
 import Footer from "./commons/Footer";
 import DailyReport from "./pages/DailyReport/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 import LogHistory from "./pages/Admin/component/LogHistory";
 import ClickHistory from "./pages/Admin/component/ClickHistory";
-
 import {UserContextProvider} from "./setup/context/UserContextProvider";
 import ApproveAuth from "./commons/ApproveAuth";
+import { MenuContextProvider } from "./setup/context/MenuContextProvider";
+
 const App = () => {
   const client = new QueryClient({
     defaultOptions: {
@@ -37,7 +37,9 @@ const App = () => {
         <div className="container">
           <QueryClientProvider client={client}>
             <Router>
-              <Navbar />
+              <MenuContextProvider>
+                <Navbar />
+              </MenuContextProvider>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/signup" element={<SignUp />} />
