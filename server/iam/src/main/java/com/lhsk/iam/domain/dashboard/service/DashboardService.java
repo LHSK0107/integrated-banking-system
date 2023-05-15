@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +37,15 @@ public class DashboardService {
 		// 관리자의 총 자산 합계 계산
 		BigDecimal AllAccountBalSum = dashboardMapper.findByAdminsAllAccountToBalSum();		
 		balSumInfo.put("total", AllAccountBalSum);
-		
+		if(balSumInfo.get("01") == null) {
+			balSumInfo.put("01", new BigDecimal(0.00));
+		}
+		if(balSumInfo.get("02") == null) {
+			balSumInfo.put("02", new BigDecimal(0.00));
+		}
+		if(balSumInfo.get("03") == null) {
+			balSumInfo.put("03", new BigDecimal(0.00));
+		}
 		return balSumInfo;
 	}
 
@@ -71,7 +82,9 @@ public class DashboardService {
 			// i만큼 현재 날짜에서 빼기
 			date[i] = LocalDate.now().minusDays(i);
 		}
-		data.put("date", date);
+		List<LocalDate> list1 = new ArrayList<>(Arrays.asList(date));
+        Collections.reverse(list1);
+		data.put("date", list1);
 
 		// 입금 합계 넣어주기
 		BigDecimal[] inSum = new BigDecimal[7];
@@ -87,7 +100,9 @@ public class DashboardService {
 				} 
 			}
 		}
-		data.put("in", inSum);
+		List<BigDecimal> list2 = new ArrayList<>(Arrays.asList(inSum));
+        Collections.reverse(list2);
+		data.put("in", list2);
 
 		// 출금 합계 넣어주기
 		BigDecimal[] outSum = new BigDecimal[7];
@@ -100,7 +115,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("out", outSum);
+		List<BigDecimal> list3 = new ArrayList<>(Arrays.asList(outSum));
+        Collections.reverse(list3);
+		data.put("out", list3);
 		
 		return data;
 	}
@@ -114,7 +131,9 @@ public class DashboardService {
 		for (int i = 0; i < 7; i++) {
 			date[i] = LocalDate.now().minusMonths(i).withDayOfMonth(1); // 현재 월의 첫 날짜로 설정
 		}
-		data.put("date", date);
+		List<LocalDate> list1 = new ArrayList<>(Arrays.asList(date));
+        Collections.reverse(list1);
+		data.put("date", list1);
 
 		// 입금 합계 넣어주기
 		BigDecimal[] inSum = new BigDecimal[7];
@@ -129,7 +148,9 @@ public class DashboardService {
 				} 
 			}
 		}
-		data.put("in", inSum);
+		List<BigDecimal> list2 = new ArrayList<>(Arrays.asList(inSum));
+        Collections.reverse(list2);
+		data.put("in", list2);
 
 		// 출금 합계 넣어주기
 		BigDecimal[] outSum = new BigDecimal[7];
@@ -142,7 +163,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("out", outSum);
+		List<BigDecimal> list3 = new ArrayList<>(Arrays.asList(outSum));
+        Collections.reverse(list3);
+		data.put("out", list3);
 		
 		return data;
 	}
@@ -156,7 +179,9 @@ public class DashboardService {
 		for (int i = 0; i < 7; i++) {
 			date[i] = LocalDate.now().minusYears(i).withDayOfYear(1); // 현재 연도의 첫 날짜로 설정
 		}
-		data.put("date", date);
+		List<LocalDate> list1 = new ArrayList<>(Arrays.asList(date));
+        Collections.reverse(list1);
+		data.put("date", list1);
 
 		// 입금 합계 넣어주기
 		BigDecimal[] inSum = new BigDecimal[7];
@@ -171,7 +196,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("in", inSum);
+		List<BigDecimal> list2 = new ArrayList<>(Arrays.asList(inSum));
+        Collections.reverse(list2);
+		data.put("in", list2);
 
 		// 출금 합계 넣어주기
 		BigDecimal[] outSum = new BigDecimal[7];
@@ -184,7 +211,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("out", outSum);
+		List<BigDecimal> list3 = new ArrayList<>(Arrays.asList(outSum));
+        Collections.reverse(list3);
+		data.put("out", list3);
 		
 		return data;
 	}
@@ -203,7 +232,16 @@ public class DashboardService {
 		// 회원의 보유 총 자산 합계 계산
 		BigDecimal AllAccountBalSum = dashboardMapper.findByUsersAllAccountToBalSum(userNo);		
 		balSumInfo.put("total", AllAccountBalSum);
-		
+		if(balSumInfo.get("01") == null) {
+			balSumInfo.put("01", new BigDecimal(0.00));
+		}
+		if(balSumInfo.get("02") == null) {
+			balSumInfo.put("02", new BigDecimal(0.00));
+		}
+		if(balSumInfo.get("03") == null) {
+			balSumInfo.put("03", new BigDecimal(0.00));
+		}
+		 
 		return balSumInfo;
 	}
 	
@@ -241,7 +279,9 @@ public class DashboardService {
 		for (int i = 0; i < 7; i++) {
 			date[i] = LocalDate.now().minusDays(i);
 		}
-		data.put("date", date);
+		List<LocalDate> list1 = new ArrayList<>(Arrays.asList(date));
+        Collections.reverse(list1);
+		data.put("date", list1);
 		
 		// 쿼리에 매개변수로 넣어 줄 map 객체 생성
 		Map<String, Object> request = new HashMap<>();
@@ -260,7 +300,9 @@ public class DashboardService {
 				} 
 			}
 		}
-		data.put("in", inSum);
+		List<BigDecimal> list2 = new ArrayList<>(Arrays.asList(inSum));
+        Collections.reverse(list2);
+		data.put("in", list2);
 
 		// 출금 합계 넣어주기
 		BigDecimal[] outSum = new BigDecimal[7];
@@ -273,7 +315,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("out", outSum);
+		List<BigDecimal> list3 = new ArrayList<>(Arrays.asList(outSum));
+        Collections.reverse(list3);
+		data.put("out", list3);
 		
 		return data;
 	}
@@ -288,7 +332,9 @@ public class DashboardService {
 		for (int i = 0; i < 7; i++) {
 			date[i] = LocalDate.now().minusMonths(i).withDayOfMonth(1); // 현재 월의 첫 날짜로 설정
 		}
-		data.put("date", date);
+		List<LocalDate> list1 = new ArrayList<>(Arrays.asList(date));
+        Collections.reverse(list1);
+		data.put("date", list1);
 		
 		// 쿼리에 매개변수로 넣어 줄 map 객체 생성
 		Map<String, Object> request = new HashMap<>();
@@ -307,7 +353,9 @@ public class DashboardService {
 				} 
 			}
 		}
-		data.put("in", inSum);
+		List<BigDecimal> list2 = new ArrayList<>(Arrays.asList(inSum));
+        Collections.reverse(list2);
+		data.put("in", list2);
 
 		// 출금 합계 넣어주기
 		BigDecimal[] outSum = new BigDecimal[7];
@@ -320,7 +368,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("out", outSum);
+		List<BigDecimal> list3 = new ArrayList<>(Arrays.asList(outSum));
+        Collections.reverse(list3);
+		data.put("out", list3);
 		
 		return data;
 	}
@@ -334,7 +384,9 @@ public class DashboardService {
 		for (int i = 0; i < 7; i++) {
 			date[i] = LocalDate.now().minusYears(i).withDayOfYear(1); // 현재 연도의 첫 날짜로 설정
 		}
-		data.put("date", date);
+		List<LocalDate> list1 = new ArrayList<>(Arrays.asList(date));
+        Collections.reverse(list1);
+		data.put("date", list1);
 
 		// 쿼리에 매개변수로 넣어 줄 map 객체 생성
 		Map<String, Object> request = new HashMap<>();
@@ -354,7 +406,9 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("in", inSum);
+		List<BigDecimal> list2 = new ArrayList<>(Arrays.asList(inSum));
+        Collections.reverse(list2);
+		data.put("in", list2);
 
 		// 출금 합계 넣어주기
 		BigDecimal[] outSum = new BigDecimal[7];
@@ -367,9 +421,11 @@ public class DashboardService {
 				}
 			}
 		}
-		data.put("out", outSum);
+		List<BigDecimal> list3 = new ArrayList<>(Arrays.asList(outSum));
+        Collections.reverse(list3);
+		data.put("out", list3);
 		
-		return data;		
+		return data;
 	}
 
 }

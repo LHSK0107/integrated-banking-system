@@ -264,6 +264,7 @@ public class UserController {
 	        for (Cookie cookie : cookies) {
 	            if ("refreshToken".equals(cookie.getName())) {
 	            	System.out.println("쿠키가 존재함");
+	            	System.out.println(cookie.getName() + " : " + cookie.getValue()); 
 	                // 쿠키의 값을 비우고 유효 시간을 과거로 설정하여 삭제합니다.
 	                cookie.setValue(null);
 	                cookie.setMaxAge(0);

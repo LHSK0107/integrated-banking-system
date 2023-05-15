@@ -85,7 +85,7 @@ public class DataProcessor {
 		if(StringUtils.isBlank(vo.getIbType())) vo.setIbType("ibtype");
 		if(StringUtils.isBlank(vo.getAcctDv())) vo.setAcctDv("01");
 		if(StringUtils.isBlank(vo.getLoanNm())) vo.setLoanNm("loan");
-		if(StringUtils.isBlank(vo.getAcctNickNm())) vo.setAcctNickNm("nick");
+		if(StringUtils.isBlank(vo.getAcctNickNm())) vo.setAcctNickNm("별칭없음");
 		if(vo.getAgmtAmt() == null) vo.setAgmtAmt(new BigDecimal(0.00));
 		if(vo.getPyatAmt() == null) vo.setPyatAmt(new BigDecimal(0.00));
 		if(vo.getPyatDt() == null) vo.setPyatDt(LocalDate.parse("1000-01-01"));

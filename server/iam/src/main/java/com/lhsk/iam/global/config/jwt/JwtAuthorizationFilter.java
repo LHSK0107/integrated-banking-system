@@ -68,6 +68,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		    response.setContentType("application/json");	// 응답 데이터 타입 설정
             response.setCharacterEncoding("UTF-8"); 
 		    response.getWriter().write("{\"message\":\"Token has expired\"}"); // 실패 메시지 반환
+		    chain.doFilter(request, response);
 		    return;
 		} else {
 			String id = jwtTokenProvider.getUsernameFromToken(jwtToken);
