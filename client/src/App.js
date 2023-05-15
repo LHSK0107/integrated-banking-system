@@ -9,7 +9,7 @@ import Index from "./pages/Index/Index";
 import DetailInquiry from "./pages/DetailInquiry/Index";
 import DashBoard from "./pages/Dashboard/Index";
 import InOut from "./pages/InOut/Index";
-import LogOut from "./pages/LogIn/LogOut";
+// import LogOut from "./pages/LogIn/LogOut";
 import Mypage from "./pages/Mypage/Index";
 import Admin from "./pages/Admin/Index";
 import AdminDetail from "./pages/Admin/component/Detail.js";
@@ -46,9 +46,9 @@ const App = () => {
                 <Route path="/login" element={<LogIn />} />
 
                 {/* 로그인 필요 */}
-                <Route element={<ApproveAuth />}>
+                {/* <Route element={<ApproveAuth />}>
                   <Route path="/logout" element={<LogOut />} />
-                </Route>
+                </Route> */}
                 <Route element={<ApproveAuth />}>
                   <Route path="/dashboard" element={<DashBoard />} />
                 </Route>

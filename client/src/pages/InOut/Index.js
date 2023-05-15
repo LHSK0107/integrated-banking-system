@@ -27,7 +27,7 @@ const Index = () => {
   });
 
   const {apiData}=useAxios("https://iam-api.site/api/accounts/inout");
-  
+
   /** 계좌 중, 은행코드 중복 제거 함수 */
   const getBankCD = () =>{
     let arr = [];

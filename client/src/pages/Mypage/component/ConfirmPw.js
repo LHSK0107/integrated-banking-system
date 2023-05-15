@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "../mypage.css";
 import useAuth from "../../../hooks/useAuth";
-import {AuthAxios} from "../../../api/useCommonAxios";
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 
 export default function ConfirmPw() {
-
-  const {loggedUserInfo} = useAuth();
+  const AuthAxios = useAxiosInterceptor();
+  const { loggedUserInfo } = useAuth();
   // 페이지 확인 및 설정
   const { stepNum, setStepNum, userInfo, setUserInfo } =
     useContext(StepContext);
@@ -35,16 +35,36 @@ export default function ConfirmPw() {
   } = useForm({ resolver: yupResolver(schema), mode: "onChange" });
 
   const getData = (data) => {
-    return AuthAxios("/api/users/checkPass",{
-      userNo: loggedUserInfo.userNo,
-      password: data.password,
-    },"post");
-  }
+    // return AuthAxios(
+    //   "/api/users/checkPass",
+    //   {
+    //     userNo: loggedUserInfo.userNo,
+    //     password: data.password,
+    //   },
+    //   "post"
+    // );
+
+  };
 
   // axios
   const onSubmit = (data) => {
-    const apiData = getData(data);
-    apiData && console.log(apiData);
+    const checkPassword = async () => {
+      try {
+        const response = await AuthAxios.post("/api/users/checkPass", {
+          userNo: loggedUserInfo.userNo,
+          password: data.password,
+        });
+        if (response.data === true) {
+          setStepNum(stepNum + 1);
+          console.log(response.data);
+        } else if (response.data === false) {
+          alert("비밀번호가 틀립니다");
+        }
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    };
+    checkPassword();
 
     // if(apiData){
     //   setStepNum(stepNum+1);
