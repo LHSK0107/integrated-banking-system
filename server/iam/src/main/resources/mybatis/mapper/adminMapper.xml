@@ -63,4 +63,37 @@
 		         END;
 	</select>
 	
+	
+	<select id="findAllDept" resultType="String">
+		SELECT dept FROM department
+	</select>
+	
+	<insert id="addDept" parameterType="String">
+		INSERT INTO department (dept) VALUES (#{dept})
+	</insert>
+	
+	<update id="updateDept" parameterType="String">
+		UPDATE department SET dept=#{newDept} WHERE dept=#{oldDept}
+	</update>
+	
+	<delete id="deleteDept" parameterType="String">
+		DELETE FROM department WHERE dept=#{dept}
+	</delete>
+	
+	<insert id="insertUserAccount" parameterType="java.util.List">
+		INSERT into user_account (user_no, acct_no, bank_cd) 
+		VALUES 
+		<foreach collection="list" item="info" separator=",">
+			( #{info.userNo}, #{info.acctNo}, #{info.bankCd} )
+		</foreach>
+	</insert>
+	
+	<delete id="deleteUserAccount" parameterType="java.util.List">
+		DELETE FROM user_account
+		WHERE 
+		<foreach collection="list" item="info" separator=",">
+			( #{info.userNo}, #{info.acctNo}, #{info.bankCd} )
+		</foreach>
+	</delete>
+	
 </mapper>

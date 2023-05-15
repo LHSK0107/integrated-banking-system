@@ -6,10 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
-import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
-import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 
 @Mapper
 public interface UserMapper {
@@ -34,15 +33,6 @@ public interface UserMapper {
 	List<DetailUserVO> findAllUser();
 	// 회원 상세정보 조회
 	DetailUserVO findByUserNo(int userNo);
-	
-	// 전체 부서 리스트 조회
-	List<String> findAllDept();
-	// 부서 추가
-	int AddDept(String dept);
-	// 부서 수정
-	int updateDept(String newDept, String oldDept);
-	// 부서 삭제
-	int deleteDept(String dept);
 	
 	// 메뉴 클릭 스케쥴링
 	void insertMenuClick(String menuNm);
