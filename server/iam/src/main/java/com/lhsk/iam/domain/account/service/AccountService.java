@@ -96,16 +96,30 @@ public class AccountService {
 			double count = accountMapper.CountUsersInoutToday(vo);
 			log.info(count+"");
 			if (count != 0) totalPage = (int)Math.ceil(count/vo.getPageSize());
+			
 			inoutList = accountMapper.findUsersInoutToday(vo);
+			// list가 비어있으면 null 반환
 			if (inoutList == null) return null;
-		}else {
+		} else {
 			// count 값으로 page 수 계산
 			double count = accountMapper.CountUsersInoutPast(vo);
 			log.info(count+"");
 			if (count != 0) totalPage = (int)Math.ceil(count/vo.getPageSize());
+			
 			inoutList = accountMapper.findUsersInoutPast(vo);
+			// list가 비어있으면 null 반환
 			if (inoutList == null) return null;
 		}
+		
+		// 계좌번호 복호화 진행
+		for (InoutVO inout : inoutList) {
+			try {
+				inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				throw new RuntimeException("Failed to decrypt acctNo", e); 
+			}
+		}
+		
 		// 총 페이지 수와 입출금 리스트를 map에 담아 반환
 		info.put("totalPage", totalPage);
 		info.put("list", inoutList);
@@ -149,6 +163,16 @@ public class AccountService {
 			inoutList = accountMapper.findAdminsInoutPast(vo);
 			if (inoutList == null) return null;
 		}
+		
+		// 계좌번호 복호화 진행
+		for (InoutVO inout : inoutList) {
+			try {
+				inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				throw new RuntimeException("Failed to decrypt acctNo", e); 
+			}
+		}
+		
 		// 총 페이지 수와 입출금 리스트를 map에 담아 반환
 		info.put("totalPage", totalPage);
 		info.put("list", inoutList);
