@@ -76,7 +76,7 @@ public class AccountController {
 	}
 
 	// 회원 계좌의 입출금 내역(ROLE_USER)
-	@PostMapping("api/users/accounts/inout/")
+	@PostMapping("api/users/accounts/inout")
 	public ResponseEntity<Map<String, Object>> getUsersInout(@RequestBody InoutRequestVO vo, HttpServletRequest request) {
 		/*
 		 * {
@@ -111,7 +111,7 @@ public class AccountController {
 	}
 
 	// 관리자의 입출금 내역 조회(ROLE_MANAGER, ROLE_ADMIN)
-	@PostMapping("api/manager/accounts/inout/")
+	@PostMapping("api/manager/accounts/inout")
 	public ResponseEntity<Map<String, Object>> getAdminsInout(@RequestBody InoutRequestVO vo) {
 		log.info("AccountController.getAdminsInout");
 

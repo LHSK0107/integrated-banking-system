@@ -46,6 +46,7 @@ public class ReportController {
 		// 유저 권한에 따라 분기별 처리 (ROLE_BLACK은 시큐리티에서 걸리기 때문에 배제함)
 		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
 		if(userCode.equals("ROLE_USER")) {
+			System.out.println("일반 사용자 진입");
 			int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
 			return new ResponseEntity<>(reportService.getDailyReportData(userNo), HttpStatus.OK);
 		} else {
