@@ -50,10 +50,10 @@
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -84,7 +84,7 @@
 		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 			AND inout_dv = #{inoutDv}
 		</if>
-			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 		UNION
 		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
 		FROM inout_today IOT
@@ -112,10 +112,10 @@
 		</if>
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -176,7 +176,7 @@
 			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 				AND inout_dv = #{inoutDv}
 			</if>
-				AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+				AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 			UNION
 			SELECT COUNT(*) AS cnt
 			FROM inout_today IOT
@@ -231,10 +231,10 @@
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -263,7 +263,7 @@
 		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 			AND inout_dv = #{inoutDv}
 		</if>
-			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 		UNION
 		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
 		FROM inout_today IOT
@@ -289,10 +289,10 @@
 		</if>
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}	
@@ -349,12 +349,12 @@
 			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 				AND inout_dv = #{inoutDv}
 			</if>
-				AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+				AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 			UNION
 			SELECT COUNT(*) AS cnt
 			FROM inout_today IOT
 				INNER JOIN account ACCT
-				    ON IOP.acct_no = ACCT.acct_no
+				    ON IOT.acct_no = ACCT.acct_no
 			WHERE 
 			<choose>
 				<when test="isLoan != null and isLoan">
