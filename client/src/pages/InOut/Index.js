@@ -30,7 +30,7 @@ const Index = () => {
     const controller = new AbortController();
     const getAvailableAcct = async () => {
       try{
-        const response = await AuthAxios.get(loggedUserInfo?.userCode==="ROLE_ADMIN" ? "/api/manager/accounts" : `/api/users/accounts/available/${loggedUserInfo?.userNo}`,{
+        const response = await AuthAxios.get(loggedUserInfo?.userCode==="ROLE_ADMIN" || loggedUserInfo?.userCode==="ROLE_MANAGER" ? "/api/manager/accounts" : `/api/users/accounts/available/${loggedUserInfo?.userNo}`,{
           signal: controller.signal
         });
         setApiData(response.data);
@@ -44,6 +44,7 @@ const Index = () => {
       controller.abort();
     }
   },[loggedUserInfo]);
+
   /** 계좌 중, 은행코드 중복 제거 함수 */
   const getBankCD = () =>{
     let arr = [];
