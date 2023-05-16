@@ -9,6 +9,8 @@ import BankName from '../../hooks/useBankName';
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import useAuth from "../../hooks/useAuth";
+import ExcelExportComponent from "./component/ExcelExportComponent";
+
 const Index = () => {
   const AuthAxios = useAxiosInterceptor();
   const {loggedUserInfo} = useAuth();
@@ -95,9 +97,9 @@ const Index = () => {
   const initialDate = useCallback(() =>{
     const today=new Date(nowDate);
     const currentStr = `${today.getFullYear()}${('0' + (today.getMonth() + 1)).slice(-2)}${('0' + today.getDate()).slice(-2)}`;
-    today.setDate(today.getDate()-31);
+    today.setDate(today.getDate()-29);
     const pastStr = `${today.getFullYear()}${('0' + (today.getMonth() + 1)).slice(-2)}${('0' + today.getDate()).slice(-2)}`;
-    const setpastDate = `${nowDate.getFullYear()}-${('0' + (nowDate.getMonth())).slice(-2)}-${('0' + nowDate.getDate()).slice(-2)}`;
+    const setpastDate = `${today.getFullYear()}-${('0' + (today.getMonth()+1)).slice(-2)}-${('0' + today.getDate()).slice(-2)}`;
     setOptionVal({...optionVal, strDate:setpastDate, endDate:currentTime});
     setLimitInputValue(currentTime);
     return {currentStr, pastStr};
@@ -107,7 +109,7 @@ const Index = () => {
     const arr = end.split("-");
     const imsiDate = new Date();
     imsiDate.setFullYear(parseInt(arr[0]),parseInt(arr[1]),parseInt(arr[2]));
-    imsiDate.setDate(imsiDate.getDate()-31);
+    imsiDate.setDate(imsiDate.getDate()-30);
     const pastStr = `${imsiDate.getFullYear()}-${('0' + (imsiDate.getMonth())).slice(-2)}-${('0' + imsiDate.getDate()).slice(-2)}`;
     // setOptionVal({...optionVal, strDate:pastStr, endDate:end});
     strInputRef.current.setAttribute("min", pastStr);
@@ -123,20 +125,19 @@ const Index = () => {
   const handleRadioOnChange = (e) => {
     const {name, value} = e.target;
     setOptionVal({...optionVal, [name]:value});
-    console.log(optionVal);
   }
 
-  const [apiTestData, setApiTestData] = useState(null);
-
+  const [inoutDataList, setInoutDataList] = useState(null);
   /** 조회 버튼 시, 서버 요청*/
   const handleOnSubmit = (e) =>{
     e.preventDefault();
+    setInoutDataList(null);
     const getData = async () => {
-      const data1 = await AuthAxios.post(loggedUserInfo.userCode==="ROLE_ADMIN" ? "/api/manager/accounts/inout" : "/api/users/accounts/inout",{
+      const data1 = await AuthAxios.post(loggedUserInfo?.userCode==="ROLE_ADMIN" || loggedUserInfo?.userCode==="ROLE_MANAGER" ? "/api/manager/accounts/inout" : "/api/users/accounts/inout",{
         "isLoan" : false,
         "bankCd" : optionVal?.bankCD==="" ? "All" : optionVal?.bankCD,
         "acctNo" : optionVal?.acctNO==="" ? "All" : optionVal?.acctNO,
-        "startDt" : "2023-04-20",
+        "startDt" : optionVal?.strDate,
         "endDt" : optionVal?.endDate,
         "inoutDv" : optionVal?.inout==="" ? "All" : optionVal?.inout,
         "sort" : optionVal?.arrange,
@@ -145,13 +146,17 @@ const Index = () => {
       });
       return data1;
     }
-    getData().then(res=>console.log(res.data.list))
+    getData().then(
+      res=>{
+        alert("조회 완료");
+        setInoutDataList(res.data.list);
+      }).catch(err=>alert("조회 확인 후, 다시 시도해주시기 바랍니다."));
     return false;
   }
   return (
     <div id="wrap">
       <div className="inner">
-        <Breadcrumb title={"조회"} subMenu={"입출금내역조회"}/>
+        <Breadcrumb title={"조회"} subMenu={"입출금내역조회"} />
         <div className="flex">
           <SideNav now={"입출내역조회"} />
           <section>
@@ -162,13 +167,15 @@ const Index = () => {
                 <li>예금</li>
                 <li className="active">대출</li>
               </ul>
-              <form className="report_form" onSubmit={(e)=>handleOnSubmit(e)}>
+              <form className="report_form" onSubmit={e=>handleOnSubmit(e)}>
                 <ul>
                   <li className="flex">
                     <p className="flex align_center">계좌</p>
                     <div className="flex align_center">
                       <select onChange={handleBankNMSelectOnChange}>
-                        <option name="bankCD" value="">전체 은행</option>
+                        <option name="bankCD" value="">
+                          전체 은행
+                        </option>
                         {bankListOption}
                       </select>
                       <select onChange={handleAcctSelectOnChange}>
@@ -181,9 +188,25 @@ const Index = () => {
                     <p className="flex align_center">조회기간</p>
                     <div>
                       <div className="flex align_center">
-                        <input type="date" name="strDate" onKeyDown={(e) => e.preventDefault()} value={optionVal.strDate} required ref={strInputRef} onChange={handleDateOnChange}/>
+                        <input
+                          type="date"
+                          name="strDate"
+                          onKeyDown={(e) => e.preventDefault()}
+                          value={optionVal.strDate}
+                          required
+                          ref={strInputRef}
+                          onChange={handleDateOnChange}
+                        />
                         <b>~</b>
-                        <input type="date" name="endDate" onKeyDown={(e) => e.preventDefault()} value={optionVal.endDate} required ref={endInputRef} onChange={handleDateOnChange}/>
+                        <input
+                          type="date"
+                          name="endDate"
+                          onKeyDown={(e) => e.preventDefault()}
+                          value={optionVal.endDate}
+                          required
+                          ref={endInputRef}
+                          onChange={handleDateOnChange}
+                        />
                       </div>
                       <div className="flex align_center">
                         <span onClick={dateChangeBtn(0)}>당일</span>
@@ -195,42 +218,94 @@ const Index = () => {
                   </li>
                   <li className="flex">
                     <p className="flex align_center">언어구분</p>
-                    <div className="flex align_center" onChange={handleRadioOnChange}>
-                      <input type="radio" id="kor" name="lang" value="kr" defaultChecked />
+                    <div
+                      className="flex align_center"
+                      onChange={handleRadioOnChange}
+                    >
+                      <input
+                        type="radio"
+                        id="kor"
+                        name="lang"
+                        value="kr"
+                        defaultChecked
+                      />
                       <label>국문</label>
-                      <input type="radio" id="eng" name="lang" value="en" disabled />
+                      <input
+                        type="radio"
+                        id="eng"
+                        name="lang"
+                        value="en"
+                        disabled
+                      />
                       <label>영문</label>
                     </div>
                   </li>
                   <li className="flex">
                     <p className="flex align_center">조회구분</p>
-                    <div className="flex align_center" onChange={handleRadioOnChange}>
-                      <input type="radio" id="inout" name="sort" value="" defaultChecked />
+                    <div
+                      className="flex align_center"
+                      onChange={handleRadioOnChange}
+                    >
+                      <input
+                        type="radio"
+                        id="inout"
+                        name="sort"
+                        value=""
+                        defaultChecked
+                      />
                       <label>전체</label>
                       <input type="radio" id="in" name="sort" value="01" />
-                      <label>입금만</label>
+                      <label>입금</label>
                       <input type="radio" id="out" name="sort" value="02" />
-                      <label>출금만</label>
+                      <label>출금</label>
                     </div>
                   </li>
                   <li className="flex">
                     <p className="flex align_center">조회결과순서</p>
-                    <div className="flex align_center" onChange={handleRadioOnChange}>
-                      <input type="radio" id="new" name="arrange" value="recent" defaultChecked />
+                    <div
+                      className="flex align_center"
+                      onChange={handleRadioOnChange}
+                    >
+                      <input
+                        type="radio"
+                        id="new"
+                        name="arrange"
+                        value="recent"
+                        defaultChecked
+                      />
                       <label>최근일로부터</label>
-                      <input type="radio" id="old" name="arrange" value="past" />
+                      <input
+                        type="radio"
+                        id="old"
+                        name="arrange"
+                        value="past"
+                      />
                       <label>과거일로부터</label>
                     </div>
                   </li>
                   <li className="flex">
                     <p className="flex align_center">정렬방식</p>
-                    <div className="flex align_center" onChange={handleRadioOnChange}>
-                      <input value="10" type="radio" id="ten" name="paging" defaultChecked />
+                    <div
+                      className="flex align_center"
+                      onChange={handleRadioOnChange}
+                    >
+                      <input
+                        value="10"
+                        type="radio"
+                        id="ten"
+                        name="paging"
+                        defaultChecked
+                      />
                       <label>10건</label>
-                      <input value="30" type="radio" id="thirty" name="paging" />
-                      <label >30건</label>
-                      <input value="50" type="radio" id="fifty" name="paging"/>
-                      <label >50건</label>
+                      <input
+                        value="30"
+                        type="radio"
+                        id="thirty"
+                        name="paging"
+                      />
+                      <label>30건</label>
+                      <input value="50" type="radio" id="fifty" name="paging" />
+                      <label>50건</label>
                     </div>
                   </li>
                 </ul>
@@ -239,74 +314,76 @@ const Index = () => {
                 </div>
               </form>
             </div>
-            <div className="result_wrap">
-              {/* <div className="account_info">
-                <ul>
-                  <li className="flex">
-                    <div className="title">예금종류</div>
-                    <div>기업자유예금</div>
-                    <div className="title">계좌별칭</div>
-                    <div>1 기업 0987</div>
-                  </li>
-                  <li className="flex">
-                    <div className="title">잔액</div>
-                    <div>100,000,000원</div>
-                    <div className="title">출금가능금액</div>
-                    <div>100,000,000원</div>
-                  </li>
-                  <li className="flex">
-                    <div className="title">조회시작일</div>
-                    <div>2023-04-01</div>
-                    <div className="title">조회종료일</div>
-                    <div>2023-04-18</div>
-                  </li>
-                </ul>
-              </div> */}
+            {inoutDataList && (
+              <>
+                <div className="result_wrap">
               <div className="result">
-                <div className="btn_info flex justify_between align_center">
-                  <button >인쇄</button>
-                  <p>조회일시 2023-04-18 13:35:12</p>
+                <div className="btn_info flex justify_end align_center">
+                  <p>조회일시 {currentTime}</p>
                 </div>
                 <div className="result_data">
-                  <ul className="column flex">
-                    <li className="account">계좌</li>
-                    <li className="date">거래일시</li>
-                    <li className="memo">적요</li>
-                    <li className="withdraw">출금(원)</li>
-                    <li className="credit">입금(원)</li>
-                    <li className="balance">잔액(원)</li>
+                  <ul>
+                    <li className="flex justify_between">
+                      <div className="account">계좌</div>
+                      <div className="trscTm">거래일시</div>
+                      <div className="rmrk">적요</div>
+                      <div className="outMoney">출금(원)</div>
+                      <div className="inMoney">입금(원)</div>
+                      <div className="bal">잔액(원)</div>
+                    </li>
+                    {inoutDataList?.map((ele, i) => {
+                      return (
+                        <li
+                          key={i}
+                          className="flex justify_between align_center"
+                        >
+                          <div className="account flex flex_column justify_center">
+                            <p>
+                              {ele?.bankCd === null ? (
+                                "없습니다"
+                              ) : (
+                                <BankName bankCD={ele?.bankCd} />
+                              )}
+                            </p>
+                            <p>
+                              {ele?.acctNo === null ? "없습니다" : ele?.acctNo}
+                            </p>
+                          </div>
+                          <div className="trscTm flex flex_column justify_center align_center">
+                            {`${ele?.trscDt} ${ele?.trscTm}`}
+                          </div>
+                          <div className="rmrk flex justify_center align_center">
+                            {ele?.rmrk1}
+                          </div>
+                          <div className="outMoney flex justify_end align_center">
+                            {ele?.inoutDv === "2" ? `-${ele?.trscAmt}` : 0}
+                          </div>
+                          <div className="inMoney flex justify_end align_center">
+                            {ele?.inoutDv === "1" ? `+${ele?.trscAmt}` : 0}
+                          </div>
+                          <div className="bal flex justify_end align_center">
+                            {ele?.bal}
+                          </div>
+                        </li>
+                      );
+                    })}
                   </ul>
-                  <ul className="data flex">
-                    <li className="account">
-                      <div className="flex align_center">
-                        <figure>
-                          <img src="" alt="" />
-                        </figure>
-                        <span>국민은행</span>
-                      </div>
-                      <div className="flex align_center">
-                        12345678901234567890
-                      </div>
-                    </li>
-                    <li className="date flex justify_center align_center">
-                      2023.04.05 14:24:14
-                    </li>
-                    <li className="memo flex justify_center align_center">
-                      비플_WeCafe2
-                      <br />
-                      asdf
-                    </li>
-                    <li className="withdraw flex justify_end align_center">
-                      -1,000
-                    </li>
-                    <li className="credit flex justify_end align_center">+</li>
-                    <li className="balance flex justify_end align_center">
-                      100,000,000
-                    </li>
-                  </ul>
+                </div>
+                <div className="export_wrap">
+                  <ExcelExportComponent
+                  // stateData={statementList}
+                  // depAInsData={depAInsList}
+                  // loadData={loanList}
+                  // stateBal={calcTotalBal().stateBal}
+                  // depInsBal={calcTotalBal().depInsBal}
+                  // loanBal={calcTotalBal().loanBal}
+                  /><button onClick={()=>print()}>인쇄</button>
                 </div>
               </div>
             </div>
+              </>
+            ) }
+            
           </section>
         </div>
       </div>
@@ -329,7 +406,7 @@ const Index = () => {
         setOptionVal({ ...optionVal, strDate: strDate, endDate: currentTime });
       } else if(date===3){
         const date = new Date(nowDate);
-        date.setDate(date.getDate()-30);
+        date.setDate(date.getDate()-29);
         const strDate = `${date.getFullYear()}-${('0' + (date.getMonth()+1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
         setOptionVal({ ...optionVal, strDate: strDate, endDate: currentTime });
       }

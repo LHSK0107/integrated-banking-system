@@ -71,57 +71,60 @@ section form button {
     font-size: .8rem;
     font-weight: 300;
 }
-.result_data .column {
+.result_data{
+    margin-bottom: 80px;
+}
+.export_wrap{
+    text-align: center;
+}
+.result_data ul li{
+    border-bottom: 1px solid var(--color-lightgray);
+}
+.result_data ul li:first-child{
+    padding: 20px 10px;
+    background-color: var(--color-lightgray);
+    border-top: 1px solid var(--color-darkgray);
+    border-bottom: none;
+}
+.result_data ul li:first-child .account,
+.result_data ul li:first-child .trscTm,
+.result_data ul li:first-child .rmrk,
+.result_data ul li:first-child .outMoney,
+.result_data ul li:first-child .inMoney,
+.result_data ul li:first-child .bal{
+    text-align: center;
+    padding:0;
+}
+.result_data ul li:not(:first-child)>div{
     width: 100%;
-    padding: 0 18px;
-    background-color: var(--color-background);
-    border-top: 1px solid var(--color-gray);
-    text-align: center;
+    height: 80px;
+    padding:0 10px;
 }
-.result_data .column li {
-    padding: 18px 8px;
-}
-.result_data .column li:not(:last-child) {
+.result_data ul li>div:not(:last-child){
     border-right: 1px solid var(--color-lightgray);
 }
-.result_data .account {
-    flex: 0 0 25%;
+.result_data ul li .account{
+    flex: 23%;
 }
-.result_data .date {
-    flex: 0 0 16%;
-}
-.result_data .memo {
-    flex: 0 0 25%;
-}
-.result_data .withdraw {
-    flex: 0 0 10%;
-}
-.result_data .credit {
-    flex: 0 0 10%;
-}
-.result_data .balance {
-    flex: 0 0 14%;
-}
-.result_data .data {
-    padding: 0 18px;
-    font-size: .88rem;
+.result_data ul li .trscTm{
+    flex: 17%;
     text-align: center;
 }
-.result_data .data li {
-    padding: 8px;
+.result_data ul li .rmrk{
+    flex: 15%;
+    text-align: center;
 }
-.result_data .data li:not(:last-child) {
-    border-right: 1px solid var(--color-lightgray);
+.result_data ul li .outMoney{
+    flex: 15%;
+    text-align: right;
+    color: rgb(246, 40, 40);
 }
-.result_data .data:last-child {
-    border-bottom: 1px solid var(--color-gray);
+.result_data ul li .inMoney{
+    flex: 15%;
+    text-align: right;
+    color: rgb(46, 46, 247);
 }
-.result_data .data .account div {
-    height: 36px;
-}
-.result_data .data .withdraw {
-    color: var(--color-red);
-}
-.result_data .data .credit {
-    color: var(--color-main);
+.result_data ul li .bal{
+    flex: 15%;
+    text-align: right;
 }
