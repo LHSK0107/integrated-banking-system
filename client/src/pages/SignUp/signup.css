@@ -2,10 +2,12 @@
 .signup_section {
   /* overflow-y: hidden; */
   width: 100%;
-  height: calc(100vh - 120px);
+  /* height: calc(100vh - 120px); */
+  height: 100%;
   padding: 40px;
   position: relative;
-  height: 100%;
+  left: 0;
+  top: 0;
 }
 .signup_section >div > div {
   width: 48%;
@@ -83,6 +85,7 @@
 .userInfo_form .email_verify_wrap input[type=text]{
   width: 65px;
   height: 65px;
+  text-align: center;
 }
 .userInfo_form .form_btn_wrap{
   margin-top: 100px;
@@ -140,7 +143,7 @@
   height: 2px;
   top: 1px;
   left: 8%;
-  background-color: var(--color-main);
+  background-color: var(--color-darkgray);
 }
 .progress_wrap .step.active::after{
   position: absolute;
@@ -186,3 +189,54 @@ input::-webkit-inner-spin-button {
   margin-bottom: 40px;
 }
 /* signup page end */
+
+/* media-query */
+/* mobile */
+@media (max-width: 320px) {
+  .signup_section {
+    padding: 0;
+  }
+  .signup_section .signup_form_section {
+    width: 100%;
+  }
+  .signup_section > div > div {
+    padding: 20px;
+  }
+  .signup_section {
+    padding: 0;
+    height: calc(100vh - 120px);
+  }
+  .progress_wrap {
+    margin-bottom: 30px;
+  }
+  .progress_wrap::before {
+    width: 82%;
+  }
+  .userInfo_form .email_verify_wrap input[type=text] {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* tablet */
+@media (max-width: 768px) {
+  .progress_wrap::before {
+    width: 86%;
+  }
+  .userInfo_form .email_verify_wrap input[type=text] {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* pc */
+@media (max-width: 1024) {
+  .progress_wrap::before {
+    width: 90%;
+  }
+  .userInfo_form .email_verify_wrap input[type=text] {
+    width: 40px;
+    height: 40px;
+  }
+}
+

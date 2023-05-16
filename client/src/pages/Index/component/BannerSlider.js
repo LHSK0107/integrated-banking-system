@@ -29,9 +29,11 @@ const NewsSlider = () => {
         }}
       >
         <SwiperSlide>
-          <div className="main_banner_cont flex">
-            <div className="main_banner_tit flex justify_center align_center">
-              <h3>중소기업을 위한 믿을 수 있는 통합경영관리</h3>
+          <div className="main_banner_cont flex justify_center">
+            <div className="pc">
+              <div className="main_banner_tit flex justify_center align_center">
+                <h3>중소기업을 위한 믿을 수 있는 통합경영관리</h3>
+              </div>
             </div>
             <div className="">
               <figure>
@@ -40,13 +42,18 @@ const NewsSlider = () => {
                   alt="슬라이드1"
                 ></img>
               </figure>
+              <h3 className="mobile">
+                중소기업을 위한 믿을 수 있는<br></br>통합경영관리
+              </h3>
             </div>
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="main_banner_cont flex">
-            <div className="main_banner_tit flex justify_center align_center">
-              <h3>경비지출관리 솔루션 선택아닌, 필수</h3>
+          <div className="main_banner_cont flex justify_center">
+            <div className="pc">
+              <div className="main_banner_tit flex justify_center align_center">
+                <h3>경비지출관리 솔루션 선택아닌, 필수</h3>
+              </div>
             </div>
             <div className="">
               <figure>
@@ -55,13 +62,16 @@ const NewsSlider = () => {
                   alt="슬라이드2"
                 ></img>
               </figure>
+              <h3 className="mobile">경비지출관리 솔루션 선택아닌, 필수</h3>
             </div>
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="main_banner_cont flex">
-            <div className="main_banner_tit flex justify_center align_center">
-              <h3>금융데이터 연동을 통한 자금 관리</h3>
+          <div className="main_banner_cont flex justify_center">
+            <div className="pc">
+              <div className="main_banner_tit flex justify_center align_center">
+                <h3>금융데이터 연동을 통한 자금 관리</h3>
+              </div>
             </div>
             <div className="">
               <figure>
@@ -70,6 +80,7 @@ const NewsSlider = () => {
                   alt="슬라이드3"
                 ></img>
               </figure>
+              <h3 className="mobile">금융데이터 연동을 통한 자금 관리</h3>
             </div>
           </div>
         </SwiperSlide>

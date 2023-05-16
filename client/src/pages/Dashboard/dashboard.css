@@ -76,6 +76,9 @@
     margin-right: 30px;
 }
 
+.chart_wrap {
+    padding: 50px 0;
+}
 .chart_wrap > div {
     margin-bottom: 100px;
 }

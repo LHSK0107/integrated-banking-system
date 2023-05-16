@@ -2,11 +2,13 @@
 
 /* main_slider --- */
 .main_banner_cont {
-
 }
-.main_banner_cont>div {
+.main_banner_cont > div {
   width: 50%;
   padding: 20px;
+}
+.main_banner_tit {
+  height: 100%;
 }
 .main_banner_cont img {
   border-radius: 18px;
@@ -67,6 +69,9 @@
 /* --- section02 */
 
 /* main_news --- */
+.news {
+  margin: 100px 0;
+}
 .news > div > div {
   width: 100%;
   padding: 0;
@@ -78,7 +83,7 @@
   -ms-transform: rotate(180deg);
 }
 .news figure {
-  width: 260px;
+  width: 20%;
   opacity: 0.4;
   margin: 20px 0;
 }
@@ -97,11 +102,25 @@
 .swiper_wrap .swiper-horizontal > .swiper-pagination-bullets {
   bottom: var(--swiper-pagination-bottom, 0px);
 }
+.swiper-slide h3 {
+  margin-bottom: 1rem;
+  /* overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; */
+}
 .swiper-slide p {
   line-height: 1.6rem;
+  margin-bottom: 1rem;
+  /* overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical; */
 }
 .swiper-slide h4 {
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 .card {
@@ -114,3 +133,59 @@
   -moz-box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.3);
 }
 /* --- main_news */
+
+
+/* media-query */
+
+/* phone */
+@media all and (max-width: 767px) {
+  .main_news_wrap .main_news_cont {
+    height: 300px;
+  }
+  .main_banner_cont figure + h3 {
+    text-align: center;
+  }
+  .main_banner_cont > div {
+    width: 100%;
+  }
+  .quick p {
+    font-size: 9px;
+    text-align: center;
+  }
+  .quick a {
+    height: 80px;
+  }
+  .section01 h3 {
+    font-size: 1.1rem;
+  }
+  .section02_tit h3 {
+    font-size: 1.3rem;
+  }
+}
+
+/* tablet */
+@media all and (min-width: 768px) and (max-width: 1024px) {
+  .main_news_wrap .main_news_cont {
+    height: 320px;
+  }
+  .main_banner_cont figure + h3 {
+    text-align: center;
+  }
+  .main_banner_cont > div {
+    width: 100%;
+  }
+  .section01 h3 {
+    font-size: 1.1rem;
+  }
+  .section02 .mobile {
+    margin-top: 10px;
+  }
+  .section02 .mobile h3 {
+    margin-bottom: 18px;
+  }
+}
+
+/* pc */
+/* @media all and (min-width: 1025px) {
+  
+} */
