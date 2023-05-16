@@ -354,7 +354,7 @@
 			SELECT COUNT(*) AS cnt
 			FROM inout_today IOT
 				INNER JOIN account ACCT
-				    ON IOP.acct_no = ACCT.acct_no
+				    ON IOT.acct_no = ACCT.acct_no
 			WHERE 
 			<choose>
 				<when test="isLoan != null and isLoan">
