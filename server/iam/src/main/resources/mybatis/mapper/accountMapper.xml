@@ -50,10 +50,10 @@
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -112,10 +112,10 @@
 		</if>
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -231,10 +231,10 @@
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -289,10 +289,10 @@
 		</if>
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_no ASC
+				ORDER BY trsc_dt DESC, trsc_tm DESC
 			</when>
 			<otherwise>
-				ORDER BY trsc_no DESC
+				ORDER BY trsc_dt ASC, trsc_tm ASC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}	
