@@ -1,16 +1,16 @@
 /* eslint-disable */
-import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./dailyreport.css";
 import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
-import useCommonAxios from "../../api/useCommonAxios";
-import { Link, useNavigate } from "react-router-dom";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
+import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import ExcelExportComponent from "./component/ExcelExportComponent";
 
 const Index = () => {
+  const AuthAxios = useAxiosInterceptor();
   const [optionVal, setOptionVal] = useState({
     lang:"",
     selectDate:""
@@ -20,8 +20,9 @@ const Index = () => {
     const {name, value} = e.target;
     setOptionVal({...optionVal, [name]:value});
   }
-  /** */
-  const handleOnSubmit = () =>{
+  /** 제출 */
+  const handleOnSubmit = (e) =>{
+    e.preventDefault();
     return false;
   }
   const selectDateRef = useRef();
@@ -38,10 +39,25 @@ const Index = () => {
     selectDateRef.current.setAttribute("max", end);
   },[]);
   // nowDate가 있을 경우, 날짜 초기화 함수 실행
+  const [load, setLoad] = useState(false);
+
   useEffect(()=>{
-    currentTime &&initialDate()
+    currentTime && initialDate();
   },[]);
 
+  const [apiData, setApiData]=useState(null);
+  const handleClickExcelExport = () =>{
+    let isMounted = true;
+    // cancellation token
+    const getData = async () => {
+        const apiData = await AuthAxios.post("/api/reports/daily");
+        return apiData;
+    }
+    getData().then(res=>{
+      setApiData(res.data);
+    });
+  }
+ 
   return (
     <div id="wrap">
       <div className="inner">
@@ -52,7 +68,7 @@ const Index = () => {
             <h3>일일시재보고서</h3>
             <Description />
             <div className="form_wrap">
-              <div className="report_form" onSubmit={handleOnSubmit}>
+              <form className="report_form" onSubmit={e=>handleOnSubmit(e)}>
                 <ul>
                   <li className="flex">
                     <p className="flex align_center">언어구분</p>
@@ -88,21 +104,20 @@ const Index = () => {
                           value={optionVal.selectDate}
                           onKeyDown={(e) => e.preventDefault()}
                           ref={selectDateRef}
+                          readOnly={true}
                         />
                       </div>
                     </div>
                   </li>
                 </ul>
                 <div className="btn_wrap flex justify_center">
-                  {
-                    <ExcelExportComponent
-                      selectDate={optionVal.selectDate}
-                      lang={optionVal.lang}
-                    />
-                  }
+                  <button onClick={()=>{
+                    handleClickExcelExport();
+                  }}>Excel 내보내기</button>
+                    {apiData && <ExcelExportComponent data={apiData}/>}
                   <button type="button">이메일로 내보내기</button>
                 </div>
-              </div>
+              </form>
             </div>
           </section>
         </div>
