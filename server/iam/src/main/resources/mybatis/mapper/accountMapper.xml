@@ -23,7 +23,7 @@
 	</select>	
 	
 	<select id="findUsersInoutPast" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 				ON IOP.acct_no = ACCT.acct_no
@@ -50,17 +50,17 @@
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_dt DESC, trsc_tm DESC
+				ORDER BY trsc_no ASC
 			</when>
 			<otherwise>
-				ORDER BY trsc_dt ASC, trsc_tm ASC
+				ORDER BY trsc_no DESC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
 	</select>	 
 	
 	<select id="findUsersInoutToday" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 				ON IOP.acct_no = ACCT.acct_no
@@ -86,7 +86,7 @@
 		</if>
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		UNION
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
 		FROM inout_today IOT
 			INNER JOIN account ACCT
 			    ON IOT.acct_no = ACCT.acct_no
@@ -112,10 +112,10 @@
 		</if>
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_dt DESC, trsc_tm DESC
+				ORDER BY trsc_no ASC
 			</when>
 			<otherwise>
-				ORDER BY trsc_dt ASC, trsc_tm ASC
+				ORDER BY trsc_no DESC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
@@ -206,7 +206,7 @@
 	</select>
 
 	<select id="findAdminsInoutPast" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 			    ON IOP.acct_no = ACCT.acct_no
@@ -231,17 +231,17 @@
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_dt DESC, trsc_tm DESC
+				ORDER BY trsc_no ASC
 			</when>
 			<otherwise>
-				ORDER BY trsc_dt ASC, trsc_tm ASC
+				ORDER BY trsc_no DESC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}
 	</select>
 
 	<select id="findAdminsInoutToday" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 			    ON IOP.acct_no = ACCT.acct_no
@@ -265,7 +265,7 @@
 		</if>
 			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
 		UNION
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
 		FROM inout_today IOT
 			INNER JOIN account ACCT
 			    ON IOT.acct_no = ACCT.acct_no
@@ -289,10 +289,10 @@
 		</if>
 		<choose>
 			<when test='sort != null and sort.equals("recent")'>
-				ORDER BY trsc_dt DESC, trsc_tm DESC
+				ORDER BY trsc_no ASC
 			</when>
 			<otherwise>
-				ORDER BY trsc_dt ASC, trsc_tm ASC
+				ORDER BY trsc_no DESC
 			</otherwise>					
 		</choose>
 		LIMIT #{start}, #{pageSize}	
@@ -394,10 +394,3 @@
 		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
 	</select>
 </mapper>
-
-
-
-
-
-
-
