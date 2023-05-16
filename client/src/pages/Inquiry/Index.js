@@ -30,22 +30,19 @@ const Index = () => {
     // cancellation token
     const controller = new AbortController();
     const getUsers = async () => {
-      try{
-        const response = await AuthAxios.get(loggedUserInfo.userCode==="ROLE_ADMIN" ? "/api/manager/accounts" : `/api/users/accounts/available/${loggedUserInfo?.userNo}`,{
-          signal: controller.signal
-        });
-        response && console.log(response);
-        setApiData(response.data);
-      } catch (err) {
-        console.log(`error 발생: ${err}`);
-      }
+      const response = await AuthAxios.get(loggedUserInfo?.userCode==="ROLE_ADMIN" || loggedUserInfo?.userCode==="ROLE_MANAGER" ? "/api/manager/accounts" : `/api/users/accounts/available/${loggedUserInfo?.userNo}`,{
+        signal: controller.signal
+      });
+      response && console.log(response);
+      setApiData(response.data);
+      console.log(`error 발생: ${err}`);
     }
     getUsers();
     return () => {
       isMounted = false;
       controller.abort();
     }
-  },[]);
+  },[loggedUserInfo]);
 
   useEffect(() => {
     apiData && clearData(apiData);
