@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import "./inquiry.css";
 import Balance from "../../hooks/useBalance";
@@ -11,7 +11,6 @@ import Breadcrumb from '../../commons/Breadcrumb';
 import ExcelExportComponent from "./component/ExcelExportComponent";
 import useAuth from "../../hooks/useAuth";
 import useRefreshToken from "../../hooks/useRefreshToken";
-import axios from "axios";
 const Index = () => {
 
   const {loggedUserInfo} = useAuth();
@@ -30,12 +29,9 @@ const Index = () => {
     let isMounted = true;
     // cancellation token
     const controller = new AbortController();
-
     const getUsers = async () => {
       try{
-        console.log("실행");
-        console.log(loggedUserInfo?.userNo);
-        const response = await AuthAxios.get(`/api/users/accounts/available/3`,{
+        const response = await AuthAxios.get(loggedUserInfo.userCode==="ROLE_ADMIN" ? "/api/manager/accounts" : `/api/users/accounts/available/${loggedUserInfo?.userNo}`,{
           signal: controller.signal
         });
         response && console.log(response);
@@ -45,7 +41,6 @@ const Index = () => {
       }
     }
     getUsers();
-
     return () => {
       isMounted = false;
       controller.abort();
@@ -53,14 +48,12 @@ const Index = () => {
   },[]);
 
   useEffect(() => {
-    apiData && console.log(apiData);
     apiData && clearData(apiData);
   }, [apiData]);
  
   // api 요소 중, 계좌 구분에 따라 분리
   const clearData = (apiData) => {
-    apiData.map((ele) => {
-      console.log(ele);
+    apiData?.map((ele) => {
       if (ele.acctDv === "01") {
         stateArr.push(ele);
         setStatementList(stateArr);
@@ -97,7 +90,6 @@ const Index = () => {
   const tabClickHandler = (index) => {
     setActiveIndex(index);
   };
-  const refresh = useRefreshToken();
   const tabContArr = [
     {
       tabTitile: (
@@ -119,7 +111,6 @@ const Index = () => {
             </div>
             <div className="flex align_center">
               <h4>
-                <button onClick={refresh}>refresh</button>
                 <Balance balance={calcTotalBal().stateBal} />
               </h4>
               <p></p>

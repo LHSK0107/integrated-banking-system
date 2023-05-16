@@ -11,29 +11,14 @@ const Navbar = () => {
   const AuthAxios = useAxiosInterceptor();
   const {clickCountList,setClickCountList} = useContext(MenuContext);
   const {
+    token,
     setToken2,
     loggedUserInfo,
     setIsAuth,
     setLoggedUserInfo,
   } = useAuth();
   useEffect(() => {
-    const AUTH_TOKEN = localStorage.getItem("jwt");
-    const decodedPayload = AUTH_TOKEN && decodeJwt(AUTH_TOKEN);
-    if (AUTH_TOKEN) {
-      setLoggedUserInfo((prev) => {
-        prev && LogoutSection(prev);
-        return {
-          id: decodedPayload.sub,
-          name: decodedPayload.name,
-          exp: decodedPayload.exp,
-          userCode: decodedPayload.userCode,
-          userNo: decodedPayload.userNo,
-        };
-      });
-    } else {
-      setToken2(null);
-      setLoggedUserInfo(null);
-    }
+    loggedUserInfo && LogoutSection(loggedUserInfo);
   }, []);
 
   /** click */
@@ -44,7 +29,6 @@ const Navbar = () => {
       })
     }
   }
-
   const navigate = useNavigate();
 
   /** logout시, context 비우는 함수 */
@@ -61,9 +45,7 @@ const Navbar = () => {
       localStorage.removeItem("jwt");
       axios
         .post(
-
           "https://iam-api.site/api/logout",
-          "http://localhost:8080/api/logout",
           {
             allAccount: 1,
             inout: 2,
@@ -121,15 +103,7 @@ const Navbar = () => {
       </div>
     );
   };
-  useEffect(()=>{
-    const getData = async () => {
-      const data = await AuthAxios.get("/api/accounts/inout");
-      return data;
-    }
 
-    
-    console.log(getData());
-  })
   const [scrollData, setScrollData] = useState(0);
   const navInfoRef = useRef();
   const navMenuRef = useRef();
@@ -138,7 +112,6 @@ const Navbar = () => {
 
   const handleDropdown = (ref) =>{
     // e.target.context==="보고서" ? e.target.children[1].classList.add
-    console.log(ref);
     ref==="보고서" ?
      reportRef?.current?.children[1].classList.add("active")
      :
@@ -192,7 +165,7 @@ const Navbar = () => {
             </div>
             {/* 로그인 체크 부분 */}
             <div className="user_info_wrap">
-              {loggedUserInfo ? (
+              {token ? (
                 <LogoutSection value={loggedUserInfo} func={handleLogout} />
               ) : (
                 <LoginSection />
@@ -210,7 +183,7 @@ const Navbar = () => {
             </Link>
             <ul className="menu_list flex">
               <li>
-                <a onClick={() => navigate("/")}>소개</a>
+                <Link to="/">소개</Link>
               </li>
               <li ref={selectRef}
                 onMouseOver={
@@ -223,7 +196,7 @@ const Navbar = () => {
                     e.stopPropagation();
                     handleLeaveDropdown("조회");
                   }} className="dropmenu_wrap">
-                <a onClick={() => navigate("/inquiry")}>조회</a>
+                <Link to="/inquiry">조회</Link>
                 <ul className="dropdown">
                   <li><Link to="/inquiry">전체계좌</Link></li>
                   <li><Link to="/inout">입출금내역</Link></li>
@@ -240,14 +213,14 @@ const Navbar = () => {
                     e.stopPropagation();
                     handleLeaveDropdown("보고서");
                   }} className="dropmenu_wrap">
-                <a onClick={() => navigate("/dailyReport")}>보고서</a>
+                <Link to="/dailyReport">보고서</Link>
                 <ul className="dropdown">
                   <li><Link to="/dailyReport">일일시재</Link></li>
-                  <li>입출금내역</li>
+                  <li><Link to="/dailyReport">입출금</Link></li>
                 </ul>
               </li>
               <li>
-                <a onClick={() => navigate("/dashboard")}>대시보드</a>
+                <Link to="/dashboard">대시보드</Link>
               </li>
             </ul>
           </div>
