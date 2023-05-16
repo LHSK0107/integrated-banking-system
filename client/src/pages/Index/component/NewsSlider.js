@@ -37,7 +37,7 @@ const NewsSlider = () => {
   // }, [AuthAxios]);
   useEffect(() => {
     // const url = "http://localhost:8080/api/news";
-    const url="https://iam-api.site/api/news";
+    const url = "https://iam-api.site/api/news";
     axios
       .get(url)
       .then((response) => {
@@ -146,6 +146,23 @@ const NewsSlider = () => {
         className="main_news_wrap mySwiper"
         slidesPerView={3}
         spaceBetween={50}
+        breakpoints={{
+          // when window width is >= 320px
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 30,
+          },
+          // when window width is >= 767px
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          },
+          // when window width is >= 1024px
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 50,
+          },
+        }}
         grabCursor={true}
         navigation={{ clickable: true }}
         // mousewheel={true}

@@ -18,7 +18,7 @@ const Index = () => {
           <BannerSlider />
         </div>
       </div>
-      
+
       <div className="quick_wrap">
         <div className="inner">
           <div className="quick flex justify_between">
@@ -65,7 +65,7 @@ const Index = () => {
               <figure className="flex justify_center align_center">
                 <img src={Quick05} alt="" />
               </figure>
-              <p>거래내역조회</p>
+              <p>거래내역보고서</p>
             </Link>
           </div>
         </div>
@@ -73,7 +73,7 @@ const Index = () => {
 
       <div className="section02">
         <div className="inner">
-          <div className="flex">
+          <div className="flex justify_center">
             <div className="section02_cont">
               <figure>
                 <img
@@ -84,7 +84,10 @@ const Index = () => {
             </div>
             <div className="section02_tit flex flex_column justify_center">
               <h3>편리한 금융업무</h3>
-              <p>전제계좌 조회부터 보고서 작성, <br></br>그리고 자산을 한 눈에 볼 수 있는 대시보드까지</p>
+              <p>
+                전제계좌 조회부터 보고서 작성, <br></br>그리고 자산을 한 눈에 볼
+                수 있는 대시보드까지
+              </p>
               <p>편하게 금융 업무를 볼 수 있습니다.</p>
             </div>
           </div>

@@ -33,16 +33,16 @@ const Index = () => {
     <div className="signup_section">
       <div className="inner">
         <div className="signup_wrap flex justify_between">
-          <div className="signup_image_section flex justify_center align_center">
-            <figure>
-              <img src={SignUpBgImg} alt="회원가입 페이지 이미지" />
-            </figure>
+          <div className="pc">
+            <div className="signup_image_section flex justify_center align_center">
+              <figure>
+                <img src={SignUpBgImg} alt="회원가입 페이지 이미지" />
+              </figure>
+            </div>
           </div>
           <div className="signup_form_section flex flex_column justify_center ">
             <h2>회원가입</h2>
-            <div className="signup_form_wrap ">
-              {showCurrentPage()}
-            </div>
+            <div className="signup_form_wrap ">{showCurrentPage()}</div>
           </div>
         </div>
       </div>

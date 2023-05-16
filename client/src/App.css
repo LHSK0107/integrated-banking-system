@@ -63,63 +63,68 @@ input:active {
   /* background-color: var(--color-lightgray); */
 }
 input[type="date"] {
-    cursor: pointer;
+  cursor: pointer;
 }
-input[type="date"]::-webkit-calendar-picker-indicator{
-    cursor: pointer;
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 input[type="date"]::before {
-    content:attr(data-placeholder);
+  content: attr(data-placeholder);
 }
 input + label {
-    display: block;
-    margin: 0 18px 0 3px;
+  display: block;
+  margin: 0 18px 0 3px;
 }
 button {
-    font-size: 1rem;
-    font-family: "Noto Sans KR", sans-serif;
-    color: var(--color-black);
-    padding: 8px 10px;
-    margin: 0 8px;
-    outline: none;
-    border: 1px solid var(--color-darkgray);
-    border-radius: 3px;
-    background-color: var(--color-white);
-    cursor: pointer;
+  font-size: 1rem;
+  font-family: "Noto Sans KR", sans-serif;
+  color: var(--color-black);
+  padding: 8px 10px;
+  margin: 0 8px;
+  outline: none;
+  border: 1px solid var(--color-darkgray);
+  border-radius: 3px;
+  background-color: var(--color-white);
+  cursor: pointer;
 }
 select {
-    font-size: 1rem;
-    font-family: "Noto Sans KR", sans-serif;
-    color: var(--color-black);
-    padding: 3px 10px;
-    margin-right: 18px;
-    border: 1px solid var(--color-gray);
+  font-size: 1rem;
+  font-family: "Noto Sans KR", sans-serif;
+  color: var(--color-black);
+  padding: 3px 10px;
+  margin-right: 18px;
+  border: 1px solid var(--color-gray);
 }
 select option:focus,
 select option:hover {
-    background-color: var(--color-lightgray);
+  background-color: var(--color-lightgray);
 }
 /* --- reset */
 
 /* 공통 속성 class --- */
 #wrap {
-    position: relative;
-    min-height: 90vh;
-    /* top: 100px; */
-}
-.inner > div {
-  padding: 50px 0;
-  margin: 50px 0;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  top: 0;
+  left: 0;
+  min-height: 90vh;
+  /* top: 100px; */
 }
 .inner {
-  width: 1280px;
+  width: 98%;
+  max-width: 1280px;
   margin: auto;
   padding: 0 20px;
 }
+.inner > div {
+  /* padding: 50px 0;
+  margin: 50px 0; */
+}
 .transition {
-    transition: all 0.2s;
-    -webkit-transition: all 0.2s;
-    -o-transition: all 0.2s;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
 }
 .btn {
   display: block;
@@ -207,12 +212,12 @@ select option:hover {
 
 /* nav_depth --- */
 #wrap .nav_depth {
-    /* #wrap > .inner .nav_depth */
-    padding: 0;
-    margin: 30px 0;
-    font-size: .8rem;
+  /* #wrap > .inner .nav_depth */
+  padding: 0;
+  margin: 30px 0;
+  font-size: 0.8rem;
 }
-.nav_depth figure{
+.nav_depth figure {
   width: 10px;
   margin: 0 5px;
 }
@@ -220,7 +225,7 @@ select option:hover {
   width: 15px;
 }
 .nav_depth figure img {
-    width: auto;
+  width: auto;
 }
 /* --- nav_depth */
 
@@ -229,75 +234,131 @@ aside {
   flex: 0 0 210px;
 }
 aside h2 {
-    /* #wrap > .inner > .nav_depth + div > aside */
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
+  /* #wrap > .inner > .nav_depth + div > aside */
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 .aside_nav {
-    font-weight: 300;
-    border-top: 2px solid var(--color-black);
+  font-weight: 300;
+  border-top: 2px solid var(--color-black);
 }
 .aside_nav a {
-    display: block;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--color-lightgray);
+  display: block;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--color-lightgray);
 }
 .aside_nav li.aside_active a {
-    background-color: var(--color-background);
+  background-color: var(--color-background);
 }
 /* --- aside */
 
 /* aside 옆 section --- */
 aside + section {
-    /* #wrap > .inner > .nav_depth + div > aside + section */
-    width: calc(100% - 260px);
-    margin-left: 50px;
+  /* #wrap > .inner > .nav_depth + div > aside + section */
+  width: calc(100% - 260px);
+  margin-left: 50px;
 }
 section h3 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 12px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 12px;
 }
 .description {
-    font-weight: 300;
-    width: 100%;
-    margin-bottom: 100px;
-    padding: 10px;
-    border: 1px solid var(--color-lightgray);
+  font-weight: 300;
+  width: 100%;
+  margin-bottom: 100px;
+  padding: 10px;
+  border: 1px solid var(--color-lightgray);
 }
 /* --- aside 옆 section */
 
 /* form --- */
 .form_wrap form ul {
-    /* .form_wrap > form > ul > li > p + div > input + label */
-    border-top: 1px solid var(--color-gray);
-    margin-bottom: 50px;
+  /* .form_wrap > form > ul > li > p + div > input + label */
+  border-top: 1px solid var(--color-gray);
+  margin-bottom: 50px;
 }
 .form_wrap form li {
-    border-bottom: 1px solid var(--color-lightgray);
+  border-bottom: 1px solid var(--color-lightgray);
 }
-.form_wrap li>p {
-    width: 180px;
-    padding: 18px;
-    font-weight: 500;
-    background-color: var(--color-background);
+.form_wrap li > p {
+  width: 180px;
+  padding: 18px;
+  font-weight: 500;
+  background-color: var(--color-background);
 }
 .form_wrap li > div {
-    padding: 10px 18px;
+  padding: 10px 18px;
 }
 .form_wrap li > div > div {
-    height: 40px;
+  height: 40px;
 }
 .form_wrap li > div > div b {
-    margin: 0 8px;
+  margin: 0 8px;
 }
 .form_wrap li > div > div span {
-    font-size: 0.8rem;
-    padding: 3px 18px;
-    margin-right: 18px;
-    background-color: var(--color-background);
-    cursor: pointer;
-    border-radius: 3px;
+  font-size: 0.8rem;
+  padding: 3px 18px;
+  margin-right: 18px;
+  background-color: var(--color-background);
+  cursor: pointer;
+  border-radius: 3px;
 }
 /* --- form */
+
+/* media-query */
+.pc {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.mobile {
+  display: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* phone */
+@media all and (max-width: 767px) {
+  html {
+    font-size: 13px;
+  }
+  .inner {
+    min-width: 300px;
+    padding: 0 10px;
+    margin: auto;
+  }
+  .inner > div {
+    padding: 20px 0;
+    margin: 20px 0;
+  }
+  .pc {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+
+  /* tablet */
+  @media all and (min-width: 768px) and (max-width: 1024px) {
+    html {
+      font-size: 14px;
+    }
+    .inner {
+      min-width: 740px;
+      padding: 0 14px;
+      margin: auto;
+    }
+    .pc {
+      display: none;
+    }
+    .mobile {
+      display: block;
+    }
+  }
+
+  /* pc */
+  @media all and (min-width: 1025px) {
+  }
+}

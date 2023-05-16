@@ -20,15 +20,29 @@ const Footer = () => {
             ></img>
           </figure>
         </h1>
-        <div className="footer_link_wrap flex justify_between">
-          <Link to="">이용약관</Link>
+        <div className="pc">
+          <div className="footer_link_wrap flex justify_between">
+            <Link to="">이용약관</Link>
+            <p>
+              I'AM &copy; <span>LHSK</span> All Rights Reserved.
+            </p>
+            <Link to="">개인정보처리방침</Link>
+          </div>
+        </div>
+        <div className="mobile footer_link_wrap">
+          <div className="flex justify_between">
+            <Link to="">이용약관</Link>
+            <Link to="">개인정보처리방침</Link>
+          </div>
           <p>
             I'AM &copy; <span>LHSK</span> All Rights Reserved.
           </p>
-          <Link to="">개인정보처리방침</Link>
         </div>
-        <div className="footer_contact_wrap flex justify_between">
-          <Link to="https://github.com/LHSK0107/integrated-banking-system" target={"_blank"}>
+        <div className="footer_contact_wrap flex justify_center">
+          <Link
+            to="https://github.com/LHSK0107/integrated-banking-system"
+            target={"_blank"}
+          >
             <figure className="flex align_center">
               <img src={GithubImg} alt="깃허브 로고"></img>
             </figure>

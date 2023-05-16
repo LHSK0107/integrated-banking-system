@@ -194,7 +194,7 @@ const UpdateInfo = () => {
     const logout = async () => {
       try {
         const response = await AuthAxios.post(
-          "http://localhost:8080/api/logout",
+          "https://iam-api.site/api/logout",
           {
             allAccount: 1,
             inout: 2,
@@ -219,15 +219,17 @@ const UpdateInfo = () => {
               signal: controller.signal,
             }
           );
+          console.log(response);
           if (response.status === 200) {
             alert("탈퇴되었습니다.");
-            logout();
           }
         } catch (err) {
           console.log(`error 발생: ${err}`);
         }
       };
+      logout();
       callDelete();
+      navigate("/");
     } else {
       return false;
     }

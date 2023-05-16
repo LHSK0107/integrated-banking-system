@@ -26,7 +26,7 @@ const useBalance = ({balance}) => {
     }
     addUnit();
   },[money,balance,balLength]);
-  return realMoney;
+  return realMoney.replace("-,", "-");
 };
 
 export default useBalance;

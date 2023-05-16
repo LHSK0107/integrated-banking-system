@@ -2,7 +2,10 @@ import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import React from "react";
 
-const getOptions = () => ({
+const getOptions = ({ data }) => ({
+  lang: {
+    thousandsSep: ",",
+  },
   colors: ["#3f77cb", "#d470cc"],
   title: {
     text: "입금-출금 비교",
@@ -16,15 +19,15 @@ const getOptions = () => ({
   credits: { enabled: false }, // 워터마크 숨김
   chart: {
     type: "column",
-    width: 600,
-    height: 400,
+    // width: 800,
+    // height: 400,
     // margin: [30, 10, 30, 0],
     backgroundColor: "rgba(255, 255, 255, 0)",
-    marginTop: 50
+    marginTop: 50,
   },
   xAxis: [
     {
-      categories: [],
+      categories: data["date"],
       labels: {
         y: 20,
         style: {
@@ -37,7 +40,7 @@ const getOptions = () => ({
       tickWidth: 1, //x축 label 사이 표지자 너비(0으로 지정 시 사라지며, 차트 타입에 따라 default로 지정되어 있을 수 있음)
       tickColor: "#cfcfcf",
       tickPosition: "inside", // outside가 default 이며, x축 선 기준 아래를 바라봄. inside는 위를 바라봄.
-      crosshair: true
+      crosshair: true,
     },
   ],
   yAxis: {
@@ -49,9 +52,10 @@ const getOptions = () => ({
       },
     },
     labels: {
-        // enabled: false//label 미사용 시 false로 지정.
-      },
-    gridLineWidth: 0// y축 차트 뒤에 깔리는 선 미사용 시 0으로 지정.
+      // enabled: false//label 미사용 시 false로 지정.
+      format: "{value:,.0f}",
+    },
+    gridLineWidth: 0, // y축 차트 뒤에 깔리는 선 미사용 시 0으로 지정.
   },
   legend: {
     //범례
@@ -73,21 +77,19 @@ const getOptions = () => ({
   series: [
     {
       name: "입금",
-      //   data: data.in,
-      data: [60, 50, 40, 30, 20, 10],
+      data: data["in"],
     },
     {
       name: "출금",
-      //   data: data.out,
-      data: [10, 20, 30, 40, 50, 60],
-    //   dataLabels: {
-    //     enabled: true,
-    //     align: 'right',
-    //     verticalAlign: 'top',
-    //     //위치 지정
-    //     x: 20,
-    //     y: -6,
-    //   }
+      data: data["out"],
+      //   dataLabels: {
+      //     enabled: true,
+      //     align: 'right',
+      //     verticalAlign: 'top',
+      //     //위치 지정
+      //     x: 20,
+      //     y: -6,
+      //   }
     },
   ],
 });
@@ -98,7 +100,7 @@ const Bar = ({ data }) => {
   return (
     <div>
       {/* <HighchartsReact highcharts={Highcharts} options={getOptions("column")} /> */}
-      <HighchartsReact highcharts={Highcharts} options={getOptions()} />
+      <HighchartsReact highcharts={Highcharts} options={getOptions({ data })} />
     </div>
   );
 };

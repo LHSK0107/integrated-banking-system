@@ -48,7 +48,7 @@
 			AND acct_dv IN ('01', '02', '03')
 	</select>
 
-	<select id="AdminsAcctDv01InoutSum" parameterType="LocalDate" resultType="AcctDv01InoutSumVo">
+	<select id="AdminsAcctDv01InoutSum" parameterType="java.time.LocalDate" resultType="AcctDv01InoutSumVo">
 		SELECT inout_dv, trsc_dt, SUM(trsc_amt) AS amtSum
 		FROM inout_past IOP
 			INNER JOIN account ACCT

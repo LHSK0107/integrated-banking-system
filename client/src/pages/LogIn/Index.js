@@ -11,24 +11,29 @@ import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 
 const Index = () => {
   // useAuth context 호출
-  const {setIsAuth,setLoggedUserInfo, setToken2} = useAuth();
+  const { setIsAuth, setLoggedUserInfo, setToken2 } = useAuth();
   const navigate = useNavigate();
 
   // login form 유효성 검사
-  const schema = yup.object({
-    username: yup
-      .string()
-      .matches(/^(?=.*[a-zA-Z0-9]).{6,20}$/, "형식에 맞지 않습니다.")
-      .min(6, "최소 6자 이상 입력해주세요.")
-      .max(20, "최대 20자리까지 입력해주세요.")
-      .required("아이디를 입력해주세요."),
-    password: yup
-      .string()
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#$%^&*+=-])(?=.*[0-9]).{6,20}$/, "대/소/특수/숫자 포함하여 입력해주세요.")
-      .min(6, "최소 6자 이상 입력해주세요.")
-      .max(20, "최대 20자리까지 입력해주세요.")
-      .required("패스워드를 입력해주세요.")
-  }).required();
+  const schema = yup
+    .object({
+      username: yup
+        .string()
+        .matches(/^(?=.*[a-zA-Z0-9]).{6,20}$/, "형식에 맞지 않습니다.")
+        .min(6, "최소 6자 이상 입력해주세요.")
+        .max(20, "최대 20자리까지 입력해주세요.")
+        .required("아이디를 입력해주세요."),
+      password: yup
+        .string()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#$%^&*+=-])(?=.*[0-9]).{6,20}$/,
+          "대/소/특수/숫자 포함하여 입력해주세요."
+        )
+        .min(6, "최소 6자 이상 입력해주세요.")
+        .max(20, "최대 20자리까지 입력해주세요.")
+        .required("패스워드를 입력해주세요."),
+    })
+    .required();
   const {
     register,
     handleSubmit,
@@ -39,14 +44,17 @@ const Index = () => {
   });
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:8080/login", {
-        username: data.username,
-        password: data.password,
-      },
-      {withCredentials: true})
+      .post(
+        "http://localhost:8080/login",
+        {
+          username: data.username,
+          password: data.password,
+        },
+        { withCredentials: true }
+      )
       .then((response) => {
         // 로그인 성공 시
-        if(response.status === 200 && response.headers.get("Authorization")) {
+        if (response.status === 200 && response.headers.get("Authorization")) {
           const token = response.headers.get("Authorization").split(" ")[1];
           // header에 default로 token 싣기
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -61,12 +69,12 @@ const Index = () => {
             name: decodedPayload.name,
             exp: decodedPayload.exp,
             userCode: decodedPayload.userCode,
-            userNo: decodedPayload.userNo
+            userNo: decodedPayload.userNo,
           });
           setIsAuth(true);
         }
         // 대시보드로 리다이렉트
-        navigate("/dashboard")
+        navigate("/dashboard");
       })
       .catch((error) => {
         alert("네트워크 통신에 문제가 발생했습니다. 잠시 후, 이용해주세요.");
@@ -76,17 +84,22 @@ const Index = () => {
   return (
     <div className="login_section">
       <div className="inner flex justify_center">
-          <div className="login_wrap flex justify_between">
+        <div className="login_wrap flex justify_between">
+          <div className="pc">
             <div className="login_image_section flex justify_center align_center">
               <figure>
                 <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
               </figure>
             </div>
-            
-            <div className="login_form_section flex flex_column justify_center">
+          </div>
+
+          <div className="login_form_section flex flex_column justify_center">
             <h2>로그인</h2>
             <div>
-              <form onSubmit={handleSubmit(onSubmit)}  className="login_form flex flex_column">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="login_form flex flex_column"
+              >
                 <div className="flex flex_column">
                   <span>id</span>
                   <input
@@ -106,9 +119,15 @@ const Index = () => {
                   <p>{errors.password?.message}</p>
                 </div>
                 <div className="login_btn_wrap flex justify_center align_center">
-                  <button className="more_btn" type="button">뒤로</button>
-                  <button className="more_btn" type="reset">취소</button>
-                  <button className="more_btn" type="submit">로그인</button>
+                  <button className="more_btn" type="button">
+                    뒤로
+                  </button>
+                  <button className="more_btn" type="reset">
+                    취소
+                  </button>
+                  <button className="more_btn" type="submit">
+                    로그인
+                  </button>
                 </div>
               </form>
             </div>
@@ -117,9 +136,7 @@ const Index = () => {
               <Link to="">회원가입</Link>
             </div>
           </div>
-          </div>
-
-          
+        </div>
       </div>
     </div>
   );

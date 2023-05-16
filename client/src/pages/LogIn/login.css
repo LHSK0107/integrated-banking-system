@@ -43,9 +43,7 @@
 .login_section .login_wrap{
   width: 100%;
 }
-.login_section .login_image_section,
-.login_section .login_form_section
-{
+.login_section > div > div > div {
   width: 48%
 }
 
@@ -62,4 +60,37 @@
 }
 .form_bottom a:not(:last-child) {
   border-right: 1px solid var(--color-gray);
+}
+
+/* media-query */
+/* mobile */
+@media (max-width: 320px) {
+  .login_section {
+    padding: 0;
+  }
+  .login_section > div > div {
+    padding: 20px;
+  }
+  .login_section .login_form_section {
+    width: 100%;
+  }
+  .login_section {
+    padding: 0;
+    height: calc(100vh - 120px);
+  }
+}
+
+/* tablet */
+@media (max-width: 768px) {
+  .login_section .login_form_section {
+    width: 100%;
+  }
+  
+}
+
+/* pc */
+@media (max-width: 1024) {
+  .login_section > div > div {
+    width: 48%;
+  }
 }

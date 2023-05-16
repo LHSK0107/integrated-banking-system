@@ -87,8 +87,8 @@ const Chart = ({data, dates}) => {
 //   Object.keys(data).forEach((key) => {
 //     console.log(key, data[key]);
 //   })
-// console.log(data);
-// console.log(dates);
+console.log(data);
+console.log(dates);
   return (
     <div>
       <HighchartsReact highcharts={Highcharts} options={getOptions({data, dates})} />
