@@ -67,7 +67,7 @@
   position: relative;
   background-color: #ffffff;
   border-top: 2px solid var(--color-lightgray);
-  padding: 17px 0;
+  height: 80px;
 }
 .nav_menu_section figure {
   width: 46px;
@@ -76,19 +76,65 @@
 .nav_menu_section .menu_list {
   font-size: 1.2rem;
   font-weight: 700;
+  position: relative;
 }
-.nav_menu_section .menu_list li {
+.nav_menu_section .menu_list>li{
   cursor: pointer;
+  width: 100px;
+  float: left;
+  position: relative;
 }
-.nav_menu_section .menu_list li:not(:last-child) {
-  margin-right: 70px;
+.nav_menu_section .menu_list>li:hover{
+  text-decoration: underline;
 }
-.nav_menu_section .menu_list li a {
+.nav_menu_section .menu_list>li:not(:last-child) {
+  margin-right: 30px;
+}
+.nav_menu_section .menu_list>li>a {
   display: block;
   width: 100%;
-  height: 100%;
+  height: 80px;
   font-size: 1.2rem;
   font-weight: 700;
+  line-height: 80px;
+  text-align: center;
+}
+/* 수정 시작 */
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown{
+  display: none;
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #666;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, .2);
+  -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, .2);
+}
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown.active{
+  display:block;
+}
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown li{
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9em;
+  position: relative;
+}
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown li:not(:first-child):after{
+  content:"";
+  position: absolute;
+  width: 80%;
+  height: 1px;
+  left:9%;
+  top:0;
+  background-color: #000;
+}
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown li:hover{
+  font-weight: 700;
+}
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown li a{
+ display: block;
+ width: 100%;
+ padding: 20px 0;
 }
 /* --- Navbar */
 

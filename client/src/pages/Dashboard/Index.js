@@ -1,12 +1,9 @@
-import "./dashboard.css";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Balance from "../../hooks/useBalance";
 import Pie from "./component/Pie";
 import Bar from "./component/Bar";
 import Point from "./component/Point";
-import { LogInContext } from "../../commons/LogInContext";
-import { AuthAxios } from "../../api/useCommonAxios";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import useAuth from "../../hooks/useAuth";
 import { useRef } from "react";

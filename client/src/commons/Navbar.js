@@ -1,42 +1,43 @@
 import "./Common.css";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
 import decodeJwt from "../hooks/decodeJwt";
+import MenuContext from "../setup/context/MenuContextProvider";
+import useAxiosInterceptor from "../hooks/useAxiosInterceptor";
 const Navbar = () => {
+  const AuthAxios = useAxiosInterceptor();
+  const {clickCountList,setClickCountList} = useContext(MenuContext);
   const {
     token,
     setToken2,
     loggedUserInfo,
-    isAuth,
     setIsAuth,
     setLoggedUserInfo,
   } = useAuth();
   useEffect(() => {
-    const AUTH_TOKEN = localStorage.getItem("jwt");
-    const decodedPayload = AUTH_TOKEN && decodeJwt(AUTH_TOKEN);
-    if (AUTH_TOKEN) {
-      console.log("있음");
-      setLoggedUserInfo((prev) => {
-        prev && LogoutSection(prev);
-        console.log(prev);
-        return {
-          id: decodedPayload.sub,
-          name: decodedPayload.name,
-          exp: decodedPayload.exp,
-          userCode: decodedPayload.userCode,
-          userNo: decodedPayload.userNo,
-        };
-      });
-    } else {
-      setToken2(null);
-      setLoggedUserInfo(null);
-    }
+    loggedUserInfo && LogoutSection(loggedUserInfo);
   }, []);
-  // useEffect(()=>{console.log(loggedUserInfo)},[setLoggedUserInfo]);
+
+  /** click */
+  const handleClickCount = (menuNum) => {
+    if(menuNum===1){
+      setClickCountList({
+
+      })
+    }
+  }
   const navigate = useNavigate();
+
+  /** logout시, context 비우는 함수 */
+  const logout = () => {
+    setToken2(null);
+    setLoggedUserInfo(null);
+    setIsAuth(false);
+    navigate("/login");
+  };
 
   // 로그아웃
   const handleLogout = () => {
@@ -44,7 +45,7 @@ const Navbar = () => {
       localStorage.removeItem("jwt");
       axios
         .post(
-          "http://localhost:8080/api/logout",
+          "https://iam-api.site/api/logout",
           {
             allAccount: 1,
             inout: 2,
@@ -55,26 +56,12 @@ const Navbar = () => {
           { withCredentials: true }
         )
         .then((response) => {
-          if (response.status === 200 || response.status === 401) {
-            setToken2(null);
-            setLoggedUserInfo(null);
-            setIsAuth(false);
-            console.log("로그아웃 완료");
-            navigate("/login");
+          if (response?.status === 200 || response?.status === 401) {
+            logout();
           }
         })
-        .catch((error) => {
-          if (error) {
-            setToken2(null);
-            setLoggedUserInfo(null);
-            setIsAuth(false);
-            console.log("로그아웃 완료");
-            navigate("/login");
-          }
-        })
-        .finally(() => {});
+        .catch(error => error && logout());
     } else {
-      console.log("로그아웃 취소");
       return false;
     }
   };
@@ -96,26 +83,23 @@ const Navbar = () => {
     return (
       <div className="login flex align_center">
         <p className="login_username">
-          안녕하세요 <span>{props?.value?.name}</span>님
+          안녕하세요&nbsp;&nbsp;&nbsp;<span><b>{props?.value?.name}</b></span>님
         </p>
-        <p className="login_exp">{props?.value?.exp}</p>
-        {/* <p>
-        <Link to="/logout">로그아웃</Link>
-      </p> */}
-        <button className="logout_btn" onClick={props?.func}>
-          로그아웃
-        </button>
+        {/* <p className="login_exp">{props?.value?.exp}</p> */}
         <p>
           <Link to="/mypage">개인정보수정</Link>
         </p>
         {props?.value?.userCode === "ROLE_ADMIN" ||
-        props?.value?.userCode === "ROLE_MANAGER" ? (
+          props?.value?.userCode === "ROLE_MANAGER" ? (
           <p>
             <Link to="/admin">관리자 페이지</Link>
           </p>
-        ) : (
-          <></>
-        )}
+
+        ) : (null)
+        }
+        <button className="logout_btn" onClick={props?.func}>
+          로그아웃
+        </button>
       </div>
     );
   };
@@ -123,7 +107,22 @@ const Navbar = () => {
   const [scrollData, setScrollData] = useState(0);
   const navInfoRef = useRef();
   const navMenuRef = useRef();
+  const selectRef = useRef();
+  const reportRef = useRef();
 
+  const handleDropdown = (ref) =>{
+    // e.target.context==="보고서" ? e.target.children[1].classList.add
+    ref==="보고서" ?
+     reportRef?.current?.children[1].classList.add("active")
+     :
+     selectRef?.current?.children[1].classList.add("active");
+  }
+  const handleLeaveDropdown = (ref) =>{
+    ref==="보고서" ?
+     reportRef?.current?.children[1].classList.remove("active")
+     :
+     selectRef?.current?.children[1].classList.remove("active");
+  }
   // const scrollFunc = useCallback((scrollYData) => {
   //   if(scrollYData>20){
   //     navMenuRef.current.style.transition="0.2s all ease";
@@ -147,10 +146,7 @@ const Navbar = () => {
             <div className="family_site_wrap">
               <ul className="family_site flex">
                 <li>
-                  <Link
-                    to="https://www.webcash.co.kr/webcash/1000.html"
-                    target={"_blank"}
-                  >
+                  <Link to="https://www.webcash.co.kr/webcash/1000.html" target={"_blank"}>
                     Webcash
                   </Link>
                 </li>
@@ -161,9 +157,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
-                    to="https://www.serp.co.kr/home/home_1000.html"
-                    target={"_blank"}
-                  >
+                    to="https://www.serp.co.kr/home/home_1000.html" target={"_blank"}>
                     경리나라
                   </Link>
                 </li>
@@ -171,7 +165,7 @@ const Navbar = () => {
             </div>
             {/* 로그인 체크 부분 */}
             <div className="user_info_wrap">
-              {loggedUserInfo ? (
+              {token ? (
                 <LogoutSection value={loggedUserInfo} func={handleLogout} />
               ) : (
                 <LoginSection />
@@ -180,7 +174,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div ref={navMenuRef} className="nav_menu_section">
+        <div ref={navMenuRef} className="nav_menu_section flex align_center">
           <div className="inner flex justify_between align_center">
             <Link to="/">
               <figure>
@@ -189,16 +183,44 @@ const Navbar = () => {
             </Link>
             <ul className="menu_list flex">
               <li>
-                <span onClick={() => navigate("/")}>소개</span>
+                <Link to="/">소개</Link>
+              </li>
+              <li ref={selectRef}
+                onMouseOver={
+                  (e)=>{
+                    e.stopPropagation();
+                    handleDropdown("조회");
+                  }} 
+                onMouseLeave={
+                  (e)=>{
+                    e.stopPropagation();
+                    handleLeaveDropdown("조회");
+                  }} className="dropmenu_wrap">
+                <Link to="/inquiry">조회</Link>
+                <ul className="dropdown">
+                  <li><Link to="/inquiry">전체계좌</Link></li>
+                  <li><Link to="/inout">입출금내역</Link></li>
+                </ul>
+              </li>
+              <li ref={reportRef} 
+                onMouseOver={
+                  (e)=>{
+                    e.stopPropagation();
+                    handleDropdown("보고서");
+                  }} 
+                onMouseLeave={
+                  (e)=>{
+                    e.stopPropagation();
+                    handleLeaveDropdown("보고서");
+                  }} className="dropmenu_wrap">
+                <Link to="/dailyReport">보고서</Link>
+                <ul className="dropdown">
+                  <li><Link to="/dailyReport">일일시재</Link></li>
+                  <li><Link to="/dailyReport">입출금</Link></li>
+                </ul>
               </li>
               <li>
-                <span onClick={() => navigate("/inquiry")}>조회</span>
-              </li>
-              <li>
-                <span onClick={() => navigate("/dailyReport")}>보고서</span>
-              </li>
-              <li>
-                <span onClick={() => navigate("/dashboard")}>대시보드</span>
+                <Link to="/dashboard">대시보드</Link>
               </li>
             </ul>
           </div>
