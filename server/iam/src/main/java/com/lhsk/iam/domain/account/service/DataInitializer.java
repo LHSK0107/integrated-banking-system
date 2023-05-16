@@ -37,7 +37,7 @@ public class DataInitializer {
    String bizNo;
    
    // 프로그램이 처음 시작되면 딱 한 번만 실행되는 메소드
-   @PostConstruct
+//   @PostConstruct
    @Transactional
    public void dataInit() {
       
