@@ -5,8 +5,6 @@ import Balance from "../../hooks/useBalance";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useCommonAxios from "../../api/useCommonAxios";
 import { Link, useNavigate } from "react-router-dom";
-import decodeJwt from "../../hooks/decodeJwt";
-import { LogInContext } from "../../commons/LogInContext";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';

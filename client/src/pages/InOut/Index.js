@@ -5,15 +5,13 @@ import "./inout.css";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
-import useCommonAxios from "../../api/useCommonAxios";
-import useAxios from "../../api/useAxios";
 import BankName from '../../hooks/useBankName';
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
-
+import useAuth from "../../hooks/useAuth";
 const Index = () => {
   const AuthAxios = useAxiosInterceptor();
-
+  const {loggedUserInfo} = useAuth();
   /** 폼에 대한 각 요소 변수 저장 -> 변수명 차후 변경 */
   const [optionVal, setOptionVal] = useState({
     bankCD:"",
@@ -25,13 +23,29 @@ const Index = () => {
     arrange:"recent",
     paging:"10"
   });
-
-  const {apiData}=useAxios("https://iam-api.site/api/accounts/inout");
-
+  const [apiData, setApiData] = useState(null);
+  useEffect(()=>{
+    const controller = new AbortController();
+    const getAvailableAcct = async () => {
+      try{
+        const response = await AuthAxios.get(loggedUserInfo?.userCode==="ROLE_ADMIN" ? "/api/manager/accounts" : `/api/users/accounts/available/${loggedUserInfo?.userNo}`,{
+          signal: controller.signal
+        });
+        setApiData(response.data);
+        console.log(response.data);
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    }
+    getAvailableAcct();
+    return () => {
+      controller.abort();
+    }
+  },[loggedUserInfo]);
   /** 계좌 중, 은행코드 중복 제거 함수 */
   const getBankCD = () =>{
     let arr = [];
-    // apiData?.filter((val)=>arr.includes(val?.BANK_CD)===false && arr.push(val?.BANK_CD));
+    apiData?.filter((val)=>arr.includes(val?.bankCd)===false && arr.push(val?.bankCd));
     return arr;
   }
   /** 은행별 계좌 요소를 option으로 리턴하는 함수 */
@@ -53,16 +67,16 @@ const Index = () => {
     setOptionVal({...optionVal, acctNO: e.target.value});
   }
   /** 은행명 select 값에 따른 계좌번호 리스트 변경 */
-  const acctListOption = () => apiData && apiData.filter((ele) => {
+  const acctListOption = () => apiData && apiData?.filter((ele) => {
     if(optionVal.bankCD===""){
       return ele;
-    } else if (optionVal.bankCD===ele?.BANK_CD){
+    } else if (optionVal.bankCD===ele?.bankCd){
       return ele;
     }
   }).map((val,i)=>{
     return (
-      <option key={i} value={val?.ACCT_NO}>
-        &nbsp;{val?.ACCT_NO}&nbsp;{val?.LOAN_NM}
+      <option key={i} value={val?.acctNo}>
+        &nbsp;{val?.ACCT_NO}&nbsp;{val?.loanNm}
       </option>
     )
   });
@@ -81,7 +95,7 @@ const Index = () => {
   const initialDate = useCallback(() =>{
     const today=new Date(nowDate);
     const currentStr = `${today.getFullYear()}${('0' + (today.getMonth() + 1)).slice(-2)}${('0' + today.getDate()).slice(-2)}`;
-    today.setDate(today.getDate()-30);
+    today.setDate(today.getDate()-31);
     const pastStr = `${today.getFullYear()}${('0' + (today.getMonth() + 1)).slice(-2)}${('0' + today.getDate()).slice(-2)}`;
     const setpastDate = `${nowDate.getFullYear()}-${('0' + (nowDate.getMonth())).slice(-2)}-${('0' + nowDate.getDate()).slice(-2)}`;
     setOptionVal({...optionVal, strDate:setpastDate, endDate:currentTime});
@@ -93,7 +107,7 @@ const Index = () => {
     const arr = end.split("-");
     const imsiDate = new Date();
     imsiDate.setFullYear(parseInt(arr[0]),parseInt(arr[1]),parseInt(arr[2]));
-    imsiDate.setDate(imsiDate.getDate()-30);
+    imsiDate.setDate(imsiDate.getDate()-31);
     const pastStr = `${imsiDate.getFullYear()}-${('0' + (imsiDate.getMonth())).slice(-2)}-${('0' + imsiDate.getDate()).slice(-2)}`;
     // setOptionVal({...optionVal, strDate:pastStr, endDate:end});
     strInputRef.current.setAttribute("min", pastStr);
@@ -112,8 +126,26 @@ const Index = () => {
     console.log(optionVal);
   }
 
-  /** */
-  const handleOnSubmit = () =>{
+  const [apiTestData, setApiTestData] = useState(null);
+
+  /** 조회 버튼 시, 서버 요청*/
+  const handleOnSubmit = (e) =>{
+    e.preventDefault();
+    const getData = async () => {
+      const data1 = await AuthAxios.post(loggedUserInfo.userCode==="ROLE_ADMIN" ? "/api/manager/accounts/inout" : "/api/users/accounts/inout",{
+        "isLoan" : false,
+        "bankCd" : optionVal?.bankCD==="" ? "All" : optionVal?.bankCD,
+        "acctNo" : optionVal?.acctNO==="" ? "All" : optionVal?.acctNO,
+        "startDt" : "2023-04-20",
+        "endDt" : optionVal?.endDate,
+        "inoutDv" : optionVal?.inout==="" ? "All" : optionVal?.inout,
+        "sort" : optionVal?.arrange,
+        "page" : 1,
+        "pageSize" : 10
+      });
+      return data1;
+    }
+    getData().then(res=>console.log(res.data.list))
     return false;
   }
   return (
@@ -130,7 +162,7 @@ const Index = () => {
                 <li>예금</li>
                 <li className="active">대출</li>
               </ul>
-              <form className="report_form" onSubmit={handleOnSubmit}>
+              <form className="report_form" onSubmit={(e)=>handleOnSubmit(e)}>
                 <ul>
                   <li className="flex">
                     <p className="flex align_center">계좌</p>
@@ -208,7 +240,7 @@ const Index = () => {
               </form>
             </div>
             <div className="result_wrap">
-              <div className="account_info">
+              {/* <div className="account_info">
                 <ul>
                   <li className="flex">
                     <div className="title">예금종류</div>
@@ -229,7 +261,7 @@ const Index = () => {
                     <div>2023-04-18</div>
                   </li>
                 </ul>
-              </div>
+              </div> */}
               <div className="result">
                 <div className="btn_info flex justify_between align_center">
                   <button >인쇄</button>

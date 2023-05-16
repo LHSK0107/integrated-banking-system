@@ -1,4 +1,5 @@
 import "./App.css";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./commons/Navbar";
 import SignUp from "./pages/SignUp/Index";
@@ -9,7 +10,6 @@ import Index from "./pages/Index/Index";
 import DetailInquiry from "./pages/DetailInquiry/Index";
 import DashBoard from "./pages/Dashboard/Index";
 import InOut from "./pages/InOut/Index";
-// import LogOut from "./pages/LogIn/LogOut";
 import Mypage from "./pages/Mypage/Index";
 import Admin from "./pages/Admin/Index";
 import AdminDetail from "./pages/Admin/component/Detail.js";
@@ -18,11 +18,12 @@ import DailyReport from "./pages/DailyReport/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LogHistory from "./pages/Admin/component/LogHistory";
 import ClickHistory from "./pages/Admin/component/ClickHistory";
-import {UserContextProvider} from "./setup/context/UserContextProvider";
 import ApproveAuth from "./commons/ApproveAuth";
 import { MenuContextProvider } from "./setup/context/MenuContextProvider";
-
+import useAuth from "./hooks/useAuth";
+import decodeJwt from "./hooks/decodeJwt";
 const App = () => {
+  const {setToken2,setLoggedUserInfo} = useAuth();
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -30,13 +31,23 @@ const App = () => {
       },
     },
   });
-
+  useEffect(()=>{
+    if(localStorage.getItem("jwt")){
+      setToken2(localStorage.getItem("jwt"));
+      const decodedPayload = decodeJwt(localStorage.getItem("jwt"));
+      setLoggedUserInfo({
+        id: decodedPayload.sub,
+        name: decodedPayload.name,
+        exp: decodedPayload.exp,
+        userCode: decodedPayload.userCode,
+        userNo: decodedPayload.userNo,
+      });
+    }  
+  },[]);
   return (
-    <UserContextProvider>
       <div className="App">
         <div className="container">
           <QueryClientProvider client={client}>
-            <Router>
               <MenuContextProvider>
                 <Navbar />
               </MenuContextProvider>
@@ -44,11 +55,6 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<LogIn />} />
-
-                {/* 로그인 필요 */}
-                {/* <Route element={<ApproveAuth />}>
-                  <Route path="/logout" element={<LogOut />} />
-                </Route> */}
                 <Route element={<ApproveAuth />}>
                   <Route path="/dashboard" element={<DashBoard />} />
                 </Route>
@@ -71,11 +77,9 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
-            </Router>
           </QueryClientProvider>
         </div>
       </div>
-    </UserContextProvider>
   );
 };
 
