@@ -79,6 +79,9 @@
 	<select id="getTotal" parameterType="java.time.LocalDate" resultType="int">
 		SELECT COUNT(*) FROM inout_past WHERE trsc_dt = #{date};
 	</select>
+	<select id="getTotalToday" parameterType="java.time.LocalDate" resultType="int">
+		SELECT COUNT(*) FROM inout_today WHERE trsc_dt = #{date};
+	</select>
 	
 	<select id="findAllUserAccount" resultType="UserAccountVO">
 		SELECT user_no, acct_no, bank_cd FROM user_account

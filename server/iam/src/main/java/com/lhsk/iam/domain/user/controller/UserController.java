@@ -256,15 +256,15 @@ public class UserController {
 		// 메뉴 클릭 기록 집계 등록 (insert or update)
 		userService.updateMenuClick(vo);
 		
-		System.out.println("cookie 소멸 시작");
+		log.info("cookie 소멸 시작");
 		
 		// 로그아웃 처리
 		Cookie[] cookies = request.getCookies();
 	    if (cookies != null) {
 	        for (Cookie cookie : cookies) {
 	            if ("refreshToken".equals(cookie.getName())) {
-	            	System.out.println("쿠키가 존재함");
-	            	System.out.println(cookie.getName() + " : " + cookie.getValue()); 
+	            	log.info("쿠키가 존재함");
+	            	log.info(cookie.getName() + " : " + cookie.getValue()); 
 	                // 쿠키의 값을 비우고 유효 시간을 과거로 설정하여 삭제합니다.
 	                cookie.setValue(null);
 	                cookie.setMaxAge(0);

@@ -25,9 +25,11 @@ import com.lhsk.iam.domain.report.model.vo.TimeAcctReportVO;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReportService {
 
 	@Value("${aes.secret}")
@@ -137,7 +139,7 @@ public class ReportService {
 		requestVO.setUserNo(userNo);
 		// 은행이름으로 은행코드를 찾아 req객체에 설정
 		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
-		System.out.println("bankCd : "+requestVO.getBankCd());
+		log.info("bankCd : "+requestVO.getBankCd());
 		// 데이터 추출
 		List<InoutReportVO> reportData = reportMapper.getUserInoutReportData(requestVO);
 		// 응답데이터에 빈값 채우기
@@ -146,11 +148,11 @@ public class ReportService {
 	    
 		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
 	    for (InoutReportVO inoutReportVO : reportData) {
-	    	System.out.println("beforeBal : " + inoutReportVO.getBeforeBal());
+	    	log.info("beforeBal : " + inoutReportVO.getBeforeBal());
 	    	// 이전잔액이 없는 경우 더 과거로 가서 잔액을 구해 넣어준다.
 	    	if(inoutReportVO.getBeforeBal() == null) {
 	    		String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo(), requestVO.getStartDt());
-	    		System.out.println("lastBalanceDate : "+lastBalanceDate);
+	    		log.info("lastBalanceDate : "+lastBalanceDate);
 	    		
 	    		if (lastBalanceDate != null) {
 	    			inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));
@@ -193,11 +195,11 @@ public class ReportService {
 	    
 		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
 	    for (InoutReportVO inoutReportVO : reportData) {
-	    	System.out.println("beforeBal : " + inoutReportVO.getBeforeBal());
+	    	log.info("beforeBal : " + inoutReportVO.getBeforeBal());
 	    	// 이전잔액이 없는 경우 더 과거로 가서 잔액을 구해 넣어준다.
 	    	if(inoutReportVO.getBeforeBal() == null) {
 	    		String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo(), requestVO.getStartDt());
-	    		System.out.println("lastBalanceDate : "+lastBalanceDate);
+	    		log.info("lastBalanceDate : "+lastBalanceDate);
 	    		
 	    		if (lastBalanceDate != null) {
 	    			inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));

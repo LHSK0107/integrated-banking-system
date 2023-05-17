@@ -142,11 +142,12 @@ public class AccountClient {
 		Map<String, String> secret = vo.getSecret();
 		
 		String date = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+		
 		Map<String, Object> reqData = new HashMap<>();
 		reqData.put("INQ_STR_DT", date);
 		reqData.put("INQ_END_DT", date);
-		reqData.put("PAGE_CNT", vo.getPageSize());
-		reqData.put("INQ_PAGE_NO", vo.getPage());
+		reqData.put("PAGE_CNT", vo.getApiPageSize());
+		reqData.put("INQ_PAGE_NO", vo.getApiPage());
 		
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("API_KEY", secret.get("apiKey"));
@@ -168,8 +169,8 @@ public class AccountClient {
             JsonNode totalCntJson = jsonNode.get("RESP_DATA").get("TOT_CNT");
 //            int totalCnt = Integer.parseInt(totalCntJson.toString());
             int totalCnt = totalCntJson.asInt();
-            System.out.println("total : " + total);
-            System.out.println("totalCnt : " + totalCnt);
+            log.info("total : " + total);
+            log.info("totalCnt : " + totalCnt);
             
             List<InoutApiVO> list = new ArrayList<>();
             if(total!=totalCnt) {
@@ -179,15 +180,23 @@ public class AccountClient {
             		// Api조회시 최대 1천개만 가능하기 때문에 차이가 1000이 넘어가면 1천개만 넣는다.
             		for(int i = 0; i < 1000; i++) {
             			InoutApiVO inout = objectMapper.treeToValue(recNode.get(i), InoutApiVO.class);
-            			inout = dataProcessor.valCheck(inout);
-            			list.add(inout);
+            			if(inout != null) {
+            				inout = dataProcessor.valCheck(inout);
+            				list.add(inout);
+            			} else {
+            				break;
+            			}
             		}
             	} else {
             		// 1000 이하라면 total의 차이만큼만 넣어주면 된다.
             		for(int i = 0; i < cnt; i++) {
             			InoutApiVO inout = objectMapper.treeToValue(recNode.get(i), InoutApiVO.class);
-            			inout = dataProcessor.valCheck(inout);
-            			list.add(inout);
+            			if(inout != null) {
+            				inout = dataProcessor.valCheck(inout);
+            				list.add(inout);
+            			} else {
+            				break;
+            			}
             		}
             	}
             }

@@ -13,8 +13,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 // 이메일 발송과 관련된 로직을 처리하는 클래스
 @Service
+@Slf4j
 public class EmailService {
 	
 	@Autowired
@@ -46,7 +49,7 @@ public class EmailService {
 		FileSystemResource file = new FileSystemResource(attachmentFile);
 		helper.addAttachment(file.getFilename(), file);
 		
-		System.out.println("메일 발송");
+		log.info("메일 발송");
 		javaMailSender.send(message);
 	}
 	
