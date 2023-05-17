@@ -8,6 +8,7 @@
 				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
 				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
 		FROM account
+		WHERE acct_dv != '04'
 	</select>
 		
 	<select id="findAvailableAccount" parameterType="int" resultType="AccountVO">
