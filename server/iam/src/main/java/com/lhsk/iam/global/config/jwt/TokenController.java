@@ -40,12 +40,12 @@ public class TokenController {
 	public ResponseEntity<?> reAccessToken(HttpServletRequest req) {
 		// 쿠키에서 리프레시 토큰 추출
 	    String refreshToken = getRefreshTokenFromCookies(req);
-	    System.out.println("refresh = "+refreshToken);
+	    log.info("refresh = "+refreshToken);
 	    
     	// 리프레시 토큰 유효성 검사
 	    try {
 	    	if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
-	    		System.out.println("try 안에서 쿠키 없음");
+	    		log.info("try 안에서 쿠키 없음");
 	    		log.info("리프레시 토큰 : " + refreshToken);
 	    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
 	    	}
@@ -79,7 +79,7 @@ public class TokenController {
 		try {
 	    	if (oldRefreshToken == null || !jwtTokenProvider.validateToken(oldRefreshToken)) {
 	    		log.info("리프레시 토큰 : " + oldRefreshToken);
-	    		System.out.println("토큰이 이상함");
+	    		log.info("토큰이 이상함");
 	    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
 	    	}
 	    } catch(ExpiredJwtException e) {
@@ -113,11 +113,11 @@ public class TokenController {
 	// 쿠키로부터 리프레시 토큰을 추출하는 메소드
 	private String getRefreshTokenFromCookies(HttpServletRequest req) {
 	    Cookie[] cookies = req.getCookies();
-	    System.out.println("getRefreshTokenFromCookies : " + cookies);
+	    log.info("getRefreshTokenFromCookies : " + cookies);
 	    if (cookies != null) {
 	        for (Cookie cookie : cookies) {
 	            if (cookie.getName().equals("refreshToken")) {
-	            	System.out.println("쿠키 있음");
+	            	log.info("쿠키 있음");
 	            	log.info("리프레시 토큰 : "+cookie.getValue());
 	                return cookie.getValue();
 	            }

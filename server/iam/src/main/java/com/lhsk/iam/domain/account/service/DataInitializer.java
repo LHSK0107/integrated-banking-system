@@ -1,5 +1,6 @@
 package com.lhsk.iam.domain.account.service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,7 @@ public class DataInitializer {
         	log.info("inout_today page : "+page);
         	// getTodayInouts()의 매개변수 생성
             InoutRequestVO req = new InoutRequestVO();
-            int total = 0;    		
+            int total = accountApiMapper.getTotalToday(LocalDate.now());    		
     		// 요청 VO 생성
     		req.setSecret(secret);
     		req.setApiPageSize(PAGE_SIZE);

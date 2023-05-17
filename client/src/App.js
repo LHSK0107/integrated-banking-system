@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./commons/Navbar";
 import SignUp from "./pages/SignUp/Index";
 import LogIn from "./pages/LogIn/Index";
@@ -43,7 +43,7 @@ const App = () => {
         userCode: decodedPayload.userCode,
         userNo: decodedPayload.userNo,
       });
-    }  
+    }
   },[]);
   return (
       <div className="App">

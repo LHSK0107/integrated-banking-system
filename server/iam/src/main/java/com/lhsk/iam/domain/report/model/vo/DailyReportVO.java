@@ -19,9 +19,9 @@ public class DailyReportVO {
 	private BigDecimal allInoutAcctBal;
 	private BigDecimal allTimeAcctBal;
 	private BigDecimal allLoanAcctBal;
-	List<InoutAcctReportVO> inoutAcctList;
-	List<TimeAcctReportVO> timeAcctList;
-	List<LoanAcctReportVO> loanAcctList;
+	private List<DailyInoutAcctReportVO> inoutAcctList;
+	private List<TimeAcctReportVO> timeAcctList;
+	private List<LoanAcctReportVO> loanAcctList;
 	
 	
 }

@@ -24,7 +24,10 @@ import com.lhsk.iam.global.config.auth.PrincipalDetails;
 import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class LoginService {
 	
 	@Autowired
@@ -97,9 +100,9 @@ public class LoginService {
  	} catch (GeneralSecurityException e) {
  		e.printStackTrace();
  	}
-        System.out.println("dt : "+vo.getLoginDt());
-        System.out.println("dept : "+vo.getDept());
+        log.info("dt : "+vo.getLoginDt());
+        log.info("dept : "+vo.getDept());
         loginMapper.insertLoginHistory(vo);
-        System.out.println("insertLoginHistory 작업 완료");
+        log.info("insertLoginHistory 작업 완료");
     }
 }

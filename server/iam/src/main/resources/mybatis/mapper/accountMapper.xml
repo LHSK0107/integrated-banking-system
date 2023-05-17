@@ -8,6 +8,7 @@
 				new_dt, expi_dt, repay_way, cont_rt, dpsv_dv, 
 				loan_kind, cltr_ctt, int_payt_dt, curr_cd, real_amt 
 		FROM account
+		WHERE acct_dv != '04'
 	</select>
 		
 	<select id="findAvailableAccount" parameterType="int" resultType="AccountVO">
@@ -23,7 +24,7 @@
 	</select>	
 	
 	<select id="findUsersInoutPast" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 				ON IOP.acct_no = ACCT.acct_no
@@ -60,7 +61,7 @@
 	</select>	 
 	
 	<select id="findUsersInoutToday" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 				ON IOP.acct_no = ACCT.acct_no
@@ -84,9 +85,9 @@
 		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 			AND inout_dv = #{inoutDv}
 		</if>
-			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 		UNION
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
 		FROM inout_today IOT
 			INNER JOIN account ACCT
 			    ON IOT.acct_no = ACCT.acct_no
@@ -176,7 +177,7 @@
 			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 				AND inout_dv = #{inoutDv}
 			</if>
-				AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+				AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 			UNION
 			SELECT COUNT(*) AS cnt
 			FROM inout_today IOT
@@ -206,7 +207,7 @@
 	</select>
 
 	<select id="findAdminsInoutPast" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 			    ON IOP.acct_no = ACCT.acct_no
@@ -241,7 +242,7 @@
 	</select>
 
 	<select id="findAdminsInoutToday" parameterType="InoutRequestVO" resultType="InoutVO">
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
 		FROM inout_past IOP
 			INNER JOIN account ACCT
 			    ON IOP.acct_no = ACCT.acct_no
@@ -263,9 +264,9 @@
 		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 			AND inout_dv = #{inoutDv}
 		</if>
-			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 		UNION
-		SELECT trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
 		FROM inout_today IOT
 			INNER JOIN account ACCT
 			    ON IOT.acct_no = ACCT.acct_no
@@ -349,12 +350,12 @@
 			<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
 				AND inout_dv = #{inoutDv}
 			</if>
-				AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+				AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
 			UNION
 			SELECT COUNT(*) AS cnt
 			FROM inout_today IOT
 				INNER JOIN account ACCT
-				    ON IOP.acct_no = ACCT.acct_no
+				    ON IOT.acct_no = ACCT.acct_no
 			WHERE 
 			<choose>
 				<when test="isLoan != null and isLoan">
@@ -393,11 +394,32 @@
 	<select id="findByBankCodeToBankName" parameterType="String" resultType="String">
 		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
 	</select>
+	
+    <select id="findBankCdByBankNm" resultType="String">
+  		SELECT bank_cd FROM bank_code WHERE bank_nm = #{bankNm}
+    </select>
+    
+    
+    <select id="copyInoutData" resultType="InoutVO">
+    	SELECT acct_no, bank_cd, inout_dv, trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd 
+		FROM inout_today 
+		WHERE DATE(trsc_dt) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+    </select>
+    
+	<insert id="insertInoutPast" parameterType="java.util.ArrayList" useGeneratedKeys="true" keyProperty="trscNo">
+		INSERT INTO inout_past(acct_no, bank_cd, inout_dv, trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd) 
+		VALUES
+		<foreach collection="list" item="inout" separator=",">
+			(
+				#{inout.acctNo},#{inout.bankCd},#{inout.inoutDv},#{inout.trscDt}, 
+				#{inout.trscTm},#{inout.bal},#{inout.rmrk1},#{inout.trscAmt},#{inout.currCd}
+			)
+		</foreach>
+	</insert>
+	
+	<delete id="resetInoutToday">
+		DELETE FROM inout_today WHERE DATE(trsc_dt) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+	</delete>
+	
+	
 </mapper>
-
-
-
-
-
-
-

@@ -4,7 +4,6 @@ import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
 
 const useAxiosInterceptor = () => {
-    console.log('interceptor 실행');
     const refresh = useRefreshToken();
     const {token} = useAuth();
     useEffect(()=>{

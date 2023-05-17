@@ -3,7 +3,6 @@ import axios from "axios";
 import useAuth from "./useAuth";
 const useRefreshToken = () => {
   const { setToken2 } = useAuth();
-  console.log("Refresh 실행");
   const refresh = async () => {
     const response = await axios.post(
       // "http://localhost:8080/reAccessToken",
@@ -13,7 +12,6 @@ const useRefreshToken = () => {
         withCredentials: true,
       }
     );
-    console.log(`response:${response}`);
     const token = response.headers.get("Authorization").split(" ")[1];
     setToken2(token);
     response.then(
