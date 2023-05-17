@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
+import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutRequestVO;
 import com.lhsk.iam.domain.account.model.vo.InoutVO;
 
@@ -46,4 +47,10 @@ public interface AccountMapper {
 	// 은행 이름으로 은행코드 찾기
 	String findBankCdByBankNm(String bankNm);
 	
+	
+	// 거래내역 데이터 이전
+	List<InoutVO> copyInoutData();
+	void insertInoutPast(List<InoutVO> inoutList);
+	// 이전에 끝난 inout_today 테이블 리셋
+	void resetInoutToday();
 }
