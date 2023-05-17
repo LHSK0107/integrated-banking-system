@@ -104,7 +104,7 @@ select option:hover {
 /* 공통 속성 class --- */
 #wrap {
   width: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
   position: relative;
   top: 0;
   left: 0;

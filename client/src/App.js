@@ -18,6 +18,7 @@ import DailyReport from "./pages/DailyReport/Index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LogHistory from "./pages/Admin/component/LogHistory";
 import ClickHistory from "./pages/Admin/component/ClickHistory";
+import InspectAccount from "./pages/Admin/component/InspectAccount";
 import ApproveAuth from "./commons/ApproveAuth";
 import { MenuContextProvider } from "./setup/context/MenuContextProvider";
 import useAuth from "./hooks/useAuth";
@@ -71,6 +72,7 @@ const App = () => {
                   <Route index element={<Admin />} />
                   <Route path=":userNo" element={<AdminDetail />} />
                 </Route>
+                <Route path="/inspectAccount" element={<InspectAccount/>}/>;
                 <Route path="/logHistory" element={<LogHistory />} />
                 <Route path="/clickHistory" element={<ClickHistory />} />
                 {/* 404페이지 */}
