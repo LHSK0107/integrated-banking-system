@@ -52,12 +52,23 @@ public class AdminController {
 		}
 	}
 	
-	// 계좌조회 권한 페이지 계좌정보
+	
+	// 계좌조회 권한 페이지 - 전체 계좌정보 재가공 
 	@GetMapping("/api/manager/usersAccount")
 	public ResponseEntity<?> getAllAccounts() {
 		Map<String, List<String>> acctInfoList = adminService.getAllAccounts();
 		
-		return new ResponseEntity<>(acctInfoList, HttpStatus.OK);
+		if (acctInfoList == null) return null;
+		else return new ResponseEntity<>(acctInfoList, HttpStatus.OK);
+	}
+	
+	// 계좌조회 권한 페이지 - 회원에게 허용된 계좌정보 재가공 
+	@GetMapping("/api/manager/usersAvailable")
+	public ResponseEntity<?> getAvailable() {
+		Map<String, List<String>> availableInfoList = adminService.getAvailable();
+		
+		if (availableInfoList == null) return null;
+		else return new ResponseEntity<>(availableInfoList, HttpStatus.OK);
 	}
 	
 	// 회원에 계좌 조회 권한 부여
