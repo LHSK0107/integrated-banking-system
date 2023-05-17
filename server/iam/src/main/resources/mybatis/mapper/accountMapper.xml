@@ -395,7 +395,7 @@
 		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
 	</select>
 	
-    <select id="findBankCodeByBankName" resultType="String">
+    <select id="findBankCdByBankNm" resultType="String">
   		SELECT bank_cd FROM bank_code WHERE bank_nm = #{bankNm}
     </select>
 </mapper>
