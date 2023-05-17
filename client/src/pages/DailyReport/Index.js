@@ -1,7 +1,6 @@
 /* eslint-disable */
-import React, { useState, useEffect, useCallback, useRef } from "react";
 import "./dailyreport.css";
-import Balance from "../../hooks/useBalance";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
@@ -25,21 +24,19 @@ const Index = () => {
     e.preventDefault();
     return false;
   }
+  // 현재 date와 date 형식 가져오기
   const selectDateRef = useRef();
-  // // 현재 date와 date 형식 가져오기
-  // // 초기 기본 값으로 오늘 날짜로부터 30일간격의 날짜를 input value로 지정
   const {currentTime} = useCurrentTime(0);
+  // 초기 기본 값으로 오늘 날짜로부터 30일간격의 날짜를 input value로 지정
   const initialDate = useCallback(() =>{
     setOptionVal({...optionVal, selectDate:currentTime});
     setLimitInputValue(currentTime);
   },[currentTime]);
-
   /** 날짜 범위에 따른 달력 제한 부여 */
   const setLimitInputValue = useCallback((end) => {
     selectDateRef.current.setAttribute("max", end);
   },[]);
   // nowDate가 있을 경우, 날짜 초기화 함수 실행
-  const [load, setLoad] = useState(false);
 
   useEffect(()=>{
     currentTime && initialDate();
@@ -47,7 +44,6 @@ const Index = () => {
 
   const [apiData, setApiData]=useState(null);
   const handleClickExcelExport = () =>{
-    let isMounted = true;
     // cancellation token
     const getData = async () => {
         const apiData = await AuthAxios.post("/api/reports/daily");
