@@ -76,7 +76,7 @@
 	</select>
 	
 
-	<select id="getInoutReportData" resultType="InoutReportVO">
+	<select id="getAdminInoutReportData" resultType="InoutReportVO">
 	    SELECT b.bank_nm, a.acct_no,
 	           (SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
 	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS in_cnt,
@@ -98,10 +98,34 @@
 	    ORDER BY a.bank_cd asc
 	</select>
 	
+	<select id="getUserInoutReportData" resultType="InoutReportVO">
+	    SELECT b.bank_nm, a.acct_no,
+	           (SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
+	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS in_cnt,
+	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN t.trsc_amt ELSE 0 END) AS in_sum,
+	           SUM(CASE WHEN t.inout_dv = 2 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS out_cnt,
+	           SUM(CASE WHEN t.inout_dv = 2 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN t.trsc_amt ELSE 0 END) AS out_sum,
+	           (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
+	    FROM account a
+	    JOIN bank_code b ON a.bank_cd = b.bank_cd
+	    JOIN user_account ua ON a.acct_no = ua.acct_no
+	    LEFT JOIN inout_past t ON a.acct_no = t.acct_no
+	    WHERE 1=1
+	    <if test="bankCd != null and bankCd != 'null'">
+	        AND a.bank_cd = #{bankCd}
+	    </if>
+	    <if test="acctNo != null and acctNo != 'null'">
+	        AND a.acct_no = #{acctNo}
+	    </if>
+	    AND ua.user_no = #{userNo}
+	    GROUP BY b.bank_nm, a.acct_no
+	    ORDER BY a.bank_cd asc
+	</select>
+	
 	<select id="getLastBalanceDate" resultType="string">
         SELECT MAX(trsc_dt)
         FROM inout_past
-        WHERE acct_no = #{acctNo}
+        WHERE acct_no = #{acctNo} AND trsc_dt &lt; #{date}
     </select>
     
 	<select id="getLastBalance" resultType="java.math.BigDecimal">
@@ -111,9 +135,11 @@
 	    ORDER BY trsc_tm DESC
 	    LIMIT 1
 	</select>
+	
+	<select id="getBalByAcctNo" parameterType="String" resultType="java.math.BigDecimal">
+		SELECT bal FROM account WHERE acct_no = #{acctNo}
+	</select>
     
-    <select id="findBankCdByBankNm" resultType="String">
-    	SELECT bank_cd FROM bank_code WHERE bank_nm = #{bankNm}
-    </select>
+
 	
 </mapper>

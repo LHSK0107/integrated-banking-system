@@ -395,7 +395,31 @@
 		SELECT bank_nm FROM bank_code WHERE bank_cd=#{bankCd} 
 	</select>
 	
-    <select id="findBankCodeByBankName" resultType="String">
+    <select id="findBankCdByBankNm" resultType="String">
   		SELECT bank_cd FROM bank_code WHERE bank_nm = #{bankNm}
     </select>
+    
+    
+    <select id="copyInoutData" resultType="InoutVO">
+    	SELECT acct_no, bank_cd, inout_dv, trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd 
+		FROM inout_today 
+		WHERE DATE(trsc_dt) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+    </select>
+    
+	<insert id="insertInoutPast" parameterType="java.util.ArrayList" useGeneratedKeys="true" keyProperty="trscNo">
+		INSERT INTO inout_past(acct_no, bank_cd, inout_dv, trsc_dt, trsc_tm, bal, rmrk1, trsc_amt, curr_cd) 
+		VALUES
+		<foreach collection="list" item="inout" separator=",">
+			(
+				#{inout.acctNo},#{inout.bankCd},#{inout.inoutDv},#{inout.trscDt}, 
+				#{inout.trscTm},#{inout.bal},#{inout.rmrk1},#{inout.trscAmt},#{inout.currCd}
+			)
+		</foreach>
+	</insert>
+	
+	<delete id="resetInoutToday">
+		DELETE FROM inout_today WHERE DATE(trsc_dt) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+	</delete>
+	
+	
 </mapper>

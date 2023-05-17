@@ -130,61 +130,42 @@ public class ReportService {
 	}
 	
 	// 일반사용자인 경우
-	public List<InoutReportVO> getInoutReportData(InoutReportRequestVO requestVO, int userNo) {
-		// 이 부분에서 requestVO에 포함된 필드를 사용하여 필요한 SQL 쿼리를 실행하고, 그 결과를 InoutReportVO 객체로 변환하여 반환합니다.
-		// 이러한 작업은 MyBatis 또는 JPA와 같은 ORM 도구를 사용하여 수행될 수 있습니다.
+	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO, int userNo) {
 		
-		List<InoutReportVO> reportData = reportMapper.getInoutReportData(requestVO);
-		
-		// 복호화 및 필요한 추가 처리 수행
-		for(InoutReportVO inoutReportVO : reportData) {
-			try {
-				inoutReportVO.setAcctNo(aesGcmEncrypt.decrypt(inoutReportVO.getAcctNo(), key));
-			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return reportData;
-	}
-	
-	// 매니저 이상인 경우
-	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO) {
 		InoutReportData data = new InoutReportData();
 		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
-		
-		
-		String bankCd = accountMapper.findBankCdByBankNm(requestVO.getBankNm());
-		
+		requestVO.setUserNo(userNo);
+		// 은행이름으로 은행코드를 찾아 req객체에 설정
 		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
-
-		List<InoutReportVO> reportData = reportMapper.getInoutReportData(requestVO);
-		
+		System.out.println("bankCd : "+requestVO.getBankCd());
+		// 데이터 추출
+		List<InoutReportVO> reportData = reportMapper.getUserInoutReportData(requestVO);
+		// 응답데이터에 빈값 채우기
 		if(requestVO.getBankNm() == null || requestVO.getBankNm().equals("null")) data.setBankNm("전체");
 		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");
 	    
+		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
 	    for (InoutReportVO inoutReportVO : reportData) {
 	    	System.out.println("beforeBal : " + inoutReportVO.getBeforeBal());
 	    	// 이전잔액이 없는 경우 더 과거로 가서 잔액을 구해 넣어준다.
 	    	if(inoutReportVO.getBeforeBal() == null) {
-	    		String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo());
+	    		String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo(), requestVO.getStartDt());
 	    		System.out.println("lastBalanceDate : "+lastBalanceDate);
 	    		
 	    		if (lastBalanceDate != null) {
 	    			inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));
 	    		} else {
-//	    			inoutReportVO.setBeforeBal(accountMapper.);
+	    			inoutReportVO.setBeforeBal(reportMapper.getBalByAcctNo(inoutReportVO.getAcctNo()));
 	    		}
 	    	}
 
 	    	// 이후잔액이 없는 경우(마지막날 기준 거래내역이 없음) 입금액만큼 더해주고 출금액만큼 뺀 값을 잔액으로 설정
-	    	if(inoutReportVO.getBeforeBal() == null) {
-	    		String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo());
-	    		if (lastBalanceDate != null) {
-	    			inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));
-	    		}
+	    	if(inoutReportVO.getAfterBal() == null) {
+	    		BigDecimal before =  inoutReportVO.getBeforeBal();
+	    		before = before.add(inoutReportVO.getInSum());
+	    		before = before.subtract(inoutReportVO.getOutSum());
+	    		inoutReportVO.setAfterBal(before);
 	    	}
-	    	
 	    	
 	        // 복호화 작업
 	        try {
@@ -194,7 +175,53 @@ public class ReportService {
 			}
 	    }
 	    data.setAcctlist(reportData);
+	    return data;
+	}
+	
+	// 매니저 이상인 경우
+	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO) {
+		InoutReportData data = new InoutReportData();
+		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
+		
+		// 은행이름으로 은행코드를 찾아 req객체에 설정
+		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
+		// 데이터 추출
+		List<InoutReportVO> reportData = reportMapper.getAdminInoutReportData(requestVO);
+		// 응답데이터에 빈값 채우기
+		if(requestVO.getBankNm() == null || requestVO.getBankNm().equals("null")) data.setBankNm("전체");
+		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");
 	    
+		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
+	    for (InoutReportVO inoutReportVO : reportData) {
+	    	System.out.println("beforeBal : " + inoutReportVO.getBeforeBal());
+	    	// 이전잔액이 없는 경우 더 과거로 가서 잔액을 구해 넣어준다.
+	    	if(inoutReportVO.getBeforeBal() == null) {
+	    		String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo(), requestVO.getStartDt());
+	    		System.out.println("lastBalanceDate : "+lastBalanceDate);
+	    		
+	    		if (lastBalanceDate != null) {
+	    			inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));
+	    		} else {
+	    			inoutReportVO.setBeforeBal(reportMapper.getBalByAcctNo(inoutReportVO.getAcctNo()));
+	    		}
+	    	}
+
+	    	// 이후잔액이 없는 경우(마지막날 기준 거래내역이 없음) 입금액만큼 더해주고 출금액만큼 뺀 값을 잔액으로 설정
+	    	if(inoutReportVO.getAfterBal() == null) {
+	    		BigDecimal before =  inoutReportVO.getBeforeBal();
+	    		before = before.add(inoutReportVO.getInSum());
+	    		before = before.subtract(inoutReportVO.getOutSum());
+	    		inoutReportVO.setAfterBal(before);
+	    	}
+	    	
+	        // 복호화 작업
+	        try {
+				inoutReportVO.setAcctNo(aesGcmEncrypt.decrypt(inoutReportVO.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+	    }
+	    data.setAcctlist(reportData);
 	    return data;
     }
     
