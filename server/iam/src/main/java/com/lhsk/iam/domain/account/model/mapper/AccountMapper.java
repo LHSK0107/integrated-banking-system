@@ -43,6 +43,7 @@ public interface AccountMapper {
 	Map<String, String> findAllBankCodeAndBankName();
 	// 특정 은행 코드에 대응되는 은행 이름 조회
 	String findByBankCodeToBankName(String bankCd);
-	
+	// 은행 이름으로 은행코드 찾기
+	String findBankCdByBankNm(String bankNm);
 	
 }
