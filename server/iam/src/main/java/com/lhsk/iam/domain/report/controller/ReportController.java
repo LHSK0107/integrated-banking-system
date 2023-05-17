@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.lhsk.iam.domain.report.model.vo.InoutReportRequestVO;
 import com.lhsk.iam.domain.report.service.ReportService;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.service.UserService;
@@ -40,7 +41,6 @@ public class ReportController {
 	@PostMapping("/api/reports/daily")
 	public ResponseEntity<?> getDailyReportData(HttpServletRequest req) {
 		
-		
 		String accessToken = req.getHeader("Authorization").split(" ")[1];
 		
 		// 유저 권한에 따라 분기별 처리 (ROLE_BLACK은 시큐리티에서 걸리기 때문에 배제함)
@@ -52,9 +52,21 @@ public class ReportController {
 		} else {
 			return new ResponseEntity<>(reportService.getDailyReportData(), HttpStatus.OK);
 		}
-		
-		
-		
+	}
+	
+	// 입출내역보고서 데이터 요청
+	@PostMapping("/api/reports/inout")
+	public ResponseEntity<?> getInoutReportData(@RequestBody InoutReportRequestVO vo, HttpServletRequest req) {
+		String accessToken = req.getHeader("Authorization").split(" ")[1];
+		// 유저 권한에 따라 분기별 처리 (ROLE_BLACK은 시큐리티에서 걸리기 때문에 배제함)
+		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
+		if(userCode.equals("ROLE_USER")) {
+			System.out.println("일반 사용자 진입");
+			int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
+			return new ResponseEntity<>(reportService.getInoutReportData(vo, userNo), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(reportService.getInoutReportData(vo), HttpStatus.OK);
+		}
 	}
 	
 	// 이메일로 내보내기

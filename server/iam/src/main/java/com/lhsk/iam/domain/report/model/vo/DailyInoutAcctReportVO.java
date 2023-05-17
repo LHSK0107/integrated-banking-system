@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class InoutAcctReportVO {
+public class DailyInoutAcctReportVO {
 	
 	private String bankNm;			// 은행이름
 	private String acctNo;			// 계좌번호
