@@ -11,7 +11,7 @@ const Aside = ({now}) => {
             <Link to="/admin">회원 목록</Link>
           </li>
           <li className={now === "계좌 열람 권한 관리"? "aside_active":""}>
-            <Link to="/">계좌 열람 권한 관리</Link>
+            <Link to="/inspectAccount">계좌 열람 권한 관리</Link>
           </li>
           <li className={now === "로그인 기록 조회"? "aside_active":""}>
             <Link to="/logHistory">로그인 기록 조회</Link>
