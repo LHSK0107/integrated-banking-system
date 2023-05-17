@@ -12,9 +12,11 @@ import com.lhsk.iam.domain.account.model.vo.InoutVO;
 import com.lhsk.iam.domain.user.model.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class Scheduler {
 	private final UserMapper userMapper;
 	private final AccountMapper accountMapper;
@@ -27,6 +29,7 @@ public class Scheduler {
 		addMenuClickDB();
 		// 거래내역 데이터 복사 및 리셋
 		copyInoutData();
+		log.info("scheduler activated");
 	}
 	
 	public void addMenuClickDB() {

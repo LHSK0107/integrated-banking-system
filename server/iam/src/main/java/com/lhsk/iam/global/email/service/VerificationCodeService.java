@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import com.lhsk.iam.global.email.model.mapper.EmailMapper;
 import com.lhsk.iam.global.encrypt.Sha512Encrypt;
 
+import lombok.extern.slf4j.Slf4j;
+
 // 인증번호 발급 및 조회 서비스
 @Service
+@Slf4j
 public class VerificationCodeService {
 	
 	@Autowired
@@ -56,7 +59,7 @@ public class VerificationCodeService {
 			String storedEmail = findEmailByCode(inputCode);
 			String salt = storedEmail.split("=")[0] + "=";
 			email = Sha512Encrypt.hashForLogin(salt, email);
-			System.out.println(email);
+			log.info(email);
 			if(email.equals(storedEmail)) return true;
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();

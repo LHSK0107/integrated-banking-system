@@ -29,6 +29,8 @@ public interface AccountApiMapper {
 	public void insertTodayPast(List<InoutVO> list);
 	// 현재상황의 total을 반환
 	public int getTotal(LocalDate date);
+	// today 테이블 total을 반환
+	public int getTotalToday(LocalDate date);
 	// user_account 테이블 데이터 전체 조회
 	public List<UserAccountVO> findAllUserAccount();
 	// user_account에 백업 데이터 입력
