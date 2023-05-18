@@ -1,13 +1,8 @@
 package com.lhsk.iam.domain.report.controller;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
