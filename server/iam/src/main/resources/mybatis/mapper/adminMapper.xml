@@ -65,7 +65,7 @@
 	
 	
 	<select id="findAllDept" resultType="DeptVO">
-		SELECT detp_no, dept FROM department
+		SELECT dept_no, dept FROM department
 	</select>
 	
 	<insert id="addDept" parameterType="DeptVO">
