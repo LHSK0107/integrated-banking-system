@@ -31,4 +31,7 @@ public interface AdminMapper {
 	int insertUserAccount(List<UserAccountVO> info);
 	// 회원에 계좌조회 권한 회수
 	int deleteUserAccount(int userNo);
+	
+	// Admin의 권한 위임시, user로 변경
+	int afterGrantAdmin(int userNo);
 }

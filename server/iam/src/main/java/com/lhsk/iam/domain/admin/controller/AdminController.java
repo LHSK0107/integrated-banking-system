@@ -3,6 +3,9 @@ package com.lhsk.iam.domain.admin.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +22,7 @@ import com.lhsk.iam.domain.admin.model.vo.DeptVO;
 import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
 import com.lhsk.iam.domain.admin.service.AdminService;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
+import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -114,6 +118,15 @@ public class AdminController {
 		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
 	}
 	
+	// 권한 위임하기
+	@PutMapping("/api/admin/grantAdmin") 
+	public ResponseEntity<?> grantAdmin (HttpServletRequest request, 
+										HttpServletResponse response,
+										@RequestBody UpdateUserVO updateUserVO) {		
+		boolean flag = adminService.grantAdmin(request, response, updateUserVO);
+		if (flag) return new ResponseEntity<>("위임 완료되었습니다.", HttpStatus.OK);
+		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+	}
 }
 
 
