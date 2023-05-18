@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhsk.iam.domain.user.model.vo.LoginRequestVO;
 import com.lhsk.iam.domain.user.service.LoginService;
-import com.lhsk.iam.global.config.auth.PrincipalDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
          throws AuthenticationException {
       
-            
+      
       // request에 있는 username과 password를 파싱해서 자바 Object로 받기
       ObjectMapper om = new ObjectMapper();
       LoginRequestVO loginRequestDto = null;

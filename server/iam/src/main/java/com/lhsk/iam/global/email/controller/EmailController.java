@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lhsk.iam.global.email.service.EmailService;
 import com.lhsk.iam.global.email.service.VerificationCodeService;
-import com.lhsk.iam.global.encrypt.Sha512Encrypt;
 
 @RestController
 public class EmailController {

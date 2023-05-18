@@ -2,13 +2,11 @@ package com.lhsk.iam.domain.user.controller;
 
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +19,7 @@ import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
+import com.lhsk.iam.domain.user.service.LoginService;
 import com.lhsk.iam.domain.user.service.UserService;
 import com.lhsk.iam.global.config.JwtConfig;
 import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
@@ -36,6 +35,7 @@ public class UserController {
 	private final UserService userService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final JwtConfig jwtConfig;
+	private final LoginService loginService;
 	
 	// id 존재 여부 확인
 	@PostMapping("/api/signup/id")
@@ -255,29 +255,9 @@ public class UserController {
 		 */
 		// 메뉴 클릭 기록 집계 등록 (insert or update)
 		userService.updateMenuClick(vo);
-		
-		log.info("cookie 소멸 시작");
-		
 		// 로그아웃 처리
-		Cookie[] cookies = request.getCookies();
-	    if (cookies != null) {
-	        for (Cookie cookie : cookies) {
-	            if ("refreshToken".equals(cookie.getName())) {
-	            	log.info("쿠키가 존재함");
-	            	log.info(cookie.getName() + " : " + cookie.getValue()); 
-	                // 쿠키의 값을 비우고 유효 시간을 과거로 설정하여 삭제합니다.
-	                cookie.setValue(null);
-	                cookie.setMaxAge(0);
-	                cookie.setHttpOnly(true);
-	                cookie.setSecure(true); // HTTPS를 사용하는 경우에만 필요합니다.
-	                cookie.setPath("/");
-	                response.addCookie(cookie);
-	                break;
-	            }
-	        }
-	    }
-        // SecurityContextHolder에서 인증 정보를 제거합니다.
-        SecurityContextHolder.clearContext();
+		loginService.logout(request, response);
+        
         // 성공적으로 로그아웃 되었다는 응답을 반환합니다.
         return ResponseEntity.ok().body("로그아웃 되었습니다.");
     }
