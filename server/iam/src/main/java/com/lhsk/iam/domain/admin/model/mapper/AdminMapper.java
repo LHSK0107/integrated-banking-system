@@ -5,8 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
-import com.lhsk.iam.domain.admin.model.vo.LoginHistoryReqeustVO;
-import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
 import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 
@@ -31,5 +29,5 @@ public interface AdminMapper {
 	// 회원에 계좌조회 권한 부여
 	int insertUserAccount(List<UserAccountVO> info);
 	// 회원에 계좌조회 권한 회수
-	int deleteUserAccount(List<UserAccountVO> info);
+	int deleteUserAccount(int userNo);
 }

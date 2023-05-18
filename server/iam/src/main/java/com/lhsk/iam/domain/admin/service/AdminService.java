@@ -2,14 +2,14 @@ package com.lhsk.iam.domain.admin.service;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.lhsk.iam.domain.account.model.vo.AccountVO;
+import com.lhsk.iam.domain.account.model.vo.GrantAccountVO;
+import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
 import com.lhsk.iam.domain.account.service.AccountService;
 import com.lhsk.iam.domain.admin.model.mapper.AdminMapper;
 import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
@@ -17,9 +17,11 @@ import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminService {
 	
 	private final AdminMapper adminMapper;
@@ -74,66 +76,103 @@ public class AdminService {
 		return list;
 	}
 	
-	// 계좌조회 권한 페이지 계좌정보
-	public Map<String, List<String>> getAllAccounts() {
+	// 계좌조회 권한 페이지 계좌정보(재가공)
+	public List<GrantAccountVO> getAllAccounts() {
 		/*
 			data : {
-				acctDv [ ],
-				acctNo [ ],
-				bankCd [ ],
-				acctNickNm []
+				[
+				 GrantAccountVO {
+					 userNo		: 0,	// 회원번호는 데이터 없음 
+					 acctDv		: ,
+					 acctNo		: ,
+					 banCd		: ,
+					 acctNickNm : ,
+					}
+				]
+			}
 		 */
-		// 최종 반환 map
-		Map<String, List<String>> info = new HashMap<>();
-
-		// 계좌구분 리스트
-		List<String> acctDvList = new ArrayList<>();
-		// 계좌번호 리스트
-		List<String> acctNoList = new ArrayList<>();
-		// 은행코드 리스트
-		List<String> bankCdList = new ArrayList<>();
-		// 은행코드 리스트
-		List<String> acctNickNmList = new ArrayList<>();
-		
 		// 전체 계좌 정보를 불러옴
 		List<AccountVO> accountAllInfo = accountService.findAllAccount();
-		// 차례대로 계좌 정보를 각각의 list에 추가
-		for (AccountVO account : accountAllInfo) {
-			acctDvList.add(account.getAcctDv());
-			acctNoList.add(account.getAcctNo());
-			bankCdList.add(account.getBankCd());
-			acctNickNmList.add(account.getAcctNickNm());
-		}
-		// 리스트들을 모두 map에 담기
-		info.put("acctDv", acctDvList);
-		info.put("acctNo", acctNoList);
-		info.put("bankCd", bankCdList);
-		info.put("acctNickNm", acctNickNmList);
+		// 최종 반환 list
+		List<GrantAccountVO> info = new ArrayList<>();
 		
+		if (accountAllInfo.size() > 0) {
+			// 필요한 값만 추출하여 계좌 정보를 재가공
+			for (int i = 0; i < accountAllInfo.size(); i++) {
+				AccountVO accountInfo = accountAllInfo.get(i);
+				GrantAccountVO reAccountInfo = new GrantAccountVO();
+				
+				reAccountInfo.setAcctDv(accountInfo.getAcctDv());
+				reAccountInfo.setAcctNickNm(accountInfo.getAcctNickNm());
+				reAccountInfo.setAcctNo(accountInfo.getAcctNo());
+				reAccountInfo.setBankCd(accountInfo.getBankCd());
+				
+				info.add(reAccountInfo);
+			}
+		}
 		return info;
 	}
 
-	// 회원에게 허용된 계좌정보 조회
-	public Map<String, List<String>> getAvailable() {
+	// 회원에게 허용된 계좌정보 조회(재가공)
+	public List<GrantAccountVO> getAvailable(int userNo) {
 		/*
 			data : {
-				user_no [ ],
-				acct_dv [ ],
-				acct_no [ ],
-				bank_cd [ ],
+				[
+				 GrantAccountVO {
+					 userNo		: ,
+					 acctDv		: ,
+					 acctNo		: ,
+					 banCd		: ,
+					 acctNickNm : ,
+					}
+				]
 			}
 		 */
+		// user_account 테이블에서 해당 회원이 접근 가능한 계좌 정보를 불러옴
+		List<AccountVO> availableInfo = accountService.findAllAvailableAccount(userNo);
+		// 최종 반환 list
+		List<GrantAccountVO> info = new ArrayList<>();
 		
-		
-		return null;
+		if (availableInfo.size() > 0) {
+			// 필요한 값만 추출하여 계좌 정보를 재가공
+			for (int i = 0; i < availableInfo.size(); i++) {
+				AccountVO accountInfo = availableInfo.get(i);
+				GrantAccountVO reAccountInfo = new GrantAccountVO();
+				reAccountInfo.setUserNo(userNo);
+				reAccountInfo.setAcctDv(accountInfo.getAcctDv());
+				reAccountInfo.setAcctNickNm(accountInfo.getAcctNickNm());
+				reAccountInfo.setAcctNo(accountInfo.getAcctNo());
+				reAccountInfo.setBankCd(accountInfo.getBankCd());
+				
+				info.add(reAccountInfo);
+			}
+		}
+		return info;
 	}
 	
 	// 회원에 계좌 조회 권한 부여
-
+	public void grantAvailableAccounts(int userNo, List<UserAccountVO> data) {
+		// iv 값 세팅
+		ivToByteArray(ivString);
+		// 클라이언트에서 넘어 온 값 재가공
+		for (UserAccountVO info : data) {
+			try {
+				info.setUserNo(userNo);
+				// 계좌번호 암호화
+				info.setAcctNo(aesGcmEncrypt.encrypt(info.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		int deleteCount = adminMapper.deleteUserAccount(userNo);
+		int insertCount = adminMapper.insertUserAccount(data);
+		
+		log.info("delete: "+ deleteCount+", insertCount: "+insertCount);
+	}
 	
 	
 	// iv property를 byte[]로 변환
-	private byte[] ivToByteArray(String ivString) {
+	public byte[] ivToByteArray(String ivString) {
 		// property에서 String으로 받아온 ivString을  ", "을 기준으로 split -> String[]에 저장
 		String[] ivStringArray = ivString.split(", ");
 		// String[] -> byte[]로 번환
@@ -142,5 +181,6 @@ public class AdminService {
 		}
 		return iv;
 	}
+
 	
 }
