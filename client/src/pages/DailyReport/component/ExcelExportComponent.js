@@ -230,24 +230,51 @@ const ExcelExportComponent = ({data}) => {
         ? theadIndexes.push(index)
         : null
     );
-    console.log(theadIndexes);
-// decode_col - 0과 index 컬럼과 컬럼명을 convert
+    // decode_col - 0과 index 컬럼과 컬럼명을 convert
     // I열 타입 지정 및 tHead 예외처리
-    //D10~ index A9:B${theadIndexes[0]+inoutData.length+2}
-    let colNum2 = XLSX.utils.decode_range(`D10:I${theadIndexes[0]+inoutData.length+2}`);
-    console.log(colNum2);
-    let range2 = XLSX.utils.decode_range(worksheet["!ref"]);
-    console.log(range2);
-    range2.s.c = range2.e.c = colNum2;
-    for (let R = range2.s.r; R <= range2.e.r; R++) {
-      if(R>7){
-        let addr = XLSX.utils.encode_cell({ r: R, c: colNum2 });
-        if (!worksheet[addr]) continue;
-        // if(worksheet[addr].v==="출금가능잔액" || worksheet[addr].v==="" || worksheet[addr].v===null) continue;
-        worksheet[addr].t = "n";
-        worksheet[addr].z = "#,##0";
+    const inoutConvertRange = ['E','G','H','I'];
+    inoutConvertRange.forEach((col)=>{
+      let colNum2 = XLSX.utils.decode_col(col);
+      let range2 = XLSX.utils.decode_range(worksheet["!ref"]);
+      range2.s.c = range2.e.c = colNum2;
+      for (let R = range2.s.r; R <= range2.e.r; R++) {
+        if(R>8 && R<theadIndexes[0]+inoutData.length+2){
+          let addr = XLSX.utils.encode_cell({ r: R, c: colNum2 });
+          if (!worksheet[addr]) continue;
+          worksheet[addr].t = "n";
+          worksheet[addr].z = "#,##0";
+        }
       }
-    }
+    });
+    const timeConvertRange = ['F','H','I'];
+    timeConvertRange.forEach((col)=>{
+      let colNum2 = XLSX.utils.decode_col(col);
+      let range2 = XLSX.utils.decode_range(worksheet["!ref"]);
+      range2.s.c = range2.e.c = colNum2;
+      for (let R = range2.s.r; R <= range2.e.r; R++) {
+        if(R>theadIndexes[1] && R<theadIndexes[1]+timeData.length+2){
+          let addr = XLSX.utils.encode_cell({ r: R, c: colNum2 });
+          if (!worksheet[addr]) continue;
+          worksheet[addr].t = "n";
+          worksheet[addr].z = "#,##0";
+        }
+      }
+    });
+    const loanConvertRange = ['E','F'];
+    loanConvertRange.forEach((col)=>{
+      let colNum2 = XLSX.utils.decode_col(col);
+      let range2 = XLSX.utils.decode_range(worksheet["!ref"]);
+      range2.s.c = range2.e.c = colNum2;
+      for (let R = range2.s.r; R <= range2.e.r; R++) {
+        if(R>theadIndexes[2] && R<theadIndexes[2]+inoutData.length+2){
+          let addr = XLSX.utils.encode_cell({ r: R, c: colNum2 });
+          if (!worksheet[addr]) continue;
+          worksheet[addr].t = "n";
+          worksheet[addr].z = "#,##0";
+        }
+      }
+    });
+    
     // workbook에 worksheet를 더해 "일일시재보고서"라는 새 워크시트 생성
     XLSX.utils.book_append_sheet(workbook, worksheet, "일일시재보고서");
     worksheet["A6"].t="n";
@@ -256,14 +283,10 @@ const ExcelExportComponent = ({data}) => {
     worksheet["D6"].z="#,##0";
     worksheet["G6"].t="n";
     worksheet["G6"].z="#,##0";
+
     // blob 생성
     const workbookBlob = workbook2blob(workbook);
 
-   
-    // F: row.agmtAmt,
-    // G: row.expiDt,
-    // H: row.pyatAmt,
-    // I: row.bal,
     const dataInfo = {
       titleRange: "A1:I2",
       dateRange: "A3:I3",
@@ -273,6 +296,7 @@ const ExcelExportComponent = ({data}) => {
       stateBalRange: "A6:C6",
       inoutBalRange: "D6:F6",
       loanBalRange: "G6:I6",
+      balSummaryRange: "A5:I6",
       inoutAcctRange: `A9:B${theadIndexes[0]+inoutData.length+2}`,
       inoutCntRange: `D9:I${theadIndexes[0]+inoutData.length+2}`,
       inoutTotalRange: `A${theadIndexes[0]+inoutData.length+2}:I${theadIndexes[0]+inoutData.length+2}`,
@@ -441,6 +465,9 @@ const ExcelExportComponent = ({data}) => {
         sheet.range(dataInfo.loanBalRange).merged(true).style({
           horizontalAlignment: "right",
           verticalAlignment: "center",
+        });
+        sheet.range(dataInfo.balSummaryRange).style({
+          border: true
         });
       });
       // 파일 링크 생성
