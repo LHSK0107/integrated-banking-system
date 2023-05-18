@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,34 +37,48 @@ public class TokenController {
 	 * 미통과시(보안 공격, 리프레시 토큰 만료) -> 로그아웃 처리
 	 */
 	 
-	@PostMapping("/reAccessToken")
-	public ResponseEntity<?> reAccessToken(HttpServletRequest req) {
+	@PostMapping("/api/reAccessToken")
+	public ResponseEntity<?> reAccessToken(HttpServletRequest req, HttpServletResponse res) {
+		
+		String refresh = null;
+		
+		Cookie[] cookies = req.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("refreshToken".equals(cookie.getName())) {
+	            	log.info("쿠키가 존재함");
+	            	log.info(cookie.getName() + " : " + cookie.getValue());
+	            	refresh = cookie.getValue();
+	                break;
+	            }
+	        }
+	    }
 		// 쿠키에서 리프레시 토큰 추출
-	    String refreshToken = getRefreshTokenFromCookies(req);
-	    log.info("refresh = "+refreshToken);
+//	    String refreshToken = getRefreshTokenFromCookies(req);
+	    log.info("refresh = "+refresh);
 	    
     	// 리프레시 토큰 유효성 검사
 	    try {
-	    	if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+	    	if (refresh == null || !jwtTokenProvider.validateToken(refresh)) {
 	    		log.info("try 안에서 쿠키 없음");
-	    		log.info("리프레시 토큰 : " + refreshToken);
+	    		log.info("리프레시 토큰 : " + refresh);
 	    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
 	    	}
 	    } catch(ExpiredJwtException e) {
 	    	// 토큰이 만료됨
-	    	log.info("토큰이 만료됨 : " + refreshToken);
+	    	log.info("토큰이 만료됨 : " + refresh);
 	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료됐습니다.");
 	    } catch(MalformedJwtException e) {
 	    	// 토큰 구조가 올바르지 않은 경우에 대한 처리
-	    	log.info("토큰의 구조가 올바르지 않음 : " + refreshToken);
+	    	log.info("토큰의 구조가 올바르지 않음 : " + refresh);
 	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("손상된 토큰입니다.");
 	    } catch(SignatureException e) {
 	    	// Jwt가 올바르게 서명되지 않음 -> 스프링 재실행시 일어날듯
-	    	log.info("서명이 일치하지 않음 : " + refreshToken);
+	    	log.info("서명이 일치하지 않음 : " + refresh);
 	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("서명이 일치하지 않습니다.");
 	    }
 	    
-	    Authentication authentication = jwtTokenProvider.getAuthenticationFromRefreshToken(refreshToken);
+	    Authentication authentication = jwtTokenProvider.getAuthenticationFromRefreshToken(refresh);
 	    String newAccessToken = jwtTokenProvider.createAccessToken(authentication);
 	    log.info("재발급한 액세스토큰 : "+newAccessToken);
 	    return ResponseEntity.ok()
@@ -72,7 +87,7 @@ public class TokenController {
 	    		.build();
 	}
 	
-	@PostMapping("/refreshToken")
+	@PostMapping("/api/refreshToken")
 	public ResponseEntity<?> genereateRefreshToken(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String oldRefreshToken = getRefreshTokenFromCookies(req);
