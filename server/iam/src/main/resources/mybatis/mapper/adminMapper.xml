@@ -93,4 +93,8 @@
 		DELETE FROM user_account WHERE user_no = #{userNo}
 	</delete>
 	
+	<update id="afterGrantAdmin">
+		UPDATE user SET user_code = 'ROLE_USER' WHERE user_no = #{userNo}
+	</update>
+	
 </mapper>

@@ -124,7 +124,10 @@ public class UserController {
 	
 	// 회원 삭제
 	@DeleteMapping("/api/users/{userNo}")
-	public ResponseEntity<?> deleteUser(@PathVariable int userNo, HttpServletRequest request) {
+	public ResponseEntity<?> deleteUser(HttpServletRequest request,
+										HttpServletResponse response,
+										@PathVariable int userNo,
+										@RequestBody MenuClickRequestVO menuVO) {
 		log.info("UserController.deleteUser");
 		// Token에서 userCode와 id parsing
 		String accessToken = request.getHeader("Authorization")
@@ -139,6 +142,10 @@ public class UserController {
 				String flag = userService.deleteUser(userNo);
 				// 쿼리 성공 여부에 따라 다른 상태 코드 반환
 				if (flag.equals("success")) {
+					// 메뉴 클릭 기록 집계 등록 (insert or update)
+					userService.updateMenuClick(menuVO);
+					// 로그아웃 처리
+					loginService.logout(request, response);
 					return new ResponseEntity<>(flag, HttpStatus.OK); }
 				else {
 					return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
@@ -153,6 +160,10 @@ public class UserController {
 				String flag = userService.deleteUser(userNo);
 				// 쿼리 성공 여부에 따라 다른 상태 코드 반환
 				if (flag.equals("success")) {
+					// 메뉴 클릭 기록 집계 등록 (insert or update)
+					userService.updateMenuClick(menuVO);
+					// 로그아웃 처리
+					loginService.logout(request, response);
 					return new ResponseEntity<>(flag, HttpStatus.OK); }
 				else {
 					return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
@@ -172,12 +183,18 @@ public class UserController {
 			}
 		// 3. admin일 때
 		} else {
-			String flag = userService.deleteUser(userNo);
-			// 쿼리 성공 여부에 따라 다른 상태 코드 반환
-			if (flag.equals("success")) {
-				return new ResponseEntity<>(flag, HttpStatus.OK); }
-			else {
-				return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
+			// 삭제하려는 회원과 토큰을 가진 회원이 동일한지 검증
+			if(id.equals((userService.findByUserNo(userNo).getId()))) {
+				// 삭제 거부
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			} else {
+				String flag = userService.deleteUser(userNo);
+				// 쿼리 성공 여부에 따라 다른 상태 코드 반환
+				if (flag.equals("success")) {
+					return new ResponseEntity<>(flag, HttpStatus.OK); }
+				else {
+					return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
+			}
 		}
 	} 
 
