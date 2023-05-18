@@ -59,6 +59,16 @@ public class ReportController {
 	// 입출내역보고서 데이터 요청
 	@PostMapping("/api/reports/inout")
 	public ResponseEntity<?> getInoutReportData(@RequestBody InoutReportRequestVO vo, HttpServletRequest req) {
+		
+		/*
+		 * {
+		 * 		bankNm : "은행명"			전체 선택시 null
+		 * 		acctNo : "계좌번호"		전체 선택시 null
+		 * 		startDt : "2023-05-11"	
+		 * 		endDt : "2023-05-14"	
+		 * }
+		 */
+		
 		String accessToken = req.getHeader("Authorization").split(" ")[1];
 		// 유저 권한에 따라 분기별 처리 (ROLE_BLACK은 시큐리티에서 걸리기 때문에 배제함)
 		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
