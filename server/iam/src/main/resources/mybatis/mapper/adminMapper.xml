@@ -81,19 +81,15 @@
 	</delete>
 	
 	<insert id="insertUserAccount" parameterType="java.util.List">
-		INSERT into user_account (user_no, acct_no, bank_cd) 
+		INSERT INTO user_account (user_no, acct_no, bank_cd) 
 		VALUES 
 		<foreach collection="list" item="info" separator=",">
-			( #{info.userNo}, #{info.acctNo}, #{info.bankCd} )
+			(#{info.userNo}, #{info.acctNo}, #{info.bankCd})
 		</foreach>
 	</insert>
 	
-	<delete id="deleteUserAccount" parameterType="java.util.List">
-		DELETE FROM user_account
-		WHERE 
-		<foreach collection="list" item="info" separator=",">
-			( #{info.userNo}, #{info.acctNo}, #{info.bankCd} )
-		</foreach>
+	<delete id="deleteUserAccount" parameterType="int">
+		DELETE FROM user_account WHERE user_no = #{userNo}
 	</delete>
 	
 </mapper>
