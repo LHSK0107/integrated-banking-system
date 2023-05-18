@@ -12,6 +12,7 @@ import com.lhsk.iam.domain.account.model.vo.GrantAccountVO;
 import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
 import com.lhsk.iam.domain.account.service.AccountService;
 import com.lhsk.iam.domain.admin.model.mapper.AdminMapper;
+import com.lhsk.iam.domain.admin.model.vo.DeptVO;
 import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
@@ -170,7 +171,44 @@ public class AdminService {
 		log.info("delete: "+ deleteCount+", insertCount: "+insertCount);
 	}
 	
+	// 부서 조회
+	public List<DeptVO> getAllDept() {
+		List<DeptVO> deptList = adminMapper.findAllDept();
+		if (deptList.size() > 0)
+			return deptList;
+		return null;
+	}
 	
+	// 부서 추가
+	public boolean addDept(DeptVO deptVO) {
+		try {
+			adminMapper.addDept(deptVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	// 부서 수정
+	public boolean updateDept(DeptVO deptVO) {
+		try {
+			adminMapper.updateDept(deptVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	// 부서 삭제
+	public boolean deleteDept(String deptNo) {
+		if (adminMapper.deleteDept(deptNo) > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	// iv property를 byte[]로 변환
 	public byte[] ivToByteArray(String ivString) {
 		// property에서 String으로 받아온 ivString을  ", "을 기준으로 split -> String[]에 저장
@@ -181,6 +219,7 @@ public class AdminService {
 		}
 		return iv;
 	}
+
 
 	
 }
