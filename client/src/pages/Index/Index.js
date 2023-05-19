@@ -18,8 +18,6 @@ const Index = () => {
           <BannerSlider />
         </div>
       </div>
-      <button onClick={refresh}>refresh</button>
-
       <div className="quick_wrap">
         <div className="inner">
           <div className="quick flex justify_between">
