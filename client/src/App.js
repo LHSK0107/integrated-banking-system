@@ -25,7 +25,7 @@ import { MenuContextProvider } from "./setup/context/MenuContextProvider";
 import useAuth from "./hooks/useAuth";
 import decodeJwt from "./hooks/decodeJwt";
 const App = () => {
-  const {setToken2,setLoggedUserInfo} = useAuth();
+  const { setToken2, setLoggedUserInfo } = useAuth();
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -33,8 +33,8 @@ const App = () => {
       },
     },
   });
-  useEffect(()=>{
-    if(localStorage.getItem("jwt")){
+  useEffect(() => {
+    if (localStorage.getItem("jwt")) {
       setToken2(localStorage.getItem("jwt"));
       const decodedPayload = decodeJwt(localStorage.getItem("jwt"));
       setLoggedUserInfo({
@@ -45,46 +45,8 @@ const App = () => {
         userNo: decodedPayload.userNo,
       });
     }
-  },[]);
+  }, []);
   return (
-<<<<<<< HEAD
-      <div className="App">
-        <div className="container">
-          <QueryClientProvider client={client}>
-              <MenuContextProvider>
-                <Navbar />
-              </MenuContextProvider>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/login" element={<LogIn />} />
-                <Route element={<ApproveAuth />}>
-                  <Route path="/dashboard" element={<DashBoard />} />
-                </Route>
-                <Route element={<ApproveAuth />}>
-                  <Route path="inquiry">
-                    <Route index element={<Inquiry />} />
-                    <Route path=":acctNo" element={<DetailInquiry />} />
-                  </Route>
-                </Route>
-                <Route path="/inout" element={<InOut />} />
-                <Route path="/dailyReport" element={<DailyReport />} />
-                <Route path="/mypage" element={<Mypage />} />
-                <Route path="/admin">
-                  <Route index element={<Admin />} />
-                  <Route path=":userNo" element={<AdminDetail />} />
-                </Route>
-                <Route path="/inspectAccount" element={<InspectAccount/>}/>;
-                <Route path="/logHistory" element={<LogHistory />} />
-                <Route path="/clickHistory" element={<ClickHistory />} />
-                <Route path="/dept" element={<Dept />} />
-                {/* 404페이지 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Footer />
-          </QueryClientProvider>
-        </div>
-=======
     <div className="App">
       <div className="container">
         <QueryClientProvider client={client}>
@@ -108,15 +70,16 @@ const App = () => {
                 <Route index element={<Admin />} />
                 <Route path=":userNo" element={<AdminDetail />} />
               </Route>
+              <Route path="/inspectAccount" element={<InspectAccount />} />;
               <Route path="/logHistory" element={<LogHistory />} />
               <Route path="/clickHistory" element={<ClickHistory />} />
+              <Route path="/dept" element={<Dept />} />
             </Route>
             {/* 404페이지 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
         </QueryClientProvider>
->>>>>>> edc6dbb18ad45719dc21258199d94066fe325ffc
       </div>
     </div>
   );
