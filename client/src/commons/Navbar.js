@@ -4,9 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
-import decodeJwt from "../hooks/decodeJwt";
 import MenuContext from "../setup/context/MenuContextProvider";
 import useAxiosInterceptor from "../hooks/useAxiosInterceptor";
+import logout from "../utils/autoLogout";
+import ExpCountDown from "./ExpCountDown";
+import useRefreshToken from "../hooks/useRefreshToken";
 const Navbar = () => {
   const AuthAxios = useAxiosInterceptor();
   const {clickCountList,setClickCountList} = useContext(MenuContext);
@@ -15,17 +17,22 @@ const Navbar = () => {
     setToken2,
     loggedUserInfo,
     setIsAuth,
-    setLoggedUserInfo,
+    setLoggedUserInfo
   } = useAuth();
   useEffect(() => {
     loggedUserInfo && LogoutSection(loggedUserInfo);
   }, []);
+  const refresh = useRefreshToken();
+  // timer 설정, 토큰 변경 시에 작동
+  const [sessionTime, SetSessionTime] = useState(0);
+  useEffect(()=>{
+    SetSessionTime(1800);
+  },[token]);
 
   /** click */
   const handleClickCount = (menuNum) => {
     if(menuNum===1){
       setClickCountList({
-
       })
     }
   }
@@ -43,26 +50,8 @@ const Navbar = () => {
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       localStorage.removeItem("jwt");
-      axios
-        .post(
-          "https://iam-api.site/api/logout",
-          {
-            allAccount: 1,
-            inout: 2,
-            inoutReport: 3,
-            dailyReport: 4,
-            dashboard: 5,
-          },
-          { withCredentials: true }
-        )
-        .then((response) => {
-          if (response?.status === 200 || response?.status === 401) {
-            logout();
-          }
-        })
-        .catch(error => error && logout());
-    } else {
-      return false;
+      alert("로그아웃 완료");
+      logout();
     }
   };
 
@@ -85,6 +74,8 @@ const Navbar = () => {
         <p className="login_username">
           안녕하세요&nbsp;&nbsp;&nbsp;<span><b>{props?.value?.name}</b></span>님
         </p>
+        <ExpCountDown seconds={sessionTime}/>
+        <button onClick={()=>{ExtendLoginSession()}}>로그인 연장</button>
         {/* <p className="login_exp">{props?.value?.exp}</p> */}
         <p>
           <Link to="/mypage">개인정보수정</Link>
@@ -103,6 +94,14 @@ const Navbar = () => {
       </div>
     );
   };
+  const ExtendLoginSession = async () =>{
+    if (window.confirm("로그인 연장을 하시겠습니까?")) {
+      alert("로그인 연장");
+      await refresh();
+    } else {
+      return false;
+    }
+  }
 
   const [scrollData, setScrollData] = useState(0);
   const navInfoRef = useRef();
