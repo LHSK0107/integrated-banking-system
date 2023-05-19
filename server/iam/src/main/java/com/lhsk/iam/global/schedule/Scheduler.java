@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.lhsk.iam.domain.account.model.mapper.AccountApiMapper;
 import com.lhsk.iam.domain.account.model.mapper.AccountMapper;
-import com.lhsk.iam.domain.account.model.vo.InoutApiVO;
 import com.lhsk.iam.domain.account.model.vo.InoutVO;
 import com.lhsk.iam.domain.user.model.mapper.UserMapper;
 
@@ -20,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class Scheduler {
 	private final UserMapper userMapper;
 	private final AccountMapper accountMapper;
-	private final AccountApiMapper accountApiMapper;
 	
 	// 매일 0시 0분 0초에 정해진 로직을 실행
 	@Scheduled(cron = "0 0 0 * * ?")
