@@ -2,7 +2,6 @@ package com.lhsk.iam.global.config.auth;
 
 import java.security.GeneralSecurityException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,13 +40,9 @@ public class PrincipalDetailsService implements UserDetailsService{
 			userEntity.setName(name);
 			userEntity.setEmail(email);
 		} catch (GeneralSecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		if(userEntity == null) {
-			throw new UsernameNotFoundException("id " + id + " not found");
-		}
 		return new PrincipalDetails(userEntity);
 	}
 

@@ -1,8 +1,6 @@
 package com.lhsk.iam.domain.report.model.vo;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class InoutAcctReportVO {
+public class DailyInoutAcctReportVO {
 	
 	private String bankNm;			// 은행이름
 	private String acctNo;			// 계좌번호

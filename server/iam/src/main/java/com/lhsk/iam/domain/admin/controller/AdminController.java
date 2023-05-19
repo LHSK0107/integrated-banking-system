@@ -1,20 +1,28 @@
 package com.lhsk.iam.domain.admin.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lhsk.iam.domain.account.model.vo.GrantAccountVO;
 import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
+import com.lhsk.iam.domain.admin.model.vo.DeptVO;
 import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
 import com.lhsk.iam.domain.admin.service.AdminService;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
+import com.lhsk.iam.domain.user.model.vo.UpdateUserVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +49,6 @@ public class AdminController {
 		 */
 		// default로 7일치 기록을 보여줌
 		if(data.get("period").equals("day")) {
-			System.out.println("day로 진입");
 			return new ResponseEntity<>(adminService.findMenuClickDay(), HttpStatus.OK);
 		} else if(data.get("period").equals("week")) {
 			return new ResponseEntity<>(adminService.findMenuClickWeek(), HttpStatus.OK);			
@@ -52,33 +59,74 @@ public class AdminController {
 		}
 	}
 	
-	// 계좌조회 권한 페이지 계좌정보
+	
+	// 계좌조회 권한 페이지 - 전체 계좌정보 재가공 
 	@GetMapping("/api/manager/usersAccount")
 	public ResponseEntity<?> getAllAccounts() {
-		Map<String, List<String>> acctInfoList = adminService.getAllAccounts();
+		List<GrantAccountVO> acctInfoList = adminService.getAllAccounts();
 		
-		return new ResponseEntity<>(acctInfoList, HttpStatus.OK);
+		if (acctInfoList == null) return null;
+		else return new ResponseEntity<>(acctInfoList, HttpStatus.OK);
+	}
+	
+	// 계좌조회 권한 페이지 - 회원에게 허용된 계좌정보 재가공 
+	@GetMapping("/api/manager/usersAvailable/{userNo}")
+	public ResponseEntity<?> getAvailable(@PathVariable int userNo) {
+		List<GrantAccountVO> availableInfoList = adminService.getAvailable(userNo);
+		
+		if (availableInfoList == null) return null;
+		else return new ResponseEntity<>(availableInfoList, HttpStatus.OK);
 	}
 	
 	// 회원에 계좌 조회 권한 부여
-	@PostMapping("/api/manager/usersAccount") 
-	public ResponseEntity<?> setUserAccount(@RequestBody Map<String, Object> data) {
-		// 클라이언트에서 넘어 온 값 분리
-		int userNo = (int)data.get("userNo");
-		List<String> acctNoList = (List<String>)data.get("acctNo");
-		List<String> bankCdList = (List<String>)data.get("bankCd");
-		// 하나의 객체에 값 세팅
-		List<UserAccountVO> infoList = new ArrayList<>();
-		for (UserAccountVO info : infoList) {
-			for (int i = 0; i < acctNoList.size(); i++) {
-				info.setUserNo(userNo);
-				info.setAcctNo(acctNoList.get(i));
-				info.setBankCd(bankCdList.get(i));
-			}
-		}
+	@PostMapping("/api/manager/grantAccount/{userNo}") 
+	public ResponseEntity<?> setUserAccount(@PathVariable int userNo, @RequestBody List<UserAccountVO> data) {
+		adminService.grantAvailableAccounts(userNo, data);
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	// 부서 조회
+	@GetMapping("/api/admin/dept")
+	public ResponseEntity<?> getAllDept() {
+		List<DeptVO> deptList = adminService.getAllDept();
+		if (deptList == null) 
+			return new ResponseEntity<>("부서 목록이 없습니다.", HttpStatus.OK);
+		else
+			return new ResponseEntity<>(deptList, HttpStatus.OK);
+	}
+	
+	// 부서 추가
+	@PostMapping("/api/admin/dept")
+	public ResponseEntity<?> AddDept(@RequestBody DeptVO dept) {
+		boolean flag = adminService.addDept(dept);
+		if (flag) return new ResponseEntity<>("추가 완료되었습니다.", HttpStatus.OK);
+		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+	}
+	// 부서 수정
+	@PutMapping("/api/admin/dept")
+	public ResponseEntity<?> updateDept(@RequestBody DeptVO dept) {
+		boolean flag  = adminService.updateDept(dept);
+		if (flag) return new ResponseEntity<>("수정 완료되었습니다.", HttpStatus.OK);
+		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+	}
+	// 부서 삭제
+	@DeleteMapping("/api/admin/dept/{deptNo}")
+	public ResponseEntity<?> deleteDept(@PathVariable String deptNo) {
+		boolean flag = adminService.deleteDept(deptNo);
+		if (flag) return new ResponseEntity<>("삭제 완료되었습니다.", HttpStatus.OK);
+		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+	}
+	
+	// 권한 위임하기
+	@PutMapping("/api/admin/grantAdmin") 
+	public ResponseEntity<?> grantAdmin (HttpServletRequest request, 
+										HttpServletResponse response,
+										@RequestBody UpdateUserVO updateUserVO) {		
+		boolean flag = adminService.grantAdmin(request, response, updateUserVO);
+		if (flag) return new ResponseEntity<>("위임 완료되었습니다.", HttpStatus.OK);
+		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+	}
 }
 
 

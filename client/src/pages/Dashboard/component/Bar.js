@@ -54,6 +54,9 @@ const getOptions = ({ data }) => ({
     labels: {
       // enabled: false//label 미사용 시 false로 지정.
       format: "{value:,.0f}",
+      // formatter: function () {
+      //   return parseInt(this.value / 20);
+      // },
     },
     gridLineWidth: 0, // y축 차트 뒤에 깔리는 선 미사용 시 0으로 지정.
   },
@@ -77,11 +80,11 @@ const getOptions = ({ data }) => ({
   series: [
     {
       name: "입금",
-      data: data["in"],
+      data: data.in,
     },
     {
       name: "출금",
-      data: data["out"],
+      data: data.out,
       //   dataLabels: {
       //     enabled: true,
       //     align: 'right',
@@ -92,6 +95,20 @@ const getOptions = ({ data }) => ({
       //   }
     },
   ],
+  options: {
+  	scales: {
+    	yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          callback: function(value, index) {
+            if(value.toString().length > 8) return (Math.floor(value / 100000000)).toLocaleString("ko-KR") + "억";
+            else if(value.toString().length > 4) return (Math.floor(value / 10000)).toLocaleString("ko-KR") + "만";
+            else return value.toLocaleString("ko-KR"); 
+          }
+        },
+      }]
+    },
+  }
 });
 
 const Bar = ({ data }) => {

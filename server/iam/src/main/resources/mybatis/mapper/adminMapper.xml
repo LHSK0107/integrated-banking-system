@@ -64,36 +64,37 @@
 	</select>
 	
 	
-	<select id="findAllDept" resultType="String">
-		SELECT dept FROM department
+	<select id="findAllDept" resultType="DeptVO">
+		SELECT dept_no, dept FROM department
 	</select>
 	
-	<insert id="addDept" parameterType="String">
-		INSERT INTO department (dept) VALUES (#{dept})
+	<insert id="addDept" parameterType="DeptVO">
+		INSERT INTO department (dept_no, dept) VALUES (#{deptNo}, #{dept})
 	</insert>
 	
-	<update id="updateDept" parameterType="String">
-		UPDATE department SET dept=#{newDept} WHERE dept=#{oldDept}
+	<update id="updateDept" parameterType="DeptVO">
+		UPDATE department SET dept = #{dept} WHERE dept_no = #{deptNo}
 	</update>
 	
 	<delete id="deleteDept" parameterType="String">
-		DELETE FROM department WHERE dept=#{dept}
+		DELETE FROM department WHERE dept_no = #{deptNo}
 	</delete>
 	
+	
 	<insert id="insertUserAccount" parameterType="java.util.List">
-		INSERT into user_account (user_no, acct_no, bank_cd) 
+		INSERT INTO user_account (user_no, acct_no, bank_cd) 
 		VALUES 
 		<foreach collection="list" item="info" separator=",">
-			( #{info.userNo}, #{info.acctNo}, #{info.bankCd} )
+			(#{info.userNo}, #{info.acctNo}, #{info.bankCd})
 		</foreach>
 	</insert>
 	
-	<delete id="deleteUserAccount" parameterType="java.util.List">
-		DELETE FROM user_account
-		WHERE 
-		<foreach collection="list" item="info" separator=",">
-			( #{info.userNo}, #{info.acctNo}, #{info.bankCd} )
-		</foreach>
+	<delete id="deleteUserAccount" parameterType="int">
+		DELETE FROM user_account WHERE user_no = #{userNo}
 	</delete>
+	
+	<update id="afterGrantAdmin">
+		UPDATE user SET user_code = 'ROLE_USER' WHERE user_no = #{userNo}
+	</update>
 	
 </mapper>
