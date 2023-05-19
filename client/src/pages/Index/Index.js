@@ -9,8 +9,8 @@ import NewsBgImg from "../../assets/images/index_news.png";
 import NewsSlider from "./component/NewsSlider";
 import BannerSlider from "./component/BannerSlider";
 import { Link } from "react-router-dom";
-
 const Index = () => {
+
   return (
     <div id="wrap">
       <div className="section01">
