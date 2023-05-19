@@ -34,7 +34,6 @@ const Index = () => {
           signal: controller.signal
         });
         setApiData(response.data);
-        console.log(response.data);
       } catch (err) {
         console.log(`error 발생: ${err}`);
       }

@@ -46,42 +46,39 @@ const App = () => {
     }
   },[]);
   return (
-      <div className="App">
-        <div className="container">
-          <QueryClientProvider client={client}>
-              <MenuContextProvider>
-                <Navbar />
-              </MenuContextProvider>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/login" element={<LogIn />} />
-                <Route element={<ApproveAuth />}>
-                  <Route path="/dashboard" element={<DashBoard />} />
-                </Route>
-                <Route element={<ApproveAuth />}>
-                  <Route path="inquiry">
-                    <Route index element={<Inquiry />} />
-                    <Route path=":acctNo" element={<DetailInquiry />} />
-                  </Route>
-                </Route>
-                <Route path="/inout" element={<InOut />} />
-                <Route path="/dailyReport" element={<DailyReport />} />
-                <Route path="/mypage" element={<Mypage />} />
-                <Route path="/admin">
-                  <Route index element={<Admin />} />
-                  <Route path=":userNo" element={<AdminDetail />} />
-                </Route>
-                <Route path="/inspectAccount" element={<InspectAccount/>}/>;
-                <Route path="/logHistory" element={<LogHistory />} />
-                <Route path="/clickHistory" element={<ClickHistory />} />
-                {/* 404페이지 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Footer />
-          </QueryClientProvider>
-        </div>
+    <div className="App">
+      <div className="container">
+        <QueryClientProvider client={client}>
+          <MenuContextProvider>
+            <Navbar />
+          </MenuContextProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route element={<ApproveAuth />}>
+              <Route path="/dashboard" element={<DashBoard />} />
+              <Route path="/inout" element={<InOut />} />
+              <Route path="/dailyReport" element={<DailyReport />} />
+              <Route path="/mypage" element={<Mypage />} />
+              <Route path="inquiry">
+                <Route index element={<Inquiry />} />
+                <Route path=":acctNo" element={<DetailInquiry />} />
+              </Route>
+              <Route path="/admin">
+                <Route index element={<Admin />} />
+                <Route path=":userNo" element={<AdminDetail />} />
+              </Route>
+              <Route path="/logHistory" element={<LogHistory />} />
+              <Route path="/clickHistory" element={<ClickHistory />} />
+            </Route>
+            {/* 404페이지 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </QueryClientProvider>
       </div>
+    </div>
   );
 };
 

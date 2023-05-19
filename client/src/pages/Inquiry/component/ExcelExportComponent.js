@@ -318,21 +318,20 @@ const ExcelExportComponent = ({ stateData, depAInsData, loadData, stateBal, depI
           horizontalAlignment: "center",
           verticalAlignment : "center"
         });
-
         sheet.range(dataInfo.theadRange1).style({
-          fill: "7A84F8",
+          fill: "003b87",
           bold: true,
           fontColor: "ffffff",
           verticalAlignment: "center",
         });
         sheet.range(dataInfo.theadRange2).style({
-          fill: "7A84F8",
+          fill: "003b87",
           bold: true,
           fontColor: "ffffff",
           verticalAlignment: "center",
         });
         sheet.range(dataInfo.theadRange3).style({
-          fill: "7A84F8",
+          fill: "003b87",
           bold: true,
           fontColor: "ffffff",
           verticalAlignment: "center",
