@@ -2,7 +2,6 @@ package com.lhsk.iam.domain.report.model.vo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

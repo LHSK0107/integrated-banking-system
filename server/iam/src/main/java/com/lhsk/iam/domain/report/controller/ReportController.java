@@ -1,13 +1,8 @@
 package com.lhsk.iam.domain.report.controller;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.lhsk.iam.domain.report.model.vo.InoutReportRequestVO;
 import com.lhsk.iam.domain.report.service.ReportService;
 import com.lhsk.iam.domain.user.model.vo.DetailUserVO;
 import com.lhsk.iam.domain.user.service.UserService;
@@ -26,9 +22,11 @@ import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
 import com.lhsk.iam.global.email.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ReportController {
 	
 	private final EmailService emailService;
@@ -40,21 +38,42 @@ public class ReportController {
 	@PostMapping("/api/reports/daily")
 	public ResponseEntity<?> getDailyReportData(HttpServletRequest req) {
 		
-		
 		String accessToken = req.getHeader("Authorization").split(" ")[1];
 		
 		// 유저 권한에 따라 분기별 처리 (ROLE_BLACK은 시큐리티에서 걸리기 때문에 배제함)
 		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
 		if(userCode.equals("ROLE_USER")) {
-			System.out.println("일반 사용자 진입");
+			log.info("일반 사용자 진입");
 			int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
 			return new ResponseEntity<>(reportService.getDailyReportData(userNo), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(reportService.getDailyReportData(), HttpStatus.OK);
 		}
+	}
+	
+	// 입출내역보고서 데이터 요청
+	@PostMapping("/api/reports/inout")
+	public ResponseEntity<?> getInoutReportData(@RequestBody InoutReportRequestVO vo, HttpServletRequest req) {
 		
+		/*
+		 * {
+		 * 		bankNm : "은행명"			전체 선택시 null
+		 * 		acctNo : "계좌번호"		전체 선택시 null
+		 * 		startDt : "2023-05-11"	
+		 * 		endDt : "2023-05-14"	
+		 * }
+		 */
 		
-		
+		String accessToken = req.getHeader("Authorization").split(" ")[1];
+		// 유저 권한에 따라 분기별 처리 (ROLE_BLACK은 시큐리티에서 걸리기 때문에 배제함)
+		String userCode = jwtTokenProvider.getUserCodeFromToken(accessToken);
+		if(userCode.equals("ROLE_USER")) {
+			log.info("일반 사용자 진입");
+			int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
+			return new ResponseEntity<>(reportService.getInoutReportData(vo, userNo), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(reportService.getInoutReportData(vo), HttpStatus.OK);
+		}
 	}
 	
 	// 이메일로 내보내기
@@ -79,7 +98,7 @@ public class ReportController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println("exception");
+			log.info("exception");
 		}
 		
 		return new ResponseEntity<>("메일 보내기 성공", HttpStatus.OK);

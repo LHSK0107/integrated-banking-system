@@ -5,8 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.lhsk.iam.domain.account.model.vo.UserAccountVO;
-import com.lhsk.iam.domain.admin.model.vo.LoginHistoryReqeustVO;
-import com.lhsk.iam.domain.admin.model.vo.MenuClickRequestVO;
+import com.lhsk.iam.domain.admin.model.vo.DeptVO;
 import com.lhsk.iam.domain.admin.model.vo.MenuClickVO;
 import com.lhsk.iam.domain.user.model.vo.LoginHistoryVO;
 
@@ -20,16 +19,19 @@ public interface AdminMapper {
 	public List<MenuClickVO> findMenuClickMonth();
 	
 	// 전체 부서 리스트 조회
-	List<String> findAllDept();
+	List<DeptVO> findAllDept();
 	// 부서 추가
-	int addDept(String dept);
+	int addDept(DeptVO deptVo);
 	// 부서 수정
-	int updateDept(String newDept, String oldDept);
+	int updateDept(DeptVO deptVo);
 	// 부서 삭제
-	int deleteDept(String dept);
+	int deleteDept(String deptNo);
 	
 	// 회원에 계좌조회 권한 부여
 	int insertUserAccount(List<UserAccountVO> info);
 	// 회원에 계좌조회 권한 회수
-	int deleteUserAccount(List<UserAccountVO> info);
+	int deleteUserAccount(int userNo);
+	
+	// Admin의 권한 위임시, user로 변경
+	int afterGrantAdmin(int userNo);
 }

@@ -12,6 +12,7 @@ const Detail = () => {
   const [role, setRole] = useState(null);
   const [rename, setRename] = useState(null);
   const [team, setTeam] = useState(null);
+  const [dept, setDept] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   // userNo param
@@ -19,7 +20,6 @@ const Detail = () => {
   // const rerename = member && member.name;
   // const [rerename, setRerename] = useState(null);
 
-  // 회원 한 명 정보 불러오기
   useEffect(() => {
     const controller = new AbortController();
     const getUsers = async () => {
@@ -35,9 +35,23 @@ const Detail = () => {
         console.log(`error 발생: ${err}`);
       }
     };
-    getUsers();
+    const getDept = async () => {
+      try {
+        const response = await AuthAxios.get(`/api/admin/dept`, {
+          signal: controller.signal,
+        });
+        console.log(response);
+        if (response.status === 200) {
+          setDept(response.data.map(ele => ele.dept));
+        }
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    };
+    getUsers(); // 회원 한 명 정보
+    getDept(); // 부서 목록
     // console.log(rename, rerename);
-    setRename(rename === member?.name ? null : member?.name);
+    setRename(rename === member?.name ? null : member?.name); // 이름 변경없으면 null
     return () => {
       controller.abort();
     };
@@ -65,9 +79,6 @@ const Detail = () => {
     if (member?.dept === value) setTeam(null);
     else setTeam(value);
   };
-  // 부서 목록 불러오기
-  // 임시 방편
-  const dept = ["감사", "자금", "IR", "세무", "외환"];
 
   // 수정사항 보내기
   const onSubmit = (e) => {
@@ -102,6 +113,7 @@ const Detail = () => {
       getUsers();
     }
   };
+
   /** 탈퇴하기 */
   const deleteMember = () => {
     if (window.confirm("탈퇴하시겠습니까?")) {
@@ -131,7 +143,7 @@ const Detail = () => {
       loggedUserInfo?.userCode === "ROLE_ADMIN" &&
       member?.userCode === "ROLE_MANAGER"
     ) {
-      return <button>위임하기</button>;
+      return <button type="button">위임하기</button>;
     }
   };
 
@@ -239,16 +251,16 @@ const Detail = () => {
                     </li>
                     {}
                   </ul>
-                  <div>
+                  <div className="btn_wrap flex justify_between">
                     <button type="submit">수정하기</button>
+                    <div>
+                      {changeRole()}
+                      {member?.userCode === "ROLE_ADMIN" ? <></>:<button type="button" onClick={deleteMember}>
+                        탈퇴
+                      </button>}
+                    </div>
                   </div>
                 </form>
-              </div>
-              <div>
-                {changeRole()}
-                <button type="button" onClick={deleteMember}>
-                  탈퇴하기
-                </button>
               </div>
             </section>
           </div>

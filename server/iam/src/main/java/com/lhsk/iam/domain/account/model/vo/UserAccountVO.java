@@ -1,12 +1,12 @@
 package com.lhsk.iam.domain.account.model.vo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class UserAccountVO {
 
 	private int userNo;

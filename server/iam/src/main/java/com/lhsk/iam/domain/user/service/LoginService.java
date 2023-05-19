@@ -1,7 +1,5 @@
 package com.lhsk.iam.domain.user.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 
@@ -13,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,10 @@ import com.lhsk.iam.global.config.auth.PrincipalDetails;
 import com.lhsk.iam.global.config.jwt.JwtTokenProvider;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class LoginService {
 	
 	@Autowired
@@ -48,21 +50,11 @@ public class LoginService {
     	PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
         String accessToken = jwtTokenProvider.createAccessToken(authResult);
         String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
-  
-        // 리프레시 토큰 발급(쿠키)
-//        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-//        refreshTokenCookie.setHttpOnly(false);			// JS로 쿠키접근 불가능
-//        refreshTokenCookie.setPath("/");	// 프론트가 쿠키를 서버측으로 전송할때, 특정 url로 요청할 경우에만 전송가능
-//        refreshTokenCookie.setMaxAge(60 * 30); 			// 30 min
-        
-//        refreshTokenCookie.setSecure(true);			// https에서만 전송되도록 설정
-//        response.addCookie(refreshTokenCookie);
         
         // 액세스 토큰 발급(헤더)
         response.addHeader(jwtConfig.getHeaderString(), jwtConfig.getTokenPrefix()+accessToken);
         response.addHeader("Access-Control-Expose-Headers", jwtConfig.getHeaderString());
         response.addHeader("Access-Control-Expose-Headers", "Set-Cookie");
-//        response.addHeader("Access-Control-Allow-Credentials", "true");
         
         // 리프레시 토큰 발급(쿠키)
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
@@ -97,9 +89,33 @@ public class LoginService {
  	} catch (GeneralSecurityException e) {
  		e.printStackTrace();
  	}
-        System.out.println("dt : "+vo.getLoginDt());
-        System.out.println("dept : "+vo.getDept());
+        log.info("dt : "+vo.getLoginDt());
+        log.info("dept : "+vo.getDept());
         loginMapper.insertLoginHistory(vo);
-        System.out.println("insertLoginHistory 작업 완료");
+        log.info("insertLoginHistory 작업 완료");
+    }
+    
+    // 로그아웃
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+		log.info("cookie 소멸 시작");
+    	Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("refreshToken".equals(cookie.getName())) {
+	            	log.info("쿠키가 존재함");
+	            	log.info(cookie.getName() + " : " + cookie.getValue()); 
+	                // 쿠키의 값을 비우고 유효 시간을 과거로 설정하여 삭제합니다.
+	                cookie.setValue(null);
+	                cookie.setMaxAge(0);
+	                cookie.setHttpOnly(true);
+	                cookie.setSecure(true); // HTTPS를 사용하는 경우에만 필요합니다.
+	                cookie.setPath("/");
+	                response.addCookie(cookie);
+	                break;
+	            }
+	        }
+	    }
+	    // SecurityContextHolder에서 인증 정보를 제거합니다.
+        SecurityContextHolder.clearContext();
     }
 }

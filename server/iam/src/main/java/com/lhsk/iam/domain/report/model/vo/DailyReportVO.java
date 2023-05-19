@@ -1,7 +1,6 @@
 package com.lhsk.iam.domain.report.model.vo;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -19,9 +18,9 @@ public class DailyReportVO {
 	private BigDecimal allInoutAcctBal;
 	private BigDecimal allTimeAcctBal;
 	private BigDecimal allLoanAcctBal;
-	List<InoutAcctReportVO> inoutAcctList;
-	List<TimeAcctReportVO> timeAcctList;
-	List<LoanAcctReportVO> loanAcctList;
+	private List<DailyInoutAcctReportVO> inoutAcctList;
+	private List<TimeAcctReportVO> timeAcctList;
+	private List<LoanAcctReportVO> loanAcctList;
 	
 	
 }
