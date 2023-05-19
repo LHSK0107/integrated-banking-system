@@ -94,3 +94,34 @@
     width: 48%;
   }
 }
+.title{
+  margin-bottom: 20px;
+}
+.skeleton {
+  width: 100%;
+  height: 800px;
+}
+.skeleton-text{
+  width: 100%;
+  height: 20px;
+  margin-bottom: .25rem;
+  border-radius: .125rem;
+}
+.skeleton-text:last-child{
+  margin-bottom: 0;
+  width: 80%;
+}
+.skeleton-img{
+  width: 100%;
+  height: 90%;
+  opacity: 0.7;
+  animation: loading 1s linear infinite alternate;
+}
+@keyframes loading {
+  0%{
+    background-color: hsl(200,20%, 70%);
+  }
+  100%{
+    background-color: hsl(200,20%, 95%);
+  }
+}

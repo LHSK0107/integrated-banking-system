@@ -1,15 +1,16 @@
 import "./login.css";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import decodeJwt from "../../hooks/decodeJwt";
+import decodeJwt from "../../utils/decodeJwt";
 import useAuth from "../../hooks/useAuth";
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
 
 const Index = () => {
+
   // useAuth context 호출
   const { setIsAuth, setLoggedUserInfo, setToken2 } = useAuth();
   const navigate = useNavigate();
@@ -78,18 +79,40 @@ const Index = () => {
         return false;
       });
   };
+
+  const [isLoading, setIsLoading]=useState(true);
+
+  const LoadingImage = () =>{
+    return (
+      <div className="skeleton flex align_center">
+        <div className="skeleton-img"></div>
+      </div>
+    )
+  }
+  useEffect(()=>{
+    setInterval(()=>{
+      setIsLoading(false);
+    },500)
+  },[])
+
   return (
-    <div className="login_section">
+    <div className="login_section flex align_center">
       <div className="inner flex justify_center">
         <div className="login_wrap flex justify_between">
           <div className="pc">
             <div className="login_image_section flex justify_center align_center">
-              <figure>
-                <img src={SignUpBgImg} alt="로그인 페이지 이미지" />
-              </figure>
+              {
+                isLoading ? 
+                <LoadingImage/> : 
+                <figure className="flex align_center">
+                  <img
+                    src={SignUpBgImg}
+                    alt="로그인 페이지 이미지"
+                  />
+                </figure>
+              }
             </div>
           </div>
-
           <div className="login_form_section flex flex_column justify_center">
             <h2>로그인</h2>
             <div>
@@ -140,3 +163,5 @@ const Index = () => {
 };
 
 export default Index;
+
+    
