@@ -1,7 +1,8 @@
 /* eslint-disable */
-import React, {useState, useRef, useCallback, useEffect}  from "react";
-import ReactDOMServer from 'react-dom/server'
 import "./inout.css";
+import React, {useState, useRef, useCallback, useEffect}  from "react";
+import ReactDOMServer from 'react-dom/server';
+import {useParams} from "react-router-dom";
 import { Description } from '../../commons/Description';
 import { SideNav } from '../../commons/SideNav';
 import Breadcrumb from '../../commons/Breadcrumb';
@@ -12,6 +13,8 @@ import useAuth from "../../hooks/useAuth";
 import ExcelExportComponent from "./component/ExcelExportComponent";
 
 const Index = () => {
+  const {bankCD, acctNo} = useParams();
+  bankCD && console.log(`bankCD:${bankCD}, acctNo:${acctNo}`);
   const AuthAxios = useAxiosInterceptor();
   const {loggedUserInfo} = useAuth();
   /** 폼에 대한 각 요소 변수 저장 -> 변수명 차후 변경 */
@@ -60,6 +63,16 @@ const Index = () => {
       );
     }
   );
+  // useEffect(()=>{
+  //   const selectAcctData = () =>{
+  //     bankListOption && 
+  //   }
+  // },[bankCD, acctNo]);
+
+  useEffect(()=>{
+     setOptionVal({...optionVal, bankCD: "031"});
+  },[bankCD]);
+
   /** 은행명 select 값 handler */
   const handleBankNMSelectOnChange = (e) => {
     setOptionVal({...optionVal, bankCD: e.target.value});

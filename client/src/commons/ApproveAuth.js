@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import useAuth from "../hooks/useAuth";
 import {Outlet, Navigate} from "react-router-dom";
-import decodeJwt from "../hooks/decodeJwt";
+import decodeJwt from "../utils/decodeJwt";
 const ApproveAuth = () => {
   const { token,setToken2, isAuth, setIsAuth,setLoggedUserInfo } = useAuth();
   useEffect(()=>{

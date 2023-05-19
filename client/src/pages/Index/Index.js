@@ -9,37 +9,8 @@ import NewsBgImg from "../../assets/images/index_news.png";
 import NewsSlider from "./component/NewsSlider";
 import BannerSlider from "./component/BannerSlider";
 import { Link } from "react-router-dom";
-import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
-import useRefreshToken from "../../hooks/useRefreshToken";
-import { useEffect } from "react";
 
 const Index = () => {
-  const refresh = useRefreshToken();
-  const AuthAxios = useAxiosInterceptor();
-
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const getUsers = async () => {
-      try{
-        console.log("실행");
-        const response = await AuthAxios.post('/api/refreshToken',{
-          signal: controller.signal
-        });
-        response && console.log(response);
-      } catch (err) {
-        // console.error(err);
-        console.log(`error 발생: ${err}`);
-      }
-    }
-    getUsers();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    }
-  }, [])
   return (
     <div id="wrap">
       <div className="section01">
@@ -47,8 +18,6 @@ const Index = () => {
           <BannerSlider />
         </div>
       </div>
-      <button onClick={refresh}>refresh</button>
-
       <div className="quick_wrap">
         <div className="inner">
           <div className="quick flex justify_between">
