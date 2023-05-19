@@ -24,7 +24,7 @@ const Index = () => {
     const getUsers = async () => {
       try{
         console.log("실행");
-        const response = await AuthAxios.get('/api/accounts',{
+        const response = await AuthAxios.post('/api/refreshToken',{
           signal: controller.signal
         });
         response && console.log(response);

@@ -8,7 +8,7 @@ const getOptions = ({ data }) => ({
   },
   colors: ["#3f77cb", "#d470cc"],
   title: {
-    text: "입금-출금 비교",
+    text: "",
     style: {
       fontFamily: "Noto Sans KR",
       fontSize: "18px",

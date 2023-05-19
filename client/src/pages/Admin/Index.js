@@ -59,13 +59,13 @@ const Index = () => {
         {currentItems &&
           currentItems.map((ele) => (
             <li key={ele?.userNo}>
-              <Link className="flex" to={`/admin/${ele?.userNo}`}>
+              {<Link className="flex" to={`/admin/${ele?.userNo}`}>
                 <p className="list_userCode">{ele?.userCode?.split("_")[1]}</p>
                 <p className="list_userNo">{ele?.userNo}</p>
                 <p className="list_name">{ele?.name}</p>
                 <p className="list_dept">{ele?.dept}</p>
                 <p className="list_email">{ele?.email}</p>
-              </Link>
+              </Link>}
             </li>
           ))}
       </>

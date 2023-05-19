@@ -82,3 +82,18 @@
 .chart_wrap > div {
     margin-bottom: 100px;
 }
+/* .column_chart {
+    width: 70%;
+} */
+.chart_wrap .column li {
+    margin-right: 8px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-darkgray);
+    padding: 8px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.chart_wrap .column .active {
+    background-color: var(--color-darkgray);
+    color: var(--color-white);
+}
