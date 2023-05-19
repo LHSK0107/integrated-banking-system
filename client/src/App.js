@@ -7,10 +7,9 @@ import LogIn from "./pages/LogIn/Index";
 import Inquiry from "./pages/Inquiry/Index";
 import NotFound from "./pages/404/Index";
 import Index from "./pages/Index/Index";
-import DetailInquiry from "./pages/DetailInquiry/Index";
 import DashBoard from "./pages/Dashboard/Index";
-import InOut from "./pages/InOut/Index";
 import Mypage from "./pages/Mypage/Index";
+import InOut from "./pages/InOut/Index";
 import Admin from "./pages/Admin/Index";
 import AdminDetail from "./pages/Admin/component/Detail.js";
 import Footer from "./commons/Footer";
@@ -21,7 +20,7 @@ import ClickHistory from "./pages/Admin/component/ClickHistory";
 import ApproveAuth from "./commons/ApproveAuth";
 import { MenuContextProvider } from "./setup/context/MenuContextProvider";
 import useAuth from "./hooks/useAuth";
-import decodeJwt from "./hooks/decodeJwt";
+import decodeJwt from "./utils/decodeJwt";
 const App = () => {
   const {setToken2,setLoggedUserInfo} = useAuth();
   const client = new QueryClient({
@@ -57,13 +56,13 @@ const App = () => {
             <Route path="/login" element={<LogIn />} />
             <Route element={<ApproveAuth />}>
               <Route path="/dashboard" element={<DashBoard />} />
-              <Route path="/inout" element={<InOut />} />
               <Route path="/dailyReport" element={<DailyReport />} />
               <Route path="/mypage" element={<Mypage />} />
-              <Route path="inquiry">
-                <Route index element={<Inquiry />} />
-                <Route path=":acctNo" element={<DetailInquiry />} />
+              <Route path="inout">
+                <Route index element={<InOut />} />
+                <Route path=":bankCD/:acctNo" element={<InOut />} />
               </Route>
+              <Route path="/inquiry" element={<Inquiry />} />
               <Route path="/admin">
                 <Route index element={<Admin />} />
                 <Route path=":userNo" element={<AdminDetail />} />
