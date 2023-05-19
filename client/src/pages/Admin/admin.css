@@ -69,6 +69,9 @@
 .admin_detail h3 {
   margin-bottom: 50px;
 }
+.admin_detail ul {
+  margin-bottom: 30px;
+}
 .admin_detail li p {
   padding: 18px 8px;
   border-bottom: 1px solid var(--color-gray);
@@ -86,11 +89,11 @@
 .inspectAccount h3 {
   margin-bottom: 50px;
 }
-.inspectAccount form>div:first-child {
+.inspectAccount form > div:first-child {
   margin-bottom: 30px;
 }
 .inspectMemberData {
-  font-size: .88rem;
+  font-size: 0.88rem;
   width: 50%;
 }
 .inspectMemberData .column {
@@ -121,7 +124,7 @@
   width: 40%;
 }
 .inspectAccountData {
-  font-size: .88rem;
+  font-size: 0.88rem;
   width: 50%;
   position: relative;
 }
@@ -147,7 +150,7 @@
 }
 ul.list_acctNo {
   height: 400px;
-  overflow:auto; 
+  overflow: auto;
   position: absolute;
   top: 40px;
   left: 150px;
@@ -155,6 +158,13 @@ ul.list_acctNo {
 .list_acctNo figure {
   width: 16px;
   margin-right: 6px;
+}
+.list_acctNo input {
+  margin-right: 8px;
+}
+.allUserList .active {
+  background-color: var(--color-darkgray);
+  color: var(--color-white);
 }
 /* --- 계좌 열람 권한 관리 */
 
@@ -168,6 +178,7 @@ ul.list_acctNo {
 }
 .log_list .list_wrap li {
   padding: 18px 0;
+  font-size: .88rem;
 }
 .log_list .list_wrap li:not(:first-child) {
   border-bottom: 1px solid var(--color-lightgray);
@@ -197,3 +208,51 @@ ul.list_acctNo {
   text-align: right;
 }
 /* --- 메뉴 클릭 기록 조회 */
+
+/* 부서 관리 --- */
+.dept h3 {
+  margin-bottom: 50px;
+}
+.dept .deptList {
+  margin-bottom: 50px;
+}
+.dept .deptList form > div {
+  margin: 12px 0;
+}
+.dept .deptList form {
+  font-size: 0.88rem;
+}
+.dept .deptList form p {
+  margin-right: 8px;
+}
+.dept .deptList form input {
+  margin-right: 18px;;
+}
+.dept .deptLst button,
+.dept button {
+  font-size: .88rem;
+  padding: 5px 18px;
+}
+.deptList .btn_wrap button:first-child {
+  background-color: var(--color-main);
+  border: none;
+  color: var(--color-white);
+}
+.deptList .btn_wrap button:last-child {
+  background-color: var(--color-red);
+  border: none;
+  color: var(--color-white);
+}
+.addDeptList input:first-child {
+  width: 140px;
+  margin-right: 10px;
+}
+.addDeptList input:nth-child(2) {
+  width: 210px;
+}
+.addDeptList button {
+  background-color: var(--color-light-point);
+  border: none;
+  margin-left: 18px;
+}
+/* --- 부서 관리 */

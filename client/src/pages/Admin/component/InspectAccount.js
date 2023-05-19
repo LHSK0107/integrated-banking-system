@@ -1,12 +1,10 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import "../admin.css";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
-import { useEffect } from "react";
-import { useState } from "react";
 import BankName from "../../../hooks/useBankName";
-import { Link } from "react-router-dom";
 
 const InspectAccount = () => {
   const AuthAxios = useAxiosInterceptor();
@@ -14,6 +12,7 @@ const InspectAccount = () => {
   const [accountList, setAccountList] = useState([]); // 전체 계좌 관리
   const [memberAccountList, setMemberAccountList] = useState([]); // 회원별 계좌 관리
   // 폼에 대한 각 요소 변수 저장
+  const [checkedUser, setCheckedUser] = useState(null);
   const [checkedVal, setCheckedVal] = useState([]);
 
   // 회원 정보 및 계좌 불러오기
@@ -38,7 +37,7 @@ const InspectAccount = () => {
     // 전체 계좌 조회
     const getAccounts = async () => {
       try {
-        const response = await AuthAxios.get(`/api/manager/accounts`, {
+        const response = await AuthAxios.get(`/api/manager/usersAccount`, {
           signal: controller.signal,
         });
         console.log(response);
@@ -64,13 +63,14 @@ const InspectAccount = () => {
     // console.log(userNo);
     try {
       const response = await AuthAxios.get(
-        `/api/users/accounts/available/${userNo}`,
+        `/api/manager/usersAvailable/${userNo}`,
         {
           signal: controller.signal,
         }
       );
       console.log(response);
       if (response.status === 200) {
+        setCheckedUser(userNo);
         setMemberAccountList(response.data);
         const checkedAccounts = response.data.map((account) => ({
           acctNo: account.acctNo,
@@ -119,7 +119,7 @@ const InspectAccount = () => {
         {userList &&
           userList.map((ele) => (
             <li
-              className="flex"
+              className={ele?.userNo===checkedUser?"active flex":"flex"}
               key={ele?.userNo}
               onClick={() => handleAccountList(ele?.userNo)}
             >
@@ -168,6 +168,7 @@ const InspectAccount = () => {
     }
   };
   console.log("checked 값",checkedVal);
+  console.log("checked 유저", checkedUser);
 
   // 전체 계좌 목록 표 그리기 + 
   function AccountItems({ accountList }) {
@@ -286,7 +287,29 @@ const InspectAccount = () => {
   }
 
   // 열람 가능 계좌 추가 및 변경
-  const onSubmit = (e) => {};
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const grantAccount = async () => {
+      try {
+        const response = await AuthAxios.post(`/api/manager/grantAccount/${checkedUser}`, checkedVal);
+        console.log(response);
+        if (response.status === 200) {
+          console.log("success");
+        }
+      } catch (err) {
+        console.log(`error 발생: ${err}`);
+      }
+    };
+    if(checkedUser === null) alert("선택한 회원이 없습니다.");
+    else {
+      const msgVal = checkedVal.map((ele) => ele.acctNo);
+      if(window.confirm(`${checkedUser}에게 "${msgVal}" 계좌를 부여하시겠습니까?`))
+        grantAccount();
+        else {
+          return false;
+        }
+    }
+  };
 
   return (
     <>
@@ -308,7 +331,7 @@ const InspectAccount = () => {
                         <li className="list_email">이메일</li>
                       </ul>
                       <div>
-                        <ul>
+                        <ul className="allUserList">
                           <UserItems userList={userList} />
                         </ul>
                       </div>

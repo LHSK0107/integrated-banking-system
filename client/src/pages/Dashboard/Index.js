@@ -75,7 +75,7 @@ const Index = () => {
   // bar 그래프 그리기
   const drawBar = () => {
     // let data = {...inoutBal[activeIndex]};
-    for(let i = 0; i < 3; i++){
+    for (let i = 0; i < 3; i++) {
       inoutBal[i].in = inoutBal[i].in.map((ele) => {
         if (ele === null) return 0;
         return ele;
@@ -231,15 +231,9 @@ const Index = () => {
             </div>
           </div>
           <div className="column">
-            <div className="column_chart">
-              {/* <Bar
-                data={inoutBal[activeIndex]}
-              /> */}
-              {inoutBal?.length > 0 && drawBar()}
-            </div>
-
+            <h4>입금 - 출금</h4>
             <div className="column_btn">
-              <ul>
+              <ul className="flex">
                 <li
                   className={activeIndex === 0 ? "active" : ""}
                   onClick={() => setActiveIndex(0)}
@@ -259,6 +253,13 @@ const Index = () => {
                   YEAR
                 </li>
               </ul>
+            </div>
+
+            <div className="column_chart">
+              {/* <Bar
+                data={inoutBal[activeIndex]}
+              /> */}
+              {inoutBal?.length > 0 && drawBar()}
             </div>
           </div>
         </div>

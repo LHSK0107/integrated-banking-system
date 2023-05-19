@@ -19,12 +19,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LogHistory from "./pages/Admin/component/LogHistory";
 import ClickHistory from "./pages/Admin/component/ClickHistory";
 import InspectAccount from "./pages/Admin/component/InspectAccount";
+import Dept from "./pages/Admin/component/Dept";
 import ApproveAuth from "./commons/ApproveAuth";
 import { MenuContextProvider } from "./setup/context/MenuContextProvider";
 import useAuth from "./hooks/useAuth";
 import decodeJwt from "./hooks/decodeJwt";
 const App = () => {
-  const {setToken2,setLoggedUserInfo} = useAuth();
+  const { setToken2, setLoggedUserInfo } = useAuth();
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -32,8 +33,8 @@ const App = () => {
       },
     },
   });
-  useEffect(()=>{
-    if(localStorage.getItem("jwt")){
+  useEffect(() => {
+    if (localStorage.getItem("jwt")) {
       setToken2(localStorage.getItem("jwt"));
       const decodedPayload = decodeJwt(localStorage.getItem("jwt"));
       setLoggedUserInfo({
@@ -44,7 +45,7 @@ const App = () => {
         userNo: decodedPayload.userNo,
       });
     }
-  },[]);
+  }, []);
   return (
     <div className="App">
       <div className="container">
@@ -69,8 +70,10 @@ const App = () => {
                 <Route index element={<Admin />} />
                 <Route path=":userNo" element={<AdminDetail />} />
               </Route>
+              <Route path="/inspectAccount" element={<InspectAccount />} />;
               <Route path="/logHistory" element={<LogHistory />} />
               <Route path="/clickHistory" element={<ClickHistory />} />
+              <Route path="/dept" element={<Dept />} />
             </Route>
             {/* 404페이지 */}
             <Route path="*" element={<NotFound />} />
