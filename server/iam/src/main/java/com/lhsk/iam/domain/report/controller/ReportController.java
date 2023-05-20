@@ -35,7 +35,7 @@ public class ReportController {
 	private final ReportService reportService;
 	
 	// 일일시재보고서 데이터 요청
-	@PostMapping("/api/reports/daily")
+	@PostMapping("/api/users/reports/daily")
 	public ResponseEntity<?> getDailyReportData(HttpServletRequest req) {
 		
 		String accessToken = req.getHeader("Authorization").split(" ")[1];
@@ -52,7 +52,7 @@ public class ReportController {
 	}
 	
 	// 입출내역보고서 데이터 요청
-	@PostMapping("/api/reports/inout")
+	@PostMapping("/api/users/reports/inout")
 	public ResponseEntity<?> getInoutReportData(@RequestBody InoutReportRequestVO vo, HttpServletRequest req) {
 		
 		/*
@@ -77,7 +77,7 @@ public class ReportController {
 	}
 	
 	// 이메일로 내보내기
-	@PostMapping("/api/reports/email")
+	@PostMapping("/api/users/reports/email")
 	public ResponseEntity<?> sendEmailWithAttachment(@RequestParam("file") MultipartFile file, HttpServletRequest req) {
 		try {
 			// 액세스 토큰으로 부터 유저의 email을 추출

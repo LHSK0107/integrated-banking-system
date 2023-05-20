@@ -126,7 +126,41 @@ public class AccountController {
 		// 총 페이지 및 입출금 내역 조회 결과 Map 리턴(key : totalPage, list)
 		return new ResponseEntity<>(accountService.findAdminsInout(vo, istoday), HttpStatus.OK);
 	}
+	
+	@PostMapping("api/manager/accounts/inout/excel")
+	public ResponseEntity<Map<String, Object>> getAdminsInoutExcel(@RequestBody InoutRequestVO vo) {
+		log.info("AccountController.getAdminsInout");
 
+		// 오늘이 포함되었는지 boolean값 반환
+		boolean istoday = inoutProcessingService.isTodayBetweenDates(vo.getStartDt(), vo.getEndDt());
+		log.info("istoday : " + istoday);
+		if(istoday) {
+			// 오늘이 포함되었을 경우 -> OpenApi를 통해 갱신을 해준다.
+			accountApiService.updateInoutToday(vo);
+		}
+		return new ResponseEntity<>(accountService.findAdminsInoutExcel(vo, istoday), HttpStatus.OK);
+	}
+	
+	// 회원 계좌의 입출금 내역(ROLE_USER)
+	@PostMapping("api/users/accounts/inout/excel")
+	public ResponseEntity<Map<String, Object>> getUsersInoutExcel(@RequestBody InoutRequestVO vo, HttpServletRequest request) {
+		log.info("AccountController.getUsersInout");
+		// Token에서 userNo을 parsing하여 vo에 set
+		String accessToken = request.getHeader("Authorization")
+									.replace(jwtConfig.getTokenPrefix(), "");
+		int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
+		vo.setUserNo(userNo);
 
+		// 오늘이 포함되었는지 boolean값 반환
+		boolean istoday = inoutProcessingService.isTodayBetweenDates(vo.getStartDt(), vo.getEndDt());
+
+		if(istoday) {
+			// 오늘이 포함되었을 경우 -> OpenApi를 통해 갱신을 해준다.
+			accountApiService.updateInoutToday(vo);
+		}
+
+		// 총 페이지 및 입출금 내역 조회 결과 Map 리턴(key : list)
+		return new ResponseEntity<>(accountService.findUsersInoutExcel(vo, istoday), HttpStatus.OK);
+	}
 
 }

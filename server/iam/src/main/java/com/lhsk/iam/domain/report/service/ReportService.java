@@ -33,11 +33,26 @@ public class ReportService {
 
 	@Value("${aes.secret}")
 	private String key;
+	@Value("${aes.iv}")
+	private String ivString;
+	
+	private byte[] iv = new byte[12];
 	
 	private final AccountMapper accountMapper;
 	private final DashboardService dashboardService;
 	private final ReportMapper reportMapper;
 	private AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
+	
+	public byte[] ivToByteArray(String ivString) {
+		// property에서 String으로 받아온 ivString을  ", "을 기준으로 split -> String[]에 저장
+		String[] ivStringArray = ivString.split(", ");
+		// String[] -> byte[]로 번환
+		for (int i = 0; i < iv.length; i++) {
+		    iv[i] = Byte.parseByte(ivStringArray[i]);
+		}
+		return iv;
+	}
+	
 	
 	// 일반 사용자인 경우 열람가능한 계좌만을 추려서 데이터를 추출함
 	public DailyReportVO getDailyReportData(int userNo) {
@@ -133,12 +148,23 @@ public class ReportService {
 	// 일반사용자인 경우
 	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO, int userNo) {
 		
+		ivToByteArray(ivString);
+		
+		// 계좌번호 암호화
+		if (requestVO.getAcctNo() != null && !requestVO.getAcctNo().equals("null")) {
+			try {
+				requestVO.setAcctNo(aesGcmEncrypt.encrypt(requestVO.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
 		InoutReportData data = new InoutReportData();
 		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
 		requestVO.setUserNo(userNo);
 		// 은행이름으로 은행코드를 찾아 req객체에 설정
 		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
 		log.info("bankCd : "+requestVO.getBankCd());
+		
 		// 데이터 추출
 		List<InoutReportVO> reportData = reportMapper.getUserInoutReportData(requestVO);
 		// 응답데이터에 빈값 채우기
@@ -181,13 +207,42 @@ public class ReportService {
 	
 	// 매니저 이상인 경우
 	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO) {
+		
+		ivToByteArray(ivString);
+		
+		log.info(requestVO.getAcctNo());
+		// 계좌번호 암호화
+		if (requestVO.getAcctNo() != null && !requestVO.getAcctNo().equals("null")) {
+			try {
+				log.info("암호화 시작");
+				requestVO.setAcctNo(aesGcmEncrypt.encrypt(requestVO.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		log.info(requestVO.getAcctNo() + " 매니저");
 		InoutReportData data = new InoutReportData();
-		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
 		
 		// 은행이름으로 은행코드를 찾아 req객체에 설정
 		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
+		
 		// 데이터 추출
 		List<InoutReportVO> reportData = reportMapper.getAdminInoutReportData(requestVO);
+		log.info("추출 끝");
+		// 복호화 작업
+		
+		if (requestVO.getAcctNo() != null && !requestVO.getAcctNo().equals("null")) {
+			try {
+				requestVO.setAcctNo(aesGcmEncrypt.decrypt(requestVO.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
+		data.setBankNm(requestVO.getBankNm());
+		data.setAcctNo(requestVO.getAcctNo());
+		
 		// 응답데이터에 빈값 채우기
 		if(requestVO.getBankNm() == null || requestVO.getBankNm().equals("null")) data.setBankNm("전체");
 		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");

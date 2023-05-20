@@ -77,6 +77,7 @@ public class AccountService {
 		int totalPage = 0;
 		
 		// 계좌번호 암호화
+		ivToByteArray(ivString);
 		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
 			try {
 				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
@@ -133,8 +134,8 @@ public class AccountService {
 		// map에 들어가 value 선언
 		List<InoutVO> inoutList = null;
 		int totalPage = 0;
-		
 		// 계좌번호 암호화
+		ivToByteArray(ivString);
 		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
 			try {
 				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
@@ -178,6 +179,88 @@ public class AccountService {
 		info.put("list", inoutList);
 		return info;
 	}
+	
+	// 계좌 입출금내역 엑셀로 내보내기 (ROLE_MANAGER, ROLE_ADMIN)
+	public Map<String, Object> findAdminsInoutExcel(InoutRequestVO vo, boolean isToday) {
+		// 총 페이지 수와 입출금 리스트를 담는 map 객체 생성
+		Map<String, Object> info = new HashMap<>();
+		// map에 들어가 value 선언
+		List<InoutVO> inoutList = null;
+		
+		// 계좌번호 암호화
+		ivToByteArray(ivString);
+		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
+			try {
+				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// 조회기간에 오늘이 포함되면 당일 포함 입출금내역 조회 쿼리 수행
+		if (isToday) {
+			inoutList = accountMapper.findAdminsInoutTodayExcel(vo);
+			if (inoutList == null) return null;
+		}else {
+			inoutList = accountMapper.findAdminsInoutPastExcel(vo);
+			if (inoutList == null) return null;
+		}
+		
+		// 계좌번호 복호화 진행
+		for (InoutVO inout : inoutList) {
+			try {
+				inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				throw new RuntimeException("Failed to decrypt acctNo", e); 
+			}
+		}
+		
+		// 총 페이지 수와 입출금 리스트를 map에 담아 반환
+		info.put("list", inoutList);
+		return info;
+	}
+	
+	// 계좌 입출금내역 엑셀로 내보내기 (ROLE_USER)
+	public Map<String, Object> findUsersInoutExcel(InoutRequestVO vo, boolean isToday) {
+		// 총 페이지 수와 입출금 리스트를 담는 map 객체 생성
+		Map<String, Object> info = new HashMap<>();
+		// map에 들어가 value 선언
+		List<InoutVO> inoutList = null;
+		
+		// 계좌번호 암호화
+		ivToByteArray(ivString);
+		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
+			try {
+				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// 조회기간에 오늘이 포함되면 당일 포함 입출금내역 조회 쿼리 수행
+		if (isToday) {
+			inoutList = accountMapper.findUsersInoutTodayExcel(vo);
+			// list가 비어있으면 null 반환
+			if (inoutList == null) return null;
+		} else {
+			inoutList = accountMapper.findUsersInoutPastExcel(vo);
+			// list가 비어있으면 null 반환
+			if (inoutList == null) return null;
+		}
+		
+		// 계좌번호 복호화 진행
+		for (InoutVO inout : inoutList) {
+			try {
+				inout.setAcctNo(aesGcmEncrypt.decrypt(inout.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				throw new RuntimeException("Failed to decrypt acctNo", e); 
+			}
+		}
+		// 총 페이지 수와 입출금 리스트를 map에 담아 반환
+		info.put("list", inoutList);
+		return info;
+	}
+
 	
 //	// 해당 계좌에 접근(조회) 가능한 사용자인지 확인
 //	public int checkByAcctNoToAccessibleUser(HashMap<String, Object> userInfo) {
