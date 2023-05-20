@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class InoutReportData {
 	private String date;
-	private String bankNm;
+	private String bankCd;
 	private String acctNo;
 	private List<InoutReportVO> acctlist;
 }

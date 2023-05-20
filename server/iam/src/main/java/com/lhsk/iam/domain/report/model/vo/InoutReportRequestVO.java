@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter
 public class InoutReportRequestVO {
 	private int userNo;
-	private String bankNm;		// 은행명
 	private String bankCd;		// 은행코드
 	private String acctNo;		// 계좌번호
 	private String startDt;		// 시작날짜

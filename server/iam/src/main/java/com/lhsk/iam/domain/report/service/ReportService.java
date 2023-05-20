@@ -38,7 +38,6 @@ public class ReportService {
 	
 	private byte[] iv = new byte[12];
 	
-	private final AccountMapper accountMapper;
 	private final DashboardService dashboardService;
 	private final ReportMapper reportMapper;
 	private AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
@@ -161,14 +160,12 @@ public class ReportService {
 		InoutReportData data = new InoutReportData();
 		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
 		requestVO.setUserNo(userNo);
-		// 은행이름으로 은행코드를 찾아 req객체에 설정
-		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
 		log.info("bankCd : "+requestVO.getBankCd());
 		
 		// 데이터 추출
 		List<InoutReportVO> reportData = reportMapper.getUserInoutReportData(requestVO);
 		// 응답데이터에 빈값 채우기
-		if(requestVO.getBankNm() == null || requestVO.getBankNm().equals("null")) data.setBankNm("전체");
+		if(requestVO.getBankCd() == null || requestVO.getBankCd().equals("null")) data.setBankCd("전체");
 		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");
 	    
 		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
@@ -222,10 +219,7 @@ public class ReportService {
 		}
 		log.info(requestVO.getAcctNo() + " 매니저");
 		InoutReportData data = new InoutReportData();
-		
-		// 은행이름으로 은행코드를 찾아 req객체에 설정
-		requestVO.setBankCd(accountMapper.findBankCdByBankNm(requestVO.getBankNm()));
-		
+				
 		// 데이터 추출
 		List<InoutReportVO> reportData = reportMapper.getAdminInoutReportData(requestVO);
 		log.info("추출 끝");
@@ -240,11 +234,11 @@ public class ReportService {
 		}
 		
 		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
-		data.setBankNm(requestVO.getBankNm());
+		data.setBankCd(requestVO.getBankCd());
 		data.setAcctNo(requestVO.getAcctNo());
 		
 		// 응답데이터에 빈값 채우기
-		if(requestVO.getBankNm() == null || requestVO.getBankNm().equals("null")) data.setBankNm("전체");
+		if(requestVO.getBankCd() == null || requestVO.getBankCd().equals("null")) data.setBankCd("전체");
 		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");
 	    
 		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기

@@ -86,7 +86,6 @@ public class AccountClient {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
-		log.info("response : "+response);
             JsonNode jsonNode = objectMapper.readTree(response);	// JsonNode로 파싱
             JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
             List<AccountApiVO> accounts = new ArrayList<>();

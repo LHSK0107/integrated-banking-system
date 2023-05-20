@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class InoutReportVO {
 	
-	private String bankNm;			// 은행명
+	private String bankCd;			// 은행코드
 	private String acctNo;			// 계좌번호
 	private BigDecimal beforeBal;	// 이전잔액
 	private int inCnt;				// 입금건수
