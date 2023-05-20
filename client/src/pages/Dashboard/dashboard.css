@@ -1,99 +1,196 @@
 @charset "utf-8";
 
-.banner {
-    width: 100%;
-    height: auto;
-    padding: 50px 0;
-    color: var(--color-darkgray);
-    background-color: var(--color-background);
+.dashboard .banner {
+  width: 100%;
+  height: auto;
+  padding: 50px 0;
+  color: var(--color-darkgray);
+  background-color: var(--color-background);
 }
-.banner .member {
-    width: 30%;
-    height: 300px;
-    margin: 0;
-    padding: 50px;
-    background-color: var(--color-white);
-    border: 2px solid var(--color-lightgray);
-    border-radius: 10px;
+.dashboard .banner .member {
+  width: 30%;
+  height: 300px;
+  margin: 0;
+  padding: 50px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-lightgray);
+  border-radius: 10px;
 }
-.member p {
-    font-size: 1.125remm;
-    font-weight: 500;
-    margin-bottom: 10px;
+.dashboard .member p {
+  font-size: 1.125remm;
+  font-weight: 500;
+  margin-bottom: 10px;
 }
-.member h2 {
-    font-size: 2rem;
-    font-weight: 500;
-    margin-bottom: 50px;
+.dashboard .member h2 {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 50px;
 }
-.member h2 span {
-    font-weight: 700;
+.dashboard .member h2 span {
+  font-weight: 700;
 }
-.member a {
-    border: 1px solid var(--color-gray);
+.dashboard .member a {
+  border: 1px solid var(--color-gray);
 }
 
-.banner .total {
-    width: calc(70% - 14px);
-    margin: 0 0 0 14px;
-    padding: 0;
+.dashboard .banner .total {
+  width: calc(70% - 14px);
+  margin: 0 0 0 14px;
+  padding: 0;
 }
-.total_total,
-.section_total > div {
-    height: 143px;
-    padding: 28px 18px;
-    background-color: var(--color-white);
-    border: 2px solid var(--color-lightgray);
-    border-radius: 10px;
+.dashboard .total_total,
+.dashboard .section_total > div {
+  height: 143px;
+  padding: 28px 18px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-lightgray);
+  border-radius: 10px;
 }
-.total_total {
-    margin-bottom: 14px;
+.dashboard .total_total {
+  margin-bottom: 14px;
 }
-.total_total span {
-    font-size: .8rem;
-    font-weight: 300;
-    color: var(--color-gray);
+.dashboard .total_total span {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--color-gray);
 }
-.total_total h3 {
-    font-size: 2rem;
-    margin-top: 1rem;
+.dashboard .total_total h3 {
+  font-size: 2rem;
+  margin-top: 1rem;
 }
-.section_total > div {
-    width: calc((100% - 28px) / 3);
+.dashboard .section_total > div {
+  width: calc((100% - 28px) / 3);
 }
-.section_total > div:not(:last-child) {
-    margin-right: 14px;
+.dashboard .section_total > div:not(:last-child) {
+  margin-right: 14px;
 }
-.section_total figure {
-    width: 32px;
-    height: 32px;
+.dashboard .section_total figure {
+  width: 32px;
+  height: 32px;
 }
-.section_total p {
-    margin-top: 1rem;
-    font-size: 1.25rem;
+.dashboard .section_total p {
+  margin-top: 1rem;
+  font-size: 1.25rem;
 }
-.section_total p span {
-    margin-right: 30px;
+.dashboard .section_total p span {
+  margin-right: 30px;
 }
 
 .chart_wrap {
-    padding: 50px 0;
+  padding: 50px 0;
+}
+.chart_wrap h4 {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 28px;
 }
 .chart_wrap > div {
-    margin-bottom: 100px;
+  margin-bottom: 80px;
 }
-/* .column_chart {
-    width: 70%;
-} */
+
+.chart_wrap .pie {
+  width: 100%;
+}
+
 .chart_wrap .column li {
-    margin-right: 8px;
-    background-color: var(--color-white);
-    border: 1px solid var(--color-darkgray);
-    padding: 8px 28px;
-    border-radius: 8px;
-    cursor: pointer;
+  margin: 0 8px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-darkgray);
+  padding: 8px 28px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 .chart_wrap .column .active {
-    background-color: var(--color-darkgray);
-    color: var(--color-white);
+  background-color: var(--color-darkgray);
+  color: var(--color-white);
+}
+
+.dashboard .table {
+  width: 100%;
+}
+.dashboard .table figure {
+  width: 24px;
+  margin-right: 6px;
+}
+.dashboard .table_btn > li > p {
+  border: 1px solid var(--color-gray);
+  padding: 8px 28px;
+  margin: 0px 18px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.dashboard .table_btn > li > p.active {
+  background-color: var(--color-background);
+}
+.dashboard .table_list {
+  width: 50%;
+}
+.dashboard .table_list > ul {
+  overflow: hidden;
+  height: 0;
+}
+.dashboard .table_list .active {
+  height: auto;
+}
+.dashboard .table_list > ul > li {
+  margin-bottom: 18px;
+}
+.dashboard .table_list > ul > li li {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--color-background);
+}
+
+/* media-query */
+/* mobile */
+@media (max-width: 320px) {
+}
+/* tablet */
+@media (max-width: 768px) {
+    .dashboard .banner {
+        padding: 30px 0;
+    }
+  .dashboard .mobile .member {
+    width: 100%;
+    height: auto;
+    padding: 28px 28px 18px;
+    margin-bottom: 10px;
+  }
+  .dashboard .mobile .member > div {
+    width: 50%;
+  }
+  .dashboard .mobile .member p {
+    font-size: 1rem;
+  }
+  .dashboard .mobile .member h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+  .dashboard .mobile .member .time {
+    display: block;
+    font-size: .8rem;
+    margin-bottom: 8px;
+  }
+  .dashboard .mobile .member .time + p {
+    margin-bottom: 18px;
+  }
+  .dashboard .mobile h3 {
+    font-size: 1.4rem;
+  }
+  .dashboard .mobile .banner .total {
+    width: 100%;
+    margin: 0;
+  }
+  .dashboard .mobile_total > div > div {
+    height: auto;
+    padding: 28px 18px;
+    margin-bottom: 10px;
+    background-color: var(--color-white);
+    border: 2px solid var(--color-lightgray);
+    border-radius: 10px;
+    font-size: 1.2rem;
+  }
+  .dashboard .mobile_total > div > div span {
+    margin-right: 10px;
+  }
 }

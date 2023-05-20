@@ -193,6 +193,10 @@ input::-webkit-inner-spin-button {
 /* media-query */
 /* mobile */
 @media (max-width: 320px) {
+}
+
+/* tablet */
+@media (max-width: 768px) {
   .signup_section {
     padding: 0;
   }
@@ -216,10 +220,6 @@ input::-webkit-inner-spin-button {
     width: 40px;
     height: 40px;
   }
-}
-
-/* tablet */
-@media (max-width: 768px) {
   .progress_wrap::before {
     width: 86%;
   }
