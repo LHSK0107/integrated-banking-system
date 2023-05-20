@@ -19,8 +19,8 @@ import LogHistory from "./pages/Admin/component/LogHistory";
 import ClickHistory from "./pages/Admin/component/ClickHistory";
 import InspectAccount from "./pages/Admin/component/InspectAccount";
 import Dept from "./pages/Admin/component/Dept";
+import InoutReport from "./pages/InoutReport/Index";
 import ApproveAuth from "./commons/ApproveAuth";
-import { MenuContextProvider } from "./setup/context/MenuContextProvider";
 import useAuth from "./hooks/useAuth";
 import decodeJwt from "./utils/decodeJwt";
 const App = () => {
@@ -49,9 +49,7 @@ const App = () => {
     <div className="App">
       <div className="container">
         <QueryClientProvider client={client}>
-          <MenuContextProvider>
-            <Navbar />
-          </MenuContextProvider>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/signup" element={<SignUp />} />
@@ -59,6 +57,7 @@ const App = () => {
             <Route element={<ApproveAuth />}>
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/dailyReport" element={<DailyReport />} />
+              <Route path="/inoutReport" element={<InoutReport />} />
               <Route path="/mypage" element={<Mypage />} />
               <Route path="inout">
                 <Route index element={<InOut />} />

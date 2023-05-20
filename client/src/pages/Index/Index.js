@@ -14,9 +14,7 @@ const Index = () => {
   return (
     <div id="wrap">
       <div className="section01">
-        <div className="inner">
           <BannerSlider />
-        </div>
       </div>
       <div className="quick_wrap">
         <div className="inner">

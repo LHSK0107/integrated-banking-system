@@ -4,14 +4,29 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
-import MenuContext from "../setup/context/MenuContextProvider";
 import useAxiosInterceptor from "../hooks/useAxiosInterceptor";
 import logout from "../utils/autoLogout";
 import ExpCountDown from "./ExpCountDown";
 import useRefreshToken from "../hooks/useRefreshToken";
+
+/** click */
+const handleClickCount = (menuNum) => {
+  let menuList = JSON.parse(localStorage.getItem("menuClick"));
+  if(menuNum===1){
+    menuList =  {...menuList, allAccount:menuList.allAccount+1}
+  } else if(menuNum===2){
+    menuList =  {...menuList, inout:menuList.inout+1}
+  } else if(menuNum===3){
+    menuList =  {...menuList, inoutReport:menuList.inoutReport+1}
+  } else if(menuNum===4){
+    menuList =  {...menuList, dailyReport:menuList.dailyReport+1}
+  } else if(menuNum===5){
+    menuList =  {...menuList, dashboard:menuList.dashboard+1}
+  }
+  localStorage.removeItem("menuClick");
+  localStorage.setItem("menuClick",JSON.stringify(menuList));
+}
 const Navbar = () => {
-  const AuthAxios = useAxiosInterceptor();
-  const {clickCountList,setClickCountList} = useContext(MenuContext);
   const {
     token,
     setToken2,
@@ -29,13 +44,7 @@ const Navbar = () => {
     SetSessionTime(1800);
   },[token]);
 
-  /** click */
-  const handleClickCount = (menuNum) => {
-    if(menuNum===1){
-      setClickCountList({
-      })
-    }
-  }
+
   const navigate = useNavigate();
 
   /** logout시, context 비우는 함수 */
@@ -50,8 +59,11 @@ const Navbar = () => {
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       localStorage.removeItem("jwt");
+      localStorage.removeItem("menuClick");
       alert("로그아웃 완료");
       logout();
+    } else {
+      return false;
     }
   };
 
@@ -88,7 +100,7 @@ const Navbar = () => {
 
         ) : (null)
         }
-        <button className="logout_btn" onClick={props?.func}>
+        <button className="logout_btn" onClick={()=>handleLogout()}>
           로그아웃
         </button>
       </div>
@@ -195,10 +207,10 @@ const Navbar = () => {
                     e.stopPropagation();
                     handleLeaveDropdown("조회");
                   }} className="dropmenu_wrap">
-                <Link to="/inquiry">조회</Link>
+                <Link to="/inquiry" onClick={()=>handleClickCount(1)}>조회</Link>
                 <ul className="dropdown">
-                  <li><Link to="/inquiry">전체계좌</Link></li>
-                  <li><Link to="/inout">입출금내역</Link></li>
+                  <li><Link to="/inquiry" onClick={()=>handleClickCount(1)}>전체계좌</Link></li>
+                  <li><Link to="/inout" onClick={()=>handleClickCount(2)}>입출금내역</Link></li>
                 </ul>
               </li>
               <li ref={reportRef} 
@@ -212,14 +224,14 @@ const Navbar = () => {
                     e.stopPropagation();
                     handleLeaveDropdown("보고서");
                   }} className="dropmenu_wrap">
-                <Link to="/dailyReport">보고서</Link>
+                <Link to="/dailyReport" onClick={()=>handleClickCount(3)}>보고서</Link>
                 <ul className="dropdown">
-                  <li><Link to="/dailyReport">일일시재</Link></li>
-                  <li><Link to="/dailyReport">입출금</Link></li>
+                  <li><Link to="/dailyReport" onClick={()=>handleClickCount(3)}>일일시재</Link></li>
+                  <li><Link to="/inoutReport" onClick={()=>handleClickCount(4)}>입출금</Link></li>
                 </ul>
               </li>
               <li>
-                <Link to="/dashboard">대시보드</Link>
+                <Link to="/dashboard" onClick={()=>handleClickCount(5)}>대시보드</Link>
               </li>
             </ul>
           </div>
