@@ -32,7 +32,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
@@ -69,7 +69,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
@@ -95,7 +95,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
@@ -131,7 +131,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
@@ -161,7 +161,7 @@
 					ON ACCT.acct_no = UA.acct_no
 			WHERE UA.user_no = #{userNo} 
 			<choose>
-				<when test="isLoan != null and isLoan = true">
+				<when test="isLoan == 1">
 					AND (ACCT.acct_dv = "03")
 				</when>
 				<otherwise>
@@ -187,7 +187,7 @@
 					ON ACCT.acct_no = UA.acct_no
 			WHERE UA.user_no = #{userNo} 
 			<choose>
-				<when test="isLoan != null and isLoan = true">
+				<when test="isLoan == 1">
 					AND (ACCT.acct_dv = "03")
 				</when>
 				<otherwise>
@@ -213,7 +213,7 @@
 			    ON IOP.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				ACCT.acct_dv = "03"
 			</when>
 			<otherwise>
@@ -248,11 +248,11 @@
 			    ON IOP.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
-				ACCT.acct_dv = "03"
+			<when test='isLoan == 1'>
+				ACCT.acct_dv = '03'
 			</when>
 			<otherwise>
-				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+				(ACCT.acct_dv = '01' or ACCT.acct_dv = '02')
 			</otherwise>
 		</choose>
 		<if test='bankCd != null and !bankCd.equals("All")'>
@@ -272,7 +272,7 @@
 			    ON IOT.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				ACCT.acct_dv = "03"
 			</when>
 			<otherwise>
@@ -306,7 +306,7 @@
 			    ON IOP.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				ACCT.acct_dv = "03"
 			</when>
 			<otherwise>
@@ -334,7 +334,7 @@
 				    ON IOP.acct_no = ACCT.acct_no
 			WHERE 
 			<choose>
-				<when test="isLoan != null and isLoan = true">
+				<when test="isLoan == 1">
 					ACCT.acct_dv = "03"
 				</when>
 				<otherwise>
@@ -358,7 +358,7 @@
 				    ON IOT.acct_no = ACCT.acct_no
 			WHERE 
 			<choose>
-				<when test="isLoan != null and isLoan = true">
+				<when test="isLoan == 1">
 					ACCT.acct_dv = "03"
 				</when>
 				<otherwise>
@@ -428,7 +428,7 @@
 			    ON IOP.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				ACCT.acct_dv = "03"
 			</when>
 			<otherwise>
@@ -463,7 +463,7 @@
 			    ON IOP.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				ACCT.acct_dv = "03"
 			</when>
 			<otherwise>
@@ -487,7 +487,7 @@
 			    ON IOT.acct_no = ACCT.acct_no
 		WHERE 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				ACCT.acct_dv = "03"
 			</when>
 			<otherwise>
@@ -522,7 +522,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
@@ -559,7 +559,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
@@ -585,7 +585,7 @@
 				ON ACCT.acct_no = UA.acct_no
 		WHERE UA.user_no = #{userNo} 
 		<choose>
-			<when test="isLoan != null and isLoan = true">
+			<when test="isLoan == 1">
 				AND (ACCT.acct_dv = "03")
 			</when>
 			<otherwise>
