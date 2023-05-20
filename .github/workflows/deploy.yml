@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p ./integrated-banking-system/server/iam/src/main/resources/
           touch ./integrated-banking-system/server/iam/src/main/resources/application.properties
-          echo "${{ secrets.APPLICATION }}" > ./integrated-banking-system/server/iam/src/main/resources/application.properties
+          echo -n "${{ secrets.APPLICATION }}" > ./integrated-banking-system/server/iam/src/main/resources/application.properties
 
         # [2]
       - name: Build with Maven
