@@ -77,6 +77,7 @@ public class AccountService {
 		int totalPage = 0;
 		
 		// 계좌번호 암호화
+		ivToByteArray(ivString);
 		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
 			try {
 				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
@@ -133,8 +134,8 @@ public class AccountService {
 		// map에 들어가 value 선언
 		List<InoutVO> inoutList = null;
 		int totalPage = 0;
-		
 		// 계좌번호 암호화
+		ivToByteArray(ivString);
 		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
 			try {
 				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
@@ -187,6 +188,7 @@ public class AccountService {
 		List<InoutVO> inoutList = null;
 		
 		// 계좌번호 암호화
+		ivToByteArray(ivString);
 		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
 			try {
 				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
@@ -226,6 +228,7 @@ public class AccountService {
 		List<InoutVO> inoutList = null;
 		
 		// 계좌번호 암호화
+		ivToByteArray(ivString);
 		if (vo.getAcctNo() != null && !vo.getAcctNo().equals("All")) {
 			try {
 				vo.setAcctNo(aesGcmEncrypt.encrypt(vo.getAcctNo(), key, iv));
