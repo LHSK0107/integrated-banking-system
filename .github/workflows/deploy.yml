@@ -58,10 +58,10 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://iamdeploy/$GITHUB_SHA.zip
 
         # [6]
-      - name: AWS CodeDeploy
-        run: |
+      - name: Code Deploy
+        run: | 
           aws deploy create-deployment \
-            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-            --revision revisionType=S3,s3Location={bucket=${{ env.S3_BUCKET_NAME }},key=$GITHUB_SHA.zip,bundleType=zip,eTag=$(aws s3api head-object --bucket ${{ env.S3_BUCKET_NAME }} --key $GITHUB_SHA.zip --query eTag --output text)} \
-            --region ${{ secrets.AWS_REGION }}
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
