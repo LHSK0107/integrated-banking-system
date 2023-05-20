@@ -64,7 +64,7 @@ public class DataInitializer {
         // 계좌목록 삭제
         accountApiMapper.deleteAccounts();
         // 계좌목록 추가
-        List<AccountApiVO> accountList = accountClient.getAccounts();
+        List<AccountApiVO> accountList = accountClient.getAccounts(secret);
         accountApiMapper.insertAccounts(accountList);
         // 백업 데이터 재입력
         if (info.size() > 0) accountApiMapper.insertBackupUserAccount(info);
