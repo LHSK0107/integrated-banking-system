@@ -59,9 +59,11 @@ jobs:
 
         # [6]
       - name: Code Deploy
-        run: | 
-          aws-actions/aws-codedeploy-action \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
+        uses: aws-actions/aws-codedeploy-for-github-actions@v1
+        with:
+          application-name: ${{ env.CODE_DEPLOY_APPLICATION_NAME }}
+          deployment-group-name: ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+          region: ${{ secrets.AWS_REGION }}
+          wait-until-deployed: true
+          file-exists-behavior: OVERWRITE
+          zip-file: ${{ github.sha }}.zip
