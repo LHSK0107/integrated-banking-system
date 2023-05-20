@@ -30,12 +30,12 @@ jobs:
         
       - name: Create properties file
         run: |
-          echo -n "${{ secrets.APPLICATION }}" > ${{ env.RESOURCE_PATH }}
+          echo -n "${{ secrets.APPLICATION }}" > /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam/src/main/resources/application.properties
 
         # [2]
       - name: Build with Maven
         run: |
-          cd ${{ env.PROJECT_PATH }}
+          cd /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam
           mvn package
         shell: bash
 
