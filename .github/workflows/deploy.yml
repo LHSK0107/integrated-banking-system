@@ -41,7 +41,7 @@ jobs:
 
         # [3]
       - name: Zip the JAR file
-        run: zip -r ./target/${GITHUB_SHA}.zip ./target/*.jar
+        run: zip -r /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam/target/${GITHUB_SHA}.zip /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam/target/*.jar
         shell: bash
 
         # [4]
