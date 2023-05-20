@@ -1,5 +1,5 @@
 import "./login.css";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -8,10 +8,7 @@ import axios from "axios";
 import decodeJwt from "../../utils/decodeJwt";
 import useAuth from "../../hooks/useAuth";
 import SignUpBgImg from "../../assets/images/signup-back-image-1.jpg";
-
 const Index = () => {
-
-  // useAuth context 호출
   const { setIsAuth, setLoggedUserInfo, setToken2 } = useAuth();
   const navigate = useNavigate();
 
@@ -69,6 +66,10 @@ const Index = () => {
             userCode: decodedPayload.userCode,
             userNo: decodedPayload.userNo,
           });
+          localStorage.setItem(
+            "menuClick",
+            JSON.stringify({ "allAccount": 0, "inout": 0, "inoutReport": 0, "dailyReport": 0, "dashboard": 0})
+          );
           setIsAuth(true);
         }
         // 대시보드로 리다이렉트
@@ -93,7 +94,7 @@ const Index = () => {
     setInterval(()=>{
       setIsLoading(false);
     },500)
-  },[])
+  },[]);
 
   return (
     <div className="login_section flex align_center">
