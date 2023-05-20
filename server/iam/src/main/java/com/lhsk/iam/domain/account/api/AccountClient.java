@@ -41,6 +41,17 @@ public class AccountClient {
 	@Value("${webCashApi.allAccounts}")
 	private String ALLACCOUNTS;
 	
+	@Value("${webCashApi.key}")
+	private String apikey;
+	@Value("${webCashApi.acctId}")
+	private String apiId;
+	@Value("${webCashApi.orgNo}")
+	private String orgNo;
+	@Value("${webCashApi.bizNo}")
+	private String bizNo;
+	
+	
+	
 	
 	// 생성자를 통해 baseUrl을 지정해준다.
 	@Autowired
@@ -59,11 +70,22 @@ public class AccountClient {
     }
 	
 	// 계좌목록을 가져오는 메소드
-	public List<AccountApiVO> getAccounts() {
+	public List<AccountApiVO> getAccounts(Map<String, String> secret) {
+		
+		Map<String, Object> reqData = new HashMap<>();
+		reqData.put("ACCT_NO", "");
+		
+		Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("API_KEY", secret.get("apiKey"));
+        requestBody.put("API_ID", apiId);
+        requestBody.put("ORG_NO", secret.get("orgNo"));
+        requestBody.put("BIZ_NO", secret.get("bizNo"));
+        requestBody.put("REQ_DATA", reqData);
+        
 		try {
             String response = webClient.post()
             		.contentType(MediaType.APPLICATION_JSON)
-            		.body(BodyInserters.fromValue(ALLACCOUNTS))
+            		.body(BodyInserters.fromValue(requestBody))
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
