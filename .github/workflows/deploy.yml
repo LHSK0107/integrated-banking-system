@@ -1,0 +1,67 @@
+name: CI-CD
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  S3_BUCKET_NAME: iamdeploy
+  RESOURCE_PATH: ./integrated-banking-system/server/iam/src/main/resources/application.properties
+  CODE_DEPLOY_APPLICATION_NAME: iam-code-deploy
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-server
+  PROJECT_PATH: integrated-banking-system/server/iam/
+  POM_FILE: pom.xml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          distribution: 'adopt'
+          maven-version: '3.x'
+        
+      - name: Create properties file
+        run: |
+          mkdir -p ./integrated-banking-system/server/iam/src/main/resources/
+          touch ./integrated-banking-system/server/iam/src/main/resources/application.properties
+          echo "::add-mask::${{ secrets.APPLICATION }}"
+          echo "${{ secrets.APPLICATION }}" > ./integrated-banking-system/server/iam/src/main/resources/application.properties
+
+        # [2]
+      - name: Build with Maven
+        run: mvn package
+        shell: bash
+
+        # [3]
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+        # [4]
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-region: ${{ secrets.AWS_REGION }} 
+
+        # [5]
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://iamdeploy/$GITHUB_SHA.zip
+
+        # [6]
+      - name: Code Deploy
+        run: | 
+          aws-actions/aws-codedeploy-action \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
