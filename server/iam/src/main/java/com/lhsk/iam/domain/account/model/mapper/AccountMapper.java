@@ -25,6 +25,10 @@ public interface AccountMapper {
 	int CountAdminsInoutPast(InoutRequestVO inoutRequestVO);
 	// 계좌의 당일 포함 입출금내역 횟수
 	int CountAdminsInoutToday(InoutRequestVO inoutRequestVO);
+	// 계좌의 과거 입출금 내역 엑셀로 내보내기
+	List<InoutVO> findAdminsInoutPastExcel(InoutRequestVO inoutRequestVO);
+	// 계좌의 당일 포함 입출금내역 엑셀로 내보내기
+	List<InoutVO> findAdminsInoutTodayExcel(InoutRequestVO inoutRequestVO);
 	
 // user
 	// 특정 회원이 조회 가능한 계좌정보 리스트
@@ -33,6 +37,10 @@ public interface AccountMapper {
 	List<InoutVO> findUsersInoutPast(InoutRequestVO inoutRequestVO);
 	// 계좌의 당일 포함 입출금내역 조회
 	List<InoutVO> findUsersInoutToday(InoutRequestVO inoutRequestVO);
+	// 계좌의 과거 입출금내역 엑셀로 내보내기
+	List<InoutVO> findUsersInoutPastExcel(InoutRequestVO inoutRequestVO);
+	// 계좌의 당일 포함 입출금내역 엑셀로 내보내기
+	List<InoutVO> findUsersInoutTodayExcel(InoutRequestVO inoutRequestVO);
 	// 계좌의 과거 입출금내역 횟수
 	int CountUsersInoutPast(InoutRequestVO inoutRequestVO);
 	// 계좌의 당일 포함 입출금내역 횟수
