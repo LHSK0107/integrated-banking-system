@@ -421,5 +421,194 @@
 		DELETE FROM inout_today WHERE DATE(trsc_dt) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 	</delete>
 	
+	<select id="findAdminsInoutPastExcel" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+			    ON IOP.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+	</select>
+	
+	
+	<select id="findAdminsInoutTodayExcel" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+			    ON IOP.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		UNION
+		SELECT ACCT.bank_cd, ACCT.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+			    ON IOT.acct_no = ACCT.acct_no
+		WHERE 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				ACCT.acct_dv = "03"
+			</when>
+			<otherwise>
+				(ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND ACCT.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND ACCT.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+	</select>
+	
+	<select id="findUsersInoutPastExcel" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND #{endDt})
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+	</select>
+	
+	
+	<select id="findUsersInoutTodayExcel" parameterType="InoutRequestVO" resultType="InoutVO">
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOP.bal
+		FROM inout_past IOP
+			INNER JOIN account ACCT
+				ON IOP.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+			AND (IOP.trsc_dt BETWEEN #{startDt} AND DATE_SUB(curdate(), INTERVAL 1 DAY))
+		UNION
+		SELECT ACCT.bank_cd, UA.acct_no, trsc_dt, trsc_tm, rmrk1, inout_dv, trsc_amt, IOT.bal
+		FROM inout_today IOT
+			INNER JOIN account ACCT
+			    ON IOT.acct_no = ACCT.acct_no
+			INNER JOIN user_account UA
+				ON ACCT.acct_no = UA.acct_no
+		WHERE UA.user_no = #{userNo} 
+		<choose>
+			<when test="isLoan != null and isLoan">
+				AND (ACCT.acct_dv = "03")
+			</when>
+			<otherwise>
+				AND (ACCT.acct_dv = "01" or ACCT.acct_dv = "02")
+			</otherwise>
+		</choose>
+		<if test='bankCd != null and !bankCd.equals("All")'>
+			AND UA.bank_cd = #{bankCd} 
+		</if>
+		<if test='acctNo != null and !acctNo.equals("All")'>
+			AND UA.acct_no = #{acctNo}
+		</if>
+		<if test='inoutDv != null and !inoutDv.equals("All") and (inoutDv.equals("1") or inoutDv.equals("2"))'>
+			AND inout_dv = #{inoutDv}
+		</if>
+		<choose>
+			<when test='sort != null and sort.equals("recent")'>
+				ORDER BY trsc_dt DESC, trsc_tm DESC
+			</when>
+			<otherwise>
+				ORDER BY trsc_dt ASC, trsc_tm ASC
+			</otherwise>					
+		</choose>
+	</select>
 	
 </mapper>
