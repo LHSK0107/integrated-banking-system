@@ -37,7 +37,9 @@ jobs:
 
         # [2]
       - name: Build with Maven
-        run: mvn package
+        run: |
+          cd /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam
+          mvn package
         shell: bash
 
         # [3]
