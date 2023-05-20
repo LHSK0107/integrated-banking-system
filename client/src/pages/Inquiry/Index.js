@@ -40,7 +40,7 @@ const Index = () => {
       );
       return response;
     };
-    getUsers().then(res=>{
+    loggedUserInfo?.userCode && getUsers().then(res=>{
       setApiData(res.data);
     });
     return () => {

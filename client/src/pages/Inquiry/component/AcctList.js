@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import Balance from "../../../hooks/useBalance";
 import BankName from "../../../hooks/useBankName";
 export const AcctList = (acctList) => {
-  return acctList.map((ele) => {
+  return acctList.map((ele,i) => {
     return (
-      <li>
-        <Link className="flex justify_between align_center" to="">
+      <li key={i}>
+        <Link className="flex justify_between align_center" to={`/inout/${ele?.bankCd}/${ele?.acctNo}`}>
           <div className="accordian_account flex">
             <figure>
               <img src={require(`../../../assets/images/icon/bank/${ele?.bankCd}.png`)} alt="bank img icon" />
