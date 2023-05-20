@@ -36,16 +36,11 @@ public class DataInitializer {
    String orgNo;
    @Value(value = "${webCashApi.bizNo}") 
    String bizNo;
-   @Value("${webCashApi.test}")
-   String testStr;
    
    // 프로그램이 처음 시작되면 딱 한 번만 실행되는 메소드
    @PostConstruct
    @Transactional
    public void dataInit() {
-      
-	  log.info(testStr);
-	   
       Map<String, String> secret = new HashMap<>();
       secret.put("apiKey", apiKey);
       secret.put("apiId", inoutId);

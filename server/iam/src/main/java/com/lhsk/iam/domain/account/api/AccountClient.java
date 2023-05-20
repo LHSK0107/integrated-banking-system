@@ -38,9 +38,6 @@ public class AccountClient {
 	private final ObjectMapper objectMapper;
 	private DataProcessor dataProcessor;
 	
-	@Value("${webCashApi.allAccounts}")
-	private String ALLACCOUNTS;
-	
 	@Value("${webCashApi.key}")
 	private String apikey;
 	@Value("${webCashApi.acctId}")
