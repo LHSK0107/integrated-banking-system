@@ -15,11 +15,9 @@ import ReactPaginate from "react-paginate";
 
 const Index = () => {
   const { bankCD, acctNo } = useParams();
-  bankCD && console.log(`bankCD:${bankCD}, acctNo:${acctNo}`);
   const AuthAxios = useAxiosInterceptor();
   const { loggedUserInfo } = useAuth();
   const [index, setIndex] = useState(0);
-  console.log();
   /** 폼에 대한 각 요소 변수 저장 -> 변수명 차후 변경 */
   const [optionVal, setOptionVal] = useState({
     bankCD: "",
@@ -52,8 +50,7 @@ const Index = () => {
         console.log(`error 발생: ${err}`);
       }
     };
-    getAvailableAcct();
-    console.log(apiData);
+    loggedUserInfo?.userCode && getAvailableAcct();
     return () => {
       controller.abort();
     };
@@ -93,15 +90,9 @@ const Index = () => {
         </option>
       );
     });
-  // useEffect(()=>{
-  //   const selectAcctData = () =>{
-  //     bankListOption &&
-  //   }
-  // },[bankCD, acctNo]);
-
-  useEffect(() => {
-    setOptionVal({ ...optionVal, bankCD: "031" });
-  }, [bankCD]);
+    useEffect(()=>{
+      bankListOption && setOptionVal({...optionVal, bankCD: bankCD, acctNO: acctNo});
+    },[apiData,bankCD,acctNo]);
 
   /** 은행명 select 값 handler */
   const handleBankNMSelectOnChange = (e) => {
@@ -290,13 +281,13 @@ const Index = () => {
                   <li className="flex">
                     <p className="flex align_center">계좌</p>
                     <div className="flex align_center">
-                      <select onChange={handleBankNMSelectOnChange}>
+                      <select value={optionVal?.bankCD} onChange={handleBankNMSelectOnChange}>
                         <option name="bankCD" value="">
                           전체 은행
                         </option>
                         {bankListOption}
                       </select>
-                      <select onChange={handleAcctSelectOnChange}>
+                      <select value={optionVal?.acctNO} onChange={handleAcctSelectOnChange}>
                         <option value="">전체 계좌</option>
                         {acctListOption()}
                       </select>
