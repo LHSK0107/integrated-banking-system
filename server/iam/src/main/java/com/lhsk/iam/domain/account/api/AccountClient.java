@@ -69,7 +69,7 @@ public class AccountClient {
                     .bodyToMono(String.class)	// 응답 바디를 Mono<String> 형태로 변환
                     // Mono가 발행하는 데이터를 구독하여 최종 데이터를 반환, Mono를 블로킹하여 스트림의 처리를 동기적으로 수행
                     .block();
-		log.debug("response : "+response);
+		log.info("response : "+response);
             JsonNode jsonNode = objectMapper.readTree(response);	// JsonNode로 파싱
             JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
             List<AccountApiVO> accounts = new ArrayList<>();
