@@ -30,7 +30,6 @@ jobs:
         
       - name: Create properties file
         run: |
-          touch ./src/main/resources/application.properties
           echo -n "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
 
         # [2]
