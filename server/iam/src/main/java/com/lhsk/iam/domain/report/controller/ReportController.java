@@ -57,7 +57,7 @@ public class ReportController {
 		
 		/*
 		 * {
-		 * 		bankNm : "은행명"			전체 선택시 null
+		 * 		bankCd : "은행코드"		전체 선택시 null
 		 * 		acctNo : "계좌번호"		전체 선택시 null
 		 * 		startDt : "2023-05-11"	
 		 * 		endDt : "2023-05-14"	
