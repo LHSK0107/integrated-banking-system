@@ -106,6 +106,7 @@
 .inspectMemberData div li {
   padding: 10px 0;
   text-align: center;
+  cursor: pointer;
 }
 .inspectMemberData > div {
   height: 400px;
@@ -135,6 +136,7 @@
 .inspectAccountData > div p {
   height: 40px;
   padding: 10px 0;
+  cursor: pointer;
 }
 .inspectAccountData > div .active > p {
   background-color: var(--color-darkgray);

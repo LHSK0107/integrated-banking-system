@@ -37,7 +37,7 @@ const Detail = () => {
     };
     const getDept = async () => {
       try {
-        const response = await AuthAxios.get(`/api/admin/dept`, {
+        const response = await AuthAxios.get(`/api/dept`, {
           signal: controller.signal,
         });
         console.log(response);

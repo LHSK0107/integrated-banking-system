@@ -34,18 +34,6 @@ export default function ConfirmPw() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema), mode: "onChange" });
 
-  const getData = (data) => {
-    // return AuthAxios(
-    //   "/api/users/checkPass",
-    //   {
-    //     userNo: loggedUserInfo.userNo,
-    //     password: data.password,
-    //   },
-    //   "post"
-    // );
-
-  };
-
   // axios
   const onSubmit = (data) => {
     const checkPassword = async () => {
@@ -82,6 +70,7 @@ export default function ConfirmPw() {
       </p>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input type="password" {...register("password")}></input>
+        <p>{errors.password?.message}</p>
         <button type="submit">확인</button>
       </form>
     </div>

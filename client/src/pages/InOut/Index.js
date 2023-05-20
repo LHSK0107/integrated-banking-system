@@ -102,6 +102,9 @@ const Index = () => {
   const handleAcctSelectOnChange = (e) => {
     setOptionVal({ ...optionVal, acctNO: e.target.value });
   };
+  /** 페이지 건수 값 handler */
+
+
   /** 은행명 select 값에 따른 계좌번호 리스트 변경 */
   const acctListOption = () =>
     apiData &&
@@ -198,7 +201,7 @@ const Index = () => {
           inoutDv: optionVal?.inout === "" ? "All" : optionVal?.inout,
           sort: optionVal?.arrange,
           page: 1,
-          pageSize: 10,
+          pageSize: optionVal?.paging,
         }
       );
       return data1;
@@ -236,7 +239,7 @@ const Index = () => {
             inoutDv: optionVal?.inout === "" ? "All" : optionVal?.inout,
             sort: optionVal?.arrange,
             page: page, // 변경된 페이지 값 사용
-            pageSize: 10,
+            pageSize: optionVal?.paging,
           }
         );
         console.log("res.list", data1.data.list);

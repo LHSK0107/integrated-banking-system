@@ -112,7 +112,7 @@ const getOptions = ({ data }) => ({
 });
 
 const Bar = ({ data }) => {
-  console.log(data);
+  // console.log(data);
 
   return (
     <div>

@@ -5,7 +5,7 @@ import React from "react";
 const getOptions = ({ data }) => ({
   colors: ["#FFC209", "#2196F3", "#FF3F4C"],
   title: {
-    text: "구분별 비율",
+    text: "",
     style: {
       fontFamily: "Noto Sans KR",
       fontSize: "18px",

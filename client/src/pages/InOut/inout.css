@@ -151,6 +151,7 @@ section form button {
     display: none;
   }
   .inoutPage .tab {
+    border: none;
     margin-bottom: 20px;
   }
   .inoutPage .tab li {
@@ -166,18 +167,34 @@ section form button {
     background-color: rgba(0, 0, 0, 0);
   }
   .report_form {
+    padding: 10px;
+    font-size: .88rem;
     border-radius: 6px;
     background-color: #ffffff;
-    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.1);
   }
   .form_wrap form ul {
+    border: none;
+    margin-bottom: 20px;
+  }
+  .form_wrap form li {
     border: none;
   }
   .form_wrap li > p {
     background-color: var(--color-white);
     padding: 8px;
-    width: 80px;
+    width: 61px;
+  }
+  .form_wrap li > div {
+    padding: 5px 10px;
+  }
+  .form_wrap li > div > div span {
+    border-radius: 10px;
+    padding: 6px 9px;
+  }
+  .form_wrap .btn_wrap {
+    margin-bottom: 10px;
   }
 }

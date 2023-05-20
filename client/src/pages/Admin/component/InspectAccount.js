@@ -170,7 +170,7 @@ const InspectAccount = () => {
   console.log("checked 값",checkedVal);
   console.log("checked 유저", checkedUser);
 
-  // 전체 계좌 목록 표 그리기 + 
+  // 전체 계좌 목록 표 그리기
   function AccountItems({ accountList }) {
     const [selectedDv, setSelectedDv] = useState("01");
 
@@ -223,7 +223,7 @@ const InspectAccount = () => {
               key={dv}
               onClick={() => setSelectedDv(dv)}
             >
-              <p className="list_acctDv">{dv}</p>
+              <p className="list_acctDv">{dv === "01" ? "입출금" : dv === "02" ? "예적금" : dv === "03" ? "대출" : ""}</p>
               {selectedDv === dv && (
                 <ul className="list_acctNo">
                   {Object.keys(groupedAccountsByBankCd[dv])
