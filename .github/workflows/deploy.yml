@@ -40,8 +40,8 @@ jobs:
         shell: bash
 
         # [3]
-      - name: Zip the JAR file
-        run: zip -r /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam/target/${GITHUB_SHA}.zip /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam/target/*.jar
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
         shell: bash
 
         # [4]
@@ -53,8 +53,8 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }} 
 
         # [5]
-      - name: Upload JAR to S3
-        run: aws s3 cp --region ap-northeast-2 /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam/target/${GITHUB_SHA}.zip s3://${{ env.S3_BUCKET_NAME }}/${GITHUB_SHA}.zip
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://iamdeploy/$GITHUB_SHA.zip
 
         # [6]
       - name: Code Deploy
@@ -63,4 +63,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,key=${GITHUB_SHA}.zip
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
