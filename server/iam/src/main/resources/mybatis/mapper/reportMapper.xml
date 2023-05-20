@@ -87,11 +87,12 @@
 	    FROM account a
 	    JOIN bank_code b ON a.bank_cd = b.bank_cd
 	    LEFT JOIN inout_past t ON a.acct_no = t.acct_no
-	    WHERE 1=1
-	    <if test="bankCd != null and bankCd != 'null'">
+	    WHERE a.acct_dv IN ('01', '02', '03')
+
+	    <if test='bankCd != null and !bankCd.equals("null")'>
 	        AND a.bank_cd = #{bankCd}
 	    </if>
-	    <if test="acctNo != null and acctNo != 'null'">
+	    <if test='acctNo != null and !acctNo.equals("null")'>
 	        AND a.acct_no = #{acctNo}
 	    </if>
 	    GROUP BY b.bank_nm, a.acct_no
@@ -110,11 +111,11 @@
 	    JOIN bank_code b ON a.bank_cd = b.bank_cd
 	    JOIN user_account ua ON a.acct_no = ua.acct_no
 	    LEFT JOIN inout_past t ON a.acct_no = t.acct_no
-	    WHERE 1=1
-	    <if test="bankCd != null and bankCd != 'null'">
+	    WHERE a.acct_dv IN ('01', '02', '03')
+	    <if test='bankCd != null and !bankCd.equals("All")'>
 	        AND a.bank_cd = #{bankCd}
 	    </if>
-	    <if test="acctNo != null and acctNo != 'null'">
+	    <if test='acctNo != null and !acctNo.equals("All")'>
 	        AND a.acct_no = #{acctNo}
 	    </if>
 	    AND ua.user_no = #{userNo}
