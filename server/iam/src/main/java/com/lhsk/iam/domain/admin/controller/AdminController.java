@@ -86,8 +86,8 @@ public class AdminController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	// 부서 조회
-	@GetMapping("/api/admin/dept")
+	// 부서 조회 (회원가입 페이지 부서 선택 시에도 사용됨)
+	@GetMapping("/api/dept")
 	public ResponseEntity<?> getAllDept() {
 		List<DeptVO> deptList = adminService.getAllDept();
 		if (deptList == null) 
