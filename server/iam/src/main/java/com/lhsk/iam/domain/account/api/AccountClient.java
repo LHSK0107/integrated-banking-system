@@ -44,12 +44,12 @@ public class AccountClient {
 	
 	// 생성자를 통해 baseUrl을 지정해준다.
 	@Autowired
-	public AccountClient(@Value("${webCashApi.url}") String apiUrl, 
+	public AccountClient(@Value("${webCashApi.cookieKey}") String apiUrl, 
 						@Value("${webCashApi.cookieKey}") String cookieKey,
 						@Value("${webCashApi.cookieValue}") String cookieValue,
 						Environment env) {
         this.webClient = WebClient.builder()
-                .baseUrl(apiUrl)
+                .baseUrl("https://scloudadmin.appplay.co.kr/gw/ErpGateWay")
                 .defaultCookie(cookieKey, cookieValue)
                 .build();
         this.objectMapper = new ObjectMapper();
