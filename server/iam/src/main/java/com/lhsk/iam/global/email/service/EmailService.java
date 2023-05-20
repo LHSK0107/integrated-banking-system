@@ -40,7 +40,7 @@ public class EmailService {
 	        +   "<p style=\"margin: 2px 0\">안녕하세요, IAM입니다.</p>"
 	        +   "<p style=\"margin: 2px 0\">아래 인증번호를 화면에 입력 부탁드립니다.</p>"
 	        +"</div>"
-	        +"<div style=\"width: 500px; border: 2px solid #898989; background-color: #003b87; border-radius: 3px; text-align: center; color: #ffffff; padding: 20px 0; margin-bottom: 30px;\">"
+	        +"<div style=\"width: 500px; background-color: #003b87; border-radius: 3px; text-align: center; color: #ffffff; padding: 20px 0; margin-bottom: 30px;\">"
 	        +        "인증 번호 : <span style=\"font-size: 22px; font-weight: bolder;\">verificationCode</span>"
 	        +"</div>"
 	        +"<p style=\"color: #898989; font-size: 14px;\">만약 이메일 요청을 하시지 않은 경우 고객센터 1577-8820로 연락 부탁드립니다.</p>"
