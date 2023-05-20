@@ -46,7 +46,7 @@ const Index = () => {
   const handleClickExcelExport = () =>{
     // cancellation token
     const getData = async () => {
-        const apiData = await AuthAxios.post("/api/reports/daily");
+        const apiData = await AuthAxios.post("/api/users/reports/daily");
         return apiData;
     }
     getData().then(res=>{
