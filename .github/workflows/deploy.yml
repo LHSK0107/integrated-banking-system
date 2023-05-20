@@ -63,5 +63,5 @@ jobs:
           aws deploy create-deployment \
             --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
             --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-            --revision revisionType=S3,s3Location={bucket=${{ env.S3_BUCKET_NAME }},bundleType=zip,eTag=$(aws s3api head-object --bucket ${{ env.S3_BUCKET_NAME }} --key $GITHUB_SHA.zip --query eTag --output text)} \
-            --region ${{ secrets.AWS_REGION }} 
+            --revision revisionType=S3,s3Location={bucket=${{ env.S3_BUCKET_NAME }},key=$GITHUB_SHA.zip,bundleType=zip,eTag=$(aws s3api head-object --bucket ${{ env.S3_BUCKET_NAME }} --key $GITHUB_SHA.zip --query eTag --output text)} \
+            --region ${{ secrets.AWS_REGION }}
