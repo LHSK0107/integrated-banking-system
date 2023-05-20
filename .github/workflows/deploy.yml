@@ -1,6 +1,5 @@
 name: CI-CD
 
-
 on:
   push:
     branches:
@@ -60,7 +59,7 @@ jobs:
         # [6]
       - name: Code Deploy
         run: | 
-          aws-actions/aws-codedeploy-action \
+          aws deploy create-deployment \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
