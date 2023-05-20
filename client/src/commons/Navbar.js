@@ -5,7 +5,7 @@ import logo from "../assets/brand/logo.png";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
 import useAxiosInterceptor from "../hooks/useAxiosInterceptor";
-import logout from "../utils/autoLogout";
+import autoLogout from "../utils/autoLogout";
 import ExpCountDown from "./ExpCountDown";
 import useRefreshToken from "../hooks/useRefreshToken";
 
@@ -58,9 +58,10 @@ const Navbar = () => {
   // 로그아웃
   const handleLogout = () => {
     if (window.confirm("로그아웃 하시겠습니까?")) {
+      alert("로그아웃 완료");
+      autoLogout();
       localStorage.removeItem("jwt");
       localStorage.removeItem("menuClick");
-      alert("로그아웃 완료");
       logout();
     } else {
       return false;
