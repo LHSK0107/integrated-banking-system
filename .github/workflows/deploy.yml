@@ -10,7 +10,7 @@ env:
   RESOURCE_PATH: ./integrated-banking-system/server/iam/src/main/resources/application.properties
   CODE_DEPLOY_APPLICATION_NAME: iam-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-server
-  PROJECT_PATH: integrated-banking-system/server/iam/
+  PROJECT_PATH: /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam
   POM_FILE: pom.xml
 
 jobs:
@@ -38,10 +38,18 @@ jobs:
           cd /home/runner/work/integrated-banking-system/integrated-banking-system/server/iam
           mvn package
         shell: bash
+        
+      - name: Copy files
+        run: |
+          cp /home/runner/work/integrated-banking-system/integrated-banking-system/deploy.sh ${{ env.PROJECT_PATH }}/target/
+          cp /home/runner/work/integrated-banking-system/integrated-banking-system/appspec.yml ${{ env.PROJECT_PATH }}/target/
+        shell: bash
 
         # [3]
-      - name: Make zip file
-        run: zip -r ./$GITHUB_SHA.zip .
+      - name: Zip the files
+        run: |
+          cd ${{ env.PROJECT_PATH }}/target
+          zip -r ${GITHUB_SHA}.zip *
         shell: bash
 
         # [4]
@@ -54,7 +62,7 @@ jobs:
 
         # [5]
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://iamdeploy/$GITHUB_SHA.zip
+        run: aws s3 cp --region ap-northeast-2 ${{ env.PROJECT_PATH }}/target/${GITHUB_SHA}.zip s3://${{ env.S3_BUCKET_NAME }}/${GITHUB_SHA}.zip
 
         # [6]
       - name: Code Deploy
