@@ -250,6 +250,7 @@ aside h2 {
 }
 .aside_nav li.aside_active a {
   background-color: var(--color-background);
+  font-weight: 400;
 }
 /* --- aside */
 

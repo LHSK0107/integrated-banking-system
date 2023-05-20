@@ -160,8 +160,8 @@ const Detail = () => {
                 <form onSubmit={onSubmit}>
                   <ul>
                     <li className="flex">
-                      <p>권한</p>
-                      <p>
+                      <p className="flex align_center">권한</p>
+                      <p className="flex align_center">
                         {loggedUserInfo?.userCode === "ROLE_ADMIN" ? (
                           <select value={role} onChange={handleRole}>
                             <option
@@ -215,8 +215,8 @@ const Detail = () => {
                       <p>{member?.id}</p>
                     </li>
                     <li className="flex">
-                      <p>이름</p>
-                      <p>
+                      <p className="flex align_center">이름</p>
+                      <p className="flex align_center">
                         <input
                           type="text"
                           value={rename}
@@ -226,8 +226,8 @@ const Detail = () => {
                       </p>
                     </li>
                     <li className="flex">
-                      <p>부서</p>
-                      <p>
+                      <p className="flex align_center">부서</p>
+                      <p className="flex align_center">
                         <select value={team || null} onChange={handleTeam}>
                           {dept.map((ele) => (
                             <option

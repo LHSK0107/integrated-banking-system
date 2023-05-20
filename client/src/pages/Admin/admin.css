@@ -73,11 +73,12 @@
   margin-bottom: 30px;
 }
 .admin_detail li p {
-  padding: 18px 8px;
+  padding: 18px;
   border-bottom: 1px solid var(--color-gray);
 }
 .admin_detail li p:first-child {
   flex: 0 0 20%;
+  font-size: .88rem;
   background-color: var(--color-background);
 }
 .admin_detail li p:last-child {
@@ -99,14 +100,13 @@
 .inspectMemberData .column {
   background-color: var(--color-background);
   border: none;
-}
-.inspectMemberData li {
+  padding: 18px 18px 18px 0;
   text-align: center;
-  padding: 10px 0;
 }
-/* .inspectMemberData li:not(:last-child) {
-  border-bottom: 1px solid var(--color-gray);
-} */
+.inspectMemberData div li {
+  padding: 10px 0;
+  text-align: center;
+}
 .inspectMemberData > div {
   height: 400px;
   overflow: auto;
@@ -130,7 +130,7 @@
 }
 .inspectAccountData .column {
   background-color: var(--color-background);
-  padding: 10px 0;
+  padding: 18px 0;
 }
 .inspectAccountData > div p {
   height: 40px;
@@ -152,7 +152,7 @@ ul.list_acctNo {
   height: 400px;
   overflow: auto;
   position: absolute;
-  top: 40px;
+  top: 56px;
   left: 150px;
 }
 .list_acctNo figure {
@@ -206,6 +206,7 @@ ul.list_acctNo {
   font-weight: 300;
   color: var(--color-darkgray);
   text-align: right;
+  margin-bottom: 18px;
 }
 /* --- 메뉴 클릭 기록 조회 */
 
@@ -243,6 +244,10 @@ ul.list_acctNo {
   border: none;
   color: var(--color-white);
 }
+.addDeptList {
+  border-top: 1px solid var(--color-gray);
+  padding-top: 28px;
+}
 .addDeptList input:first-child {
   width: 140px;
   margin-right: 10px;
@@ -251,8 +256,8 @@ ul.list_acctNo {
   width: 210px;
 }
 .addDeptList button {
-  background-color: var(--color-light-point);
-  border: none;
+  /* background-color: var(--color-light-point);
+  border: none; */
   margin-left: 18px;
 }
 /* --- 부서 관리 */
