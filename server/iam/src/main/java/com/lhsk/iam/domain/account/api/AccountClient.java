@@ -44,12 +44,12 @@ public class AccountClient {
 	
 	// 생성자를 통해 baseUrl을 지정해준다.
 	@Autowired
-	public AccountClient(@Value("${webCashApi.cookieKey}") String apiUrl, 
+	public AccountClient(@Value("${webCashApi.url}") String apiUrl, 
 						@Value("${webCashApi.cookieKey}") String cookieKey,
 						@Value("${webCashApi.cookieValue}") String cookieValue,
 						Environment env) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://scloudadmin.appplay.co.kr/gw/ErpGateWay")
+                .baseUrl(apiUrl)
                 .defaultCookie(cookieKey, cookieValue)
                 .build();
         this.objectMapper = new ObjectMapper();
@@ -61,13 +61,11 @@ public class AccountClient {
 	// 계좌목록을 가져오는 메소드
 	public List<AccountApiVO> getAccounts() {
 		try {
-			// baseUrl을 지정해줬고, 다른 url로 요청을 보낼 일이 없기 때문에 url()을 작성할 필요가 없다.
             String response = webClient.post()
             		.contentType(MediaType.APPLICATION_JSON)
             		.body(BodyInserters.fromValue(ALLACCOUNTS))
-                    .retrieve()					// HTTP 요청을 보내고 응답을 받아온다.
-                    .bodyToMono(String.class)	// 응답 바디를 Mono<String> 형태로 변환
-                    // Mono가 발행하는 데이터를 구독하여 최종 데이터를 반환, Mono를 블로킹하여 스트림의 처리를 동기적으로 수행
+                    .retrieve()
+                    .bodyToMono(String.class)
                     .block();
             JsonNode jsonNode = objectMapper.readTree(response);	// JsonNode로 파싱
             JsonNode recNode = jsonNode.get("RESP_DATA").get("REC");
