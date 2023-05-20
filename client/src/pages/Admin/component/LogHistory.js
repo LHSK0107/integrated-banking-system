@@ -13,14 +13,14 @@ const LogHistory = () => {
   // pagination
   const [itemOffset, setItemOffset] = useState(0); // 페이지에서 시작할 인덱스
   const endOffset = itemOffset + 10; // 페이지에서 끝날 인덱스
-  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  // console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   const currentItems = log?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(log?.length / 10);
   const handlePageClick = (event) => {
     const newOffset = (event.selected * 10) % log.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
+    // console.log(
+    //   `User requested page number ${event.selected}, which is offset ${newOffset}`
+    // );
     setItemOffset(newOffset);
   };
 
@@ -83,6 +83,15 @@ const LogHistory = () => {
           <section className="log_list">
             <h3>로그인 기록 조회</h3>
             <div className="list_wrap">
+              <p className="dateTime">
+                조회일시{" "}
+                <span>
+                  {new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+                    .toISOString()
+                    .replace("T", " ")
+                    .slice(0, -5)}
+                </span>
+              </p>
               <ul>
                 <li className="list_column flex">
                   <p className="list_name">이름</p>

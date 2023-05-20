@@ -139,12 +139,12 @@ const Index = () => {
                   <p>{errors.password?.message}</p>
                 </div>
                 <div className="login_btn_wrap flex justify_center align_center">
-                  <button className="more_btn" type="button">
+                  {/* <button className="more_btn" type="button">
                     뒤로
                   </button>
                   <button className="more_btn" type="reset">
                     취소
-                  </button>
+                  </button> */}
                   <button className="more_btn" type="submit">
                     로그인
                   </button>

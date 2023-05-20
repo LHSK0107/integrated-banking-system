@@ -6,7 +6,7 @@ const Breadcrumb = ({title, subMenu}) =>{
   return (
     <div className="nav_depth flex justify_end align_center">
       <Link className="flex justify_end align_center">
-        <figure>
+        <figure className="flex justify_center align_center">
           <img
             src={HomeIcon}
             alt="home img icon"
