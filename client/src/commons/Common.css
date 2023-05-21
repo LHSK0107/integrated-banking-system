@@ -59,9 +59,9 @@
 .user_info_wrap .login p:not(:last-child) {
   margin-right: 15px;
 }
-.top_gnb .user_info_wrap .login p:not(:last-child){
+/* .top_gnb .user_info_wrap .login p:not(:last-child){
   margin:0;
-}
+} */
 #nav .nav_inner {
   width: 1280px;
   padding: 0 20px;
@@ -116,7 +116,10 @@
 .nav_menu_section .menu_list .dropmenu_wrap .dropdown.active {
   display: block;
 }
-.nav_menu_section .menu_list .dropmenu_wrap .dropdown li {
+.img_rotate{
+  transform: rotate(180deg);
+}
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown>li {
   width: 100%;
   text-align: center;
   font-weight: 500;
@@ -139,7 +142,7 @@
 .nav_menu_section .menu_list .dropmenu_wrap .dropdown li:hover {
   font-weight: 700;
 }
-.nav_menu_section .menu_list .dropmenu_wrap .dropdown li a {
+.nav_menu_section .menu_list .dropmenu_wrap .dropdown>li>a {
   display: block;
   width: 100%;
   padding: 20px 0;
@@ -163,12 +166,12 @@
   width: 40px;
   height: 40px;
   margin-left: auto;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
 }
 .mobile_arrow_icon{
   display: none;
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
   margin:0;
 }
 .mobile_menu_wrap{
@@ -191,11 +194,14 @@
   background-color: #fff;
   opacity: 1;
   z-index: 9999;
-  padding: 40px;
+  padding: 30px;
 }
 .mobile_menu_wrap .mobile_content .top_gnb{
   z-index: 9999;
-  background-color: #fff;
+  background-color: var(--color-lightgray);
+  padding: 8px 10px;
+  border-radius: 10px;
+
 }
 .skeleton-img{
   width: 100%;
@@ -206,9 +212,11 @@
 @keyframes mobile-menu-slide {
   0%{
     transform: translateX(100%);
+    opacity: 0;
   }
   100%{
     transform: translateX(0);
+    opacity: 1;
   }
 }
 .signup_text{
@@ -219,31 +227,46 @@
   padding-bottom: 20px;
 }
 .mobile_menu_list{
-  margin-top: 50px;
+  margin-top: 15px;
   width: 100%;
 }
 .mobile_menu_list .mobile_menu{
   width: 100%;
 }
-.mobile_menu_list .mobile_menu li{
+.mobile_menu_list .mobile_menu>li{
   border-bottom: 1px solid #333;
 }
 .mobile_menu_list .mobile_menu li:first-child{
   border-top: 1px solid #333;
 }
-.mobile_menu_list .mobile_menu li a{
-  font-size: 1.4em;
+.mobile_menu_list .mobile_menu>li>a{
+  font-size: 1.2em;
   font-weight: 700;
   display: block;
-  height: 70px;
+  height: 60px;
   width: 100%;
-  line-height: 70px;
+  line-height: 60px;
 }
-.mobile_menu_list .mobile_menu li a div{
+.mobile_menu_list .mobile_menu>li>a>div{
   height: 100%;
 }
 .mobile_menu .mobile_sub_menu .mobile_sub{
   display: none;
+}
+.mobile_menu .mobile_sub_menu .mobile_sub li{
+}
+.mobile_menu .mobile_sub_menu .mobile_sub li a{
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  padding: 10px 0 10px 10px;
+
+}
+.mobile_menu .mobile_sub_menu .mobile_sub.active{
+  display: block;
+}
+.mobile_menu .mobile_sub_menu .mobile_sub.active .mobile_menu{
+  background-color: #000;
 }
 
 /* --- Navbar */
@@ -409,6 +432,9 @@ footer .footer_contact_wrap a {
     width: 100%;
     justify-content: space-between;
   }
+  .signup_wrap .login{
+    
+  }
 }
 @media (max-width: 768px) {
   footer p,
@@ -433,26 +459,55 @@ footer .footer_contact_wrap a {
   .mobile_menu_icon,
   .mobile_close_icon{
     display: block;
+    cursor: pointer;
   }
   .mobile_arrow_icon{
     display: inline-block;
+    transition: 0.2s all ease-in-out;
   }
   .mobile_menu_wrap{
     
   }
   .login{
     justify-content: flex-end;
+  }
+  .top_gnb{
+    width: 100%;
     margin-bottom: 40px;
+  }
+  .top_gnb button{
+    padding: 4px 8px;
   }
   .top_gnb .login div:not(:last-child){
     margin:0;
   }
-  .top_gnb .login div:last-child{
-    margin-top: 20px;
-  }
   .top_gnb .login {
     align-items: flex-end;
     flex-direction: column;
+  }
+  .timer-icon-img{
+    width: 15px;
+    height: 15px;
+  }
+  .top_gnb .user_info_wrap .login>div{
+    width: 100%;
+  }
+  .mobile_logout_btn_wrap{
+    margin:0;
+  }
+  .user_manage_wrap{
+    padding-top: 20px;
+  }
+  .user_manage_wrap div>p:not(:last-child){
+    margin-right: 20px;
+  }
+  .signup_wrap{
+    width: 100%;
+  }
+  .signup_wrap p {
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
   }
   /* nav end */
   #wrap{

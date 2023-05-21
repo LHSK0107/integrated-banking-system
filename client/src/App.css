@@ -341,7 +341,8 @@ section h3 {
   .mobile {
     display: block;
   }
-
+  #wrap{
+  }
   /* tablet */
   @media all and (min-width: 768px) and (max-width: 1024px) {
     html {
