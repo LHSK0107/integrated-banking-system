@@ -3,6 +3,8 @@ package com.lhsk.iam.global.config.auth;
 import java.security.GeneralSecurityException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,10 +15,12 @@ import com.lhsk.iam.domain.user.model.vo.UserVO;
 import com.lhsk.iam.global.encrypt.AesGcmEncrypt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 // http://localhost:8080/login => 여기서 동작을 안 한다.
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PrincipalDetailsService implements UserDetailsService{
 	
 	private final LoginMapper loginMapper;
@@ -33,6 +37,12 @@ public class PrincipalDetailsService implements UserDetailsService{
 		
 		UserVO userEntity =  loginMapper.findUserById(id);
 		
+		// 이 부분을 추가하면 ROLE_BLACK을 가진 사용자를 찾을 수 있습니다.
+	    if (userEntity.getUserCodeList().get(0).equals("ROLE_BLACK")) {
+	    	log.info("차단된 계정 : "+id);
+	        throw new DisabledException("This user is blacklisted");
+	    }
+		
 		AesGcmEncrypt aesGcmEncrypt = new AesGcmEncrypt();
 		try {
 			String name = aesGcmEncrypt.decrypt(userEntity.getName(), key);
@@ -43,7 +53,10 @@ public class PrincipalDetailsService implements UserDetailsService{
 			e.printStackTrace();
 		}
 		
-		return new PrincipalDetails(userEntity);
+		PrincipalDetails principal = new PrincipalDetails(userEntity);
+		
+//		return new PrincipalDetails(userEntity);
+		return principal;
 	}
 
 }

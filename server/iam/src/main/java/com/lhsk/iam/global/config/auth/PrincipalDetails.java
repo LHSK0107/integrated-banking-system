@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.lhsk.iam.domain.user.model.vo.UserVO;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public class PrincipalDetails implements UserDetails {
 
 	private UserVO userVO;
@@ -63,9 +65,15 @@ public class PrincipalDetails implements UserDetails {
 	// 계정이 활성화 되어있는가?
 	@Override
 	public boolean isEnabled() {
+		if(userVO.getUserCodeList().get(0).equals("ROLE_BLACK")) {
+			log.info("블랙리스트임");
+			return false;
+		} else {
+			log.info("isEnabled 통과");
+			return true;
+		}
 		// ex) 1년동안 접속을 하지 않았다면 휴면계정으로 바꾸기
 		// 현재시간 - 로그인시간 > 1년 ? false : true
-		return true;
 	}
 
 }
