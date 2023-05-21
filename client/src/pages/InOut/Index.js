@@ -175,12 +175,12 @@ const Index = () => {
     nowDate && initialDate();
   }, []);
 
+  console.log("option",optionVal);
   /** radio 버튼에 대한 onChange 핸들러 */
   const handleRadioOnChange = (e) => {
     const { name, value } = e.target;
     setOptionVal({ ...optionVal, [name]: value });
   };
-
   const [inoutDataList, setInoutDataList] = useState(null);
   const [pageCount, setPageCount] = useState(null);
   /** 조회 버튼 시, 서버 요청*/
@@ -205,6 +205,7 @@ const Index = () => {
           pageSize: optionVal?.paging,
         }
       );
+      console.log(data1);
       return data1;
     };
     getData()
@@ -243,10 +244,10 @@ const Index = () => {
             pageSize: optionVal?.paging,
           }
         );
-        console.log("res.list", data1.data.list);
-        console.log("res.totalPage", data1.data.totalPage);
         setPageCount(data1.data.totalPage);
         setInoutDataList(data1.data.list);
+        console.log("res.list", data1.data.list);
+        console.log("res.totalPage", data1.data.totalPage);
       } catch (error) {
         console.error("Error fetching data:", error);
         alert("조회 확인 후, 다시 시도해주시기 바랍니다.");

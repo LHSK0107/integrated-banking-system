@@ -99,7 +99,7 @@
 	    ORDER BY a.bank_cd asc
 	</select>
 	
-	<select id="getUserInoutReportData" resultType="InoutReportVO">
+	<select id="getUserInoutReportData" parameterType="InoutReportRequestVO" resultType="InoutReportVO">
 	    SELECT b.bank_cd, a.acct_no,
 	           (SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
 	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS in_cnt,
@@ -112,10 +112,10 @@
 	    JOIN user_account ua ON a.acct_no = ua.acct_no
 	    LEFT JOIN inout_past t ON a.acct_no = t.acct_no
 	    WHERE a.acct_dv IN ('01', '02', '03')
-	    <if test='bankCd != null and !bankCd.equals("All")'>
+	    <if test='bankCd != null and !bankCd.equals("null")'>
 	        AND a.bank_cd = #{bankCd}
 	    </if>
-	    <if test='acctNo != null and !acctNo.equals("All")'>
+	    <if test='acctNo != null and !acctNo.equals("null")'>
 	        AND a.acct_no = #{acctNo}
 	    </if>
 	    AND ua.user_no = #{userNo}
