@@ -45,7 +45,7 @@ const Index = () => {
           }
         );
         setInitialData(response.data);
-        setApiData(response.data.filter((ele) => ele.acctDv !== "03"));
+        setApiData(response.data);
       } catch (err) {
         console.log(`error 발생: ${err}`);
       }
@@ -119,7 +119,8 @@ const Index = () => {
       .map((val, i) => {
         return (
           <option key={i} value={val?.acctNo}>
-            &nbsp;{val?.ACCT_NO}&nbsp;{val?.loanNm}
+            {/* &nbsp;{val?.ACCT_NO}&nbsp;{val?.loanNm}&nbsp;{val?.acctNickNm} */}
+            &nbsp;{val?.acctNo}&nbsp;{val?.acctNickNm}
           </option>
         );
       });
@@ -280,6 +281,7 @@ const Index = () => {
                 </li>
               </ul>
               <form className="report_form" onSubmit={(e) => handleOnSubmit(e)}>
+                <div>
                 <ul>
                   <li className="flex">
                     <p className="flex align_center">계좌</p>
@@ -446,6 +448,8 @@ const Index = () => {
                     </div>
                   </li>
                 </ul>
+                </div>
+                
                 <div className="btn_wrap flex justify_center">
                   <button type="submit">조회</button>
                 </div>

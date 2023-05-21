@@ -182,6 +182,11 @@ section form button {
   .form_wrap form li {
     border: none;
   }
+  .form_wrap form li:first-child div {
+    display: block;
+  }.form_wrap form li:first-child select:first-child {
+    margin-bottom: 10px;
+  }
   .form_wrap li > p {
     background-color: var(--color-white);
     padding: 8px;
@@ -196,5 +201,8 @@ section form button {
   }
   .form_wrap .btn_wrap {
     margin-bottom: 10px;
+  }
+  .result_data li:first-child {
+    display: none;
   }
 }

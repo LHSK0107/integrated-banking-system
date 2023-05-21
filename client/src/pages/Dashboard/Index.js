@@ -267,7 +267,7 @@ const Index = () => {
                   </span>
                 </div>
                 <h3>
-                  {balance["total"] === undefined ? (
+                  {balance["total"] === undefined || null ? (
                     "-"
                   ) : (
                     <Balance balance={balance["total"]} />
