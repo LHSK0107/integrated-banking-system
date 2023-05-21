@@ -40,9 +40,10 @@ const Index = () => {
       );
       return response;
     };
-    loggedUserInfo?.userCode && getUsers().then(res=>{
-      setApiData(res.data);
-    });
+    loggedUserInfo?.userCode &&
+      getUsers().then((res) => {
+        setApiData(res.data);
+      });
     return () => {
       isMounted = false;
       controller.abort();
@@ -121,12 +122,22 @@ const Index = () => {
                   <Balance balance={calcTotalBal().stateBal} />
                 </h4>
                 <p></p>
-                <figure className="flex align_center">
-                  <img
-                    src={require(`../../assets/images/icon/arrow_up_w.png`)}
-                    alt=""
-                  />
-                </figure>
+                <div className="pc">
+                  <figure className="flex align_center">
+                    <img
+                      src={require(`../../assets/images/icon/arrow_up_w.png`)}
+                      alt=""
+                    />
+                  </figure>
+                </div>
+                <div className="mobile">
+                  <figure className="flex align_center">
+                    <img
+                      src={require(`../../assets/images/icon/arrow_down_b.png`)}
+                      alt=""
+                    />
+                  </figure>
+                </div>
               </div>
             </div>
             <ul>{AcctList(statementList)}</ul>
@@ -148,12 +159,22 @@ const Index = () => {
                   <Balance balance={calcTotalBal().depInsBal} />
                 </h4>
                 <p></p>
-                <figure className="flex align_center">
-                  <img
-                    src={require(`../../assets/images/icon/arrow_up_w.png`)}
-                    alt=""
-                  />
-                </figure>
+                <div className="pc">
+                  <figure className="flex align_center">
+                    <img
+                      src={require(`../../assets/images/icon/arrow_up_w.png`)}
+                      alt=""
+                    />
+                  </figure>
+                </div>
+                <div className="mobile">
+                  <figure className="flex align_center">
+                    <img
+                      src={require(`../../assets/images/icon/arrow_down_b.png`)}
+                      alt=""
+                    />
+                  </figure>
+                </div>
               </div>
             </div>
             <ul>{AcctList(depAInsList)}</ul>
@@ -187,12 +208,22 @@ const Index = () => {
               <h4>
                 <Balance balance={calcTotalBal().loanBal} />
               </h4>
-              <figure className="flex align_center">
-                <img
-                  src={require(`../../assets/images/icon/arrow_up_w.png`)}
-                  alt=""
-                />
-              </figure>
+              <div className="pc">
+                <figure className="flex align_center">
+                  <img
+                    src={require(`../../assets/images/icon/arrow_up_w.png`)}
+                    alt=""
+                  />
+                </figure>
+              </div>
+              <div className="mobile">
+                <figure className="flex align_center">
+                  <img
+                    src={require(`../../assets/images/icon/arrow_down_b.png`)}
+                    alt=""
+                  />
+                </figure>
+              </div>
             </div>
           </div>
           <ul>{AcctList(loanList)}</ul>
@@ -205,7 +236,7 @@ const Index = () => {
     <div id="wrap">
       <div className="inner">
         <Breadcrumb title={"조회"} subMenu={"전체계좌조회"} />
-        <div className="flex">
+        <div className="inquiry flex">
           <SideNav now={"전체계좌조회"} />
           <section>
             <h3>전체계좌조회</h3>

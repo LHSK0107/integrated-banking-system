@@ -6,11 +6,15 @@ import { useNavigate } from "react-router";
 import { StepContext } from "../context/StepContext";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
+import autoLogout from "../../../utils/autoLogout";
+import axios from "axios";
+
 import "../mypage.css";
 
 const UpdateInfo = () => {
   const AuthAxios = useAxiosInterceptor();
-  const { loggedUserInfo } = useAuth();
+  const { setToken2, loggedUserInfo, setIsAuth, setLoggedUserInfo } =
+    useAuth();
   const navigate = useNavigate();
   let menuList = JSON.parse(localStorage.getItem("menuClick"));
 
@@ -189,50 +193,61 @@ const UpdateInfo = () => {
       }
     }
   };
+  console.log(menuList);
 
   const handleWithdraw = () => {
-    const controller = new AbortController();
-    const logout = async () => {
-      try {
-        const response = await AuthAxios.post(
-          "https://iam-api.site/api/logout",
-          {
-            allAccount: 1,
-            inout: 2,
-            inoutReport: 3,
-            dailyReport: 4,
-            dashboard: 5,
-          },
-          { withCredentials: true }
-        );
-      } catch (error) {
-        console.log(error);
-      }
+    /** logout시, context 비우는 함수 */
+    const logout = () => {
+      setToken2(null);
+      setLoggedUserInfo(null);
+      setIsAuth(false);
+      navigate("/login");
     };
 
     if (window.confirm("탈퇴하시겠습니까?")) {
-      const callDelete = async () => {
-        try {
-          const controller = new AbortController();
-          const response = await AuthAxios.delete(
-            `/api/users/${loggedUserInfo.userNo}`,
-            {
-              menuList,
-            }
-          );
-          console.log(response);
-          if (response.status === 200) {
+      // const callDelete = () => {
+      //   const deleteMember = async () => {
+      //     const menuClickList = JSON.parse(localStorage.getItem("menuClick"));
+      //     return await axios.delete(
+      //       `https://iam-api.site/api/users/${loggedUserInfo.userNo}`,
+      //       {data:menuClickList}
+      //     );
+      //   };
+      //   //   try {
+      //   //     const response = await AuthAxios.delete(
+      //   //       `/api/users/${loggedUserInfo.userNo}`, null, menuList
+      //   //     );
+      //   //     console.log(response);
+      //   //     if (response.status === 200) {
+      //   //       alert("탈퇴되었습니다.");
+      //   //     }
+      //   //   } catch (err) {
+      //   //     console.log(`error 발생: ${err}`);
+      //   //   }
+      //   return deleteMember;
+      // };
+      // 로컬 비우고
+      // 로그아웃 시키고
+      // autoLogout();
+      // } else {
+      //   return false;
+      // callDelete();
+      axios
+        .delete(
+          `https://iam-api.site/api/users/${loggedUserInfo.userNo}`,
+          { data: menuList },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
             alert("탈퇴되었습니다.");
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("menuClick");
+            logout();
           }
-        } catch (err) {
-          console.log(`error 발생: ${err}`);
-        }
-      };
-      // logout();
-      callDelete();
-      navigate("/");
-    } else {
-      return false;
+        })
+        .catch((err) => console.log(err));
     }
   };
 

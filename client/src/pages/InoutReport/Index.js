@@ -3,7 +3,7 @@ import "./inoutReport.css";
 import React, { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import ReactDOMServer from "react-dom/server";
 import { Description } from "../../commons/Description";
-import { SideNav } from "../../commons/SideNav";
+import { SideNavReport } from "../../commons/SideNavReport";
 import Breadcrumb from "../../commons/Breadcrumb";
 import BankName from "../../hooks/useBankName";
 import useCurrentTime from "../../hooks/useCurrentTime";
@@ -189,9 +189,9 @@ const Index = () => {
   return (
     <div id="wrap">
       <div className="inner">
-        <Breadcrumb title={"조회"} subMenu={"입출금내역조회"} />
-        <div className="inoutPage flex">
-          <SideNav now={"입출내역조회"} />
+        <Breadcrumb title={"보고서"} subMenu={"입출내역보고서"} />
+        <div className="inoutReport flex">
+          <SideNavReport now={"입출내역보고서"} />
           <section>
             <h3>입출내역보고서</h3>
             <Description />

@@ -138,3 +138,27 @@ section .description {
     padding: 8px 28px 8px 18px;
     border: 1px solid var(--color-main);
 }
+
+/* media query */
+/* mobile */
+@media (max-width:768px) {
+    .inoutReport aside {
+        display: none;
+    }
+    .inoutReport .description {
+        display: none;
+    }
+    .inoutReport aside + section {
+        width: 100%;
+        margin: 0;
+    }
+    .inoutReport .form_wrap li > p {
+        width: 10%;
+    }
+    .inoutReport .form_wrap li > div {
+        width: 90%;
+    }
+    .inoutReport section form button {
+        padding: 8px 18px;
+    }
+}

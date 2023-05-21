@@ -35,9 +35,8 @@ const Index = () => {
         const response = await AuthAxios.get(totalUri, {
           signal: controller.signal,
         });
-        // console.log(response);
         if (response.status === 200) {
-          setBalance(response.data.map(ele=>{if(ele === null) return 0; else return ele;}));
+          setBalance(response.data);
         }
       } catch (err) {
         console.log(`error 발생: ${err}`);
@@ -92,7 +91,7 @@ const Index = () => {
   useEffect(() => {
     setRatioBal([balance["01"], balance["02"], balance["03"]]);
   }, [balance]);
-  console.log(activeIndex);
+  // console.log(activeIndex);
 
   // 계좌 리스트 그리기
   function DrawTable() {
@@ -212,21 +211,21 @@ const Index = () => {
         ele.substring(0, 4)
       );
     }
-    console.log(inoutBal);
-    console.log(
-      "graph 들어가기 전 ",
-      activeIndex,
-      " ",
-      inoutBal[activeIndex].in
-    );
+    // console.log(inoutBal);
+    // console.log(
+    //   "graph 들어가기 전 ",
+    //   activeIndex,
+    //   " ",
+    //   inoutBal[activeIndex].in
+    // );
     return <Bar data={inoutBal[activeIndex]} />;
   };
 
-  console.log(balance);
-  console.log(ratioBal);
+  // console.log(balance);
+  // console.log(ratioBal);
   // console.log(inoutBal);
   // console.log(activeIndex);
-  console.log(totalAccount);
+  // console.log(totalAccount);
 
   return (
     <div id="wrap">

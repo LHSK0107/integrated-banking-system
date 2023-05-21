@@ -182,27 +182,30 @@ section form button {
   .form_wrap form li {
     border: none;
   }
-  .form_wrap form li:first-child div {
+  .inoutPage .form_wrap form li:first-child div {
     display: block;
-  }.form_wrap form li:first-child select:first-child {
+  }
+  .inoutPage .form_wrap form li:first-child select:first-child {
     margin-bottom: 10px;
+    display: block;
   }
   .form_wrap li > p {
     background-color: var(--color-white);
     padding: 8px;
-    width: 61px;
+    width: 20%;
   }
-  .form_wrap li > div {
+  .inoutPage .form_wrap li > div {
     padding: 5px 10px;
+    width: 80%;
   }
-  .form_wrap li > div > div span {
+  .inoutPage .form_wrap li > div > div span {
     border-radius: 10px;
     padding: 6px 9px;
   }
-  .form_wrap .btn_wrap {
+  .inoutPage .form_wrap .btn_wrap {
     margin-bottom: 10px;
   }
-  .result_data li:first-child {
+  .inoutPage .result_data li:first-child {
     display: none;
   }
 }

@@ -48,6 +48,9 @@
 .list_column > p:not(:last-child) {
   border-right: 1px solid var(--color-gray);
 }
+.admin_list .list_wrap li > div {
+  color: var(--color-gray);
+}
 .admin_list .list_userCode {
   flex: 0 0 20%;
 }
@@ -83,6 +86,9 @@
 }
 .admin_detail li p:last-child {
   flex: 0 0 80%;
+}
+.admin_detail .btn_wrap button[type="button"] {
+  color: var(--color-red);
 }
 /* --- 회원 정보 */
 
