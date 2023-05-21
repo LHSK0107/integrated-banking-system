@@ -49,12 +49,11 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleMenuIconClick = () => {
+    mobileInqiryRef && mobileInqiryRef.current.classList.remove("active");
+    mobileReportRef && mobileReportRef.current.classList.remove("active");
     mobileMenuRef.current.classList.add("active");
   };
   const handleMenuCloseClick = () => {
-    mobileMenuRef.current.classList.remove("active");
-  }
-  const closeMobileMenu = () =>{
     mobileMenuRef.current.classList.remove("active");
   }
   /** logout시, context 비우는 함수 */
@@ -80,13 +79,15 @@ const Navbar = () => {
 
   const LoginSection = () => {
     return (
-      <div className="login flex align_center">
-        <p className="signup_text">
-          <Link to="./signup">회원가입</Link>
-        </p>
-        <p className="signup_text">
-          <Link to="./login">로그인</Link>
-        </p>
+      <div className="signup_wrap">
+        <div className="login flex align_center">
+          <p className="signup_text">
+            <Link to="./signup" onClick={()=>{handleMenuCloseClick()}}>회원가입</Link>
+          </p>
+          <p className="signup_text">
+            <Link to="./login" onClick={()=>{handleMenuCloseClick()}}>로그인</Link>
+          </p>
+        </div>
       </div>
     );
   };
@@ -114,14 +115,73 @@ const Navbar = () => {
         </div>
         <div>
           <p>
-            <Link to="/mypage">개인정보수정</Link>
+            <Link to="/mypage" onClick={()=>{handleMenuCloseClick()}}>개인정보수정</Link>
           </p>
           {props?.value?.userCode === "ROLE_ADMIN" ||
           props?.value?.userCode === "ROLE_MANAGER" ? (
             <p>
-              <Link to="/admin">관리자 페이지</Link>
+              <Link to="/admin" onClick={()=>{handleMenuCloseClick()}}>관리자 페이지</Link>
             </p>
           ) : null}
+          <button className="logout_btn" onClick={() => handleLogout()}>
+            로그아웃
+          </button>
+        </div>
+      </div>
+    );
+  };
+  const MobileLoginSection = () => {
+    return (
+      <div className="signup_wrap">
+        <div className="login flex align_center">
+          <p className="signup_text">
+            <Link to="./signup">회원가입</Link>
+          </p>
+          <p className="signup_text">
+            <Link to="./login">로그인</Link>
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const MobileLogoutSection = (props) => {
+    return (
+      <div className="login flex align_center">
+        <div className="flex align_center justify_between">
+          <div>
+            <p className="login_username">
+              안녕하세요&nbsp;&nbsp;&nbsp;
+              <span>
+                <b>{props?.value?.name}</b>
+              </span>
+              님
+            </p>
+          </div>
+          <div className="mobile_logout_btn_wrap">
+            <ExpCountDown seconds={sessionTime} />
+            <button
+              className="login_extension_btn"
+              onClick={() => {
+                ExtendLoginSession();
+              }}
+            >
+              로그인 연장
+            </button>
+          </div>
+        </div>
+        <div className="user_manage_wrap flex justify_between">
+          <div>
+            <p>
+              <Link to="/mypage">개인정보수정</Link>
+            </p>
+            {props?.value?.userCode === "ROLE_ADMIN" ||
+            props?.value?.userCode === "ROLE_MANAGER" ? (
+              <p>
+                <Link to="/admin">관리자 페이지</Link>
+              </p>
+            ) : null}
+          </div>
           <button className="logout_btn" onClick={() => handleLogout()}>
             로그아웃
           </button>
@@ -172,6 +232,20 @@ const Navbar = () => {
   //     scrollFunc(scrollData);
   //   })
   // },[scrollData,scrollFunc]);
+  
+  const mobileInqiryRef = useRef();
+  const mobileReportRef = useRef();
+  const downIcon1Ref = useRef();
+  const downIcon2Ref = useRef();
+  const openMobileSubMenu = (menu) => {
+    if(menu==="inquiry"){
+      mobileInqiryRef.current.classList.toggle("active");
+      downIcon1Ref.current.classList.toggle("img_rotate");
+    }else {
+      mobileReportRef.current.classList.toggle("active");
+      downIcon2Ref.current.classList.toggle("img_rotate");
+    }
+  };
   return (
     <header id="header">
       <div ref={mobileMenuRef} className="mobile_menu_wrap">
@@ -188,7 +262,7 @@ const Navbar = () => {
           <div className="top_gnb">
             <div className="user_info_wrap">
               {token ? (
-                <LogoutSection value={loggedUserInfo} func={handleLogout} />
+                <MobileLogoutSection value={loggedUserInfo} func={handleLogout} />
               ) : (
                 <LoginSection />
               )}
@@ -197,27 +271,40 @@ const Navbar = () => {
           <div className="mobile_menu_list">
             <ul className="mobile_menu">
               <li>
-                <Link className="flex" onClick={()=>{closeMobileMenu()}} to="/">소개</Link>
+                <Link className="flex" onClick={()=>{handleMenuCloseClick()}} to="/">소개</Link>
               </li>
               <li className="mobile_sub_menu">
-                <Link className="flex" onClick={()=>{closeMobileMenu()}} to="/inquiry">
+                <Link className="flex" onClick={()=>{openMobileSubMenu("inquiry")}} to="">
                   <div className="flex align_center justify_between">
                   조회
                   <figure>
-                    <img className="mobile_arrow_icon" src={MenuArrowIcon} alt="menu down 아이콘"/> 
+                    <img ref={downIcon1Ref} className="mobile_arrow_icon" src={MenuArrowIcon} alt="menu down 아이콘"/> 
                   </figure>
                   </div>
                 </Link>
-                <ul className="mobile_sub">
-                  <li><Link to="">asd</Link></li>
-                  <li><Link to="">asd</Link></li>
+                <ul ref={mobileInqiryRef} className="mobile_sub">
+                  <li><Link to="/inquiry" onClick={() => {handleMenuCloseClick();}}>
+                    &middot;계좌조회</Link>
+                  </li>
+                  <li><Link to="/inout" onClick={() => {handleMenuCloseClick();}}>&middot;입출금내역조회</Link></li>
+                </ul>
+              </li>
+              <li className="mobile_sub_menu">
+                <Link className="flex" onClick={()=>{openMobileSubMenu("report")}} to="">
+                  <div className="flex align_center justify_between">
+                    보고서
+                    <figure>
+                      <img ref={downIcon2Ref} className="mobile_arrow_icon" src={MenuArrowIcon} alt="menu down 아이콘"/> 
+                    </figure>
+                    </div>
+                </Link>
+                <ul ref={mobileReportRef} className="mobile_sub">
+                  <li><Link to="/dailyReport" onClick={() => {handleMenuCloseClick();}}>&middot;일일시재보고서</Link></li>
+                  <li><Link to="/inoutReport" onClick={() => {handleMenuCloseClick();}}>&middot;입출금내역보고서</Link></li>
                 </ul>
               </li>
               <li>
-                <Link className="flex" onClick={()=>{closeMobileMenu()}} to="/dailyReport">보고서</Link>
-              </li>
-              <li>
-                <Link className="flex align_center" onClick={()=>{closeMobileMenu()}} to="/dashboard">대시보드</Link>
+                <Link className="flex align_center" onClick={()=>{handleMenuCloseClick()}} to="/dashboard">대시보드</Link>
               </li>
             </ul>
           </div>
@@ -324,7 +411,7 @@ const Navbar = () => {
                   </li>
                   <li>
                     <Link to="/inoutReport" onClick={() => handleClickCount(4)}>
-                      입출금
+                      입출내역
                     </Link>
                   </li>
                 </ul>

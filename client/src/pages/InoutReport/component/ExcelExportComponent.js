@@ -1,12 +1,12 @@
 import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
-
+import ReactDomServer from 'react-dom/server';
+import BankNM from "../../../hooks/useBankName";
 const ExcelExportComponent = ({data}) => {
   const inquiryDate = data?.date;
-  const bankName = data?.bankNm;
+  const bankName = data?.bankCd==="전체" ? data?.bankCd : ReactDomServer.renderToStaticMarkup(<BankNM bankCD={data?.bankCd} />);
   const accountNumber = data?.acctNo;
   const inoutList = data?.acctlist;
-
   const excelDownload = () => {
     createTable().then((url) => {
       const downloadNode = document.createElement("a");
@@ -78,7 +78,7 @@ const ExcelExportComponent = ({data}) => {
       outTotalBal+=row.outSum;
       totalBal+=row.afterBal;
       tb2.push({
-        A: row.bankNm,
+        A: ReactDomServer.renderToStaticMarkup(<BankNM bankCD={row.bankCd} />),
         B: ` ${row.acctNo}`,
         C: row.beforeBal,
         D: `${row.inCnt}건`,

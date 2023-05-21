@@ -154,12 +154,17 @@ const Index = () => {
   const [inoutDataList,setInoutDataList]=useState(null);
   inoutDataList&&console.log(inoutDataList);
   const handleClickExcelExport = (e) =>{
-    console.log(optionVal);
+    console.log({
+      bankNm : optionVal?.bankCD ==="" ? "null" : optionVal?.bankCD,
+      acctNo: optionVal?.acctNO === "" ? "null" : optionVal?.acctNO,
+      startDt: optionVal?.strDate,
+      endDt: optionVal?.endDate,
+    });
     e.preventDefault();
     // cancellation token
     const getData = async () => {
         const inoutData = await AuthAxios.post("/api/users/reports/inout",{
-          bankNm : optionVal?.bankCD ==="" ? "null" : optionVal?.bankCD,
+          bankCd : optionVal?.bankCD ==="" ? "null" : optionVal?.bankCD,
           acctNo: optionVal?.acctNO === "" ? "null" : optionVal?.acctNO,
           startDt: optionVal?.strDate,
           endDt: optionVal?.endDate,
