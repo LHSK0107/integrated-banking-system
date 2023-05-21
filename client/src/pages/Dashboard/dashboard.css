@@ -193,4 +193,7 @@
   .dashboard .mobile_total > div > div span {
     margin-right: 10px;
   }
+  .dashboard .table_btn > li > p {
+    padding: 8px 18px;
+  }
 }

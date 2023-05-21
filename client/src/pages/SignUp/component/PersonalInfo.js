@@ -104,6 +104,7 @@ const PersonalInfo = () => {
     <div className="form_container">
       <form className="userInfo_form" onSubmit={handleSubmit(onSubmit)}>
         <div>
+          <p>이름</p>
           <input
             type="text"
             placeholder="이름을 입력하세요."
@@ -114,6 +115,7 @@ const PersonalInfo = () => {
           <p>{errors.name?.message}</p>
         </div>
         <div>
+          <p>부서</p>
           <select value={personalInputValue?.dept} {...register("dept")} onChange={onChange}>
             {dept.map((ele) => (
               <option
@@ -127,12 +129,13 @@ const PersonalInfo = () => {
           <p>{errors.dept?.message}</p>
         </div>
         <div>
+          <p>휴대폰번호</p>
           <input
             type="text"
             value={personalInputValue?.phone}
             {...register("phone")}
             onChange={onChange}
-            placeholder="휴대폰 번호를 '-'를 포함하여 입력하세요."
+            placeholder="휴대폰번호를 '-'를 포함하여 입력하세요."
           />
           <p>{errors.phone?.message}</p>
         </div>

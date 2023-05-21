@@ -37,7 +37,7 @@ const Index = () => {
         });
         // console.log(response);
         if (response.status === 200) {
-          setBalance(response.data);
+          setBalance(response.data.map(ele=>{if(ele === null) return 0; else return ele;}));
         }
       } catch (err) {
         console.log(`error 발생: ${err}`);

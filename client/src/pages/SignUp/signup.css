@@ -2,8 +2,8 @@
 .signup_section {
   /* overflow-y: hidden; */
   width: 100%;
-  /* height: calc(100vh - 120px); */
-  height: 100%;
+  height: calc(100vh - 120px);
+  /* height: 100%; */
   padding: 40px;
   position: relative;
   left: 0;
@@ -15,11 +15,10 @@
   padding: 40px;
   background-color: var(--color-white);
 }
-.signup_section .signup_image_section{
+.signup_section > div > div > div {
   width: 48%;
-}
-.signup_section .signup_form_section{
-  width: 48%;
+  /* height: 100%; */
+  position: relative;
 }
 .signup_section .signup_image_section figure{
   width: 100%;
@@ -45,6 +44,7 @@
 .signup_form_wrap input[type=submit]{
   width: 100%;
   height: 50px;
+  margin: 28px 0;
 }
 .signup_form_wrap p {
   margin-bottom: 10px;
@@ -83,7 +83,8 @@
   margin: 50px 0 20px 0;
 }
 .userInfo_form .email_verify_wrap input[type=text]{
-  width: 65px;
+  /* width: 65px; */
+  width: 100%;
   height: 65px;
   text-align: center;
 }
@@ -95,14 +96,8 @@
 {
   width: 46%;
   height: 50px;
-  font-size: 1rem;
-  font-family: "Noto Sans KR", sans-serif;
-  color: var(--color-black);
-  outline: none;
   border: 1px solid var(--color-gray);
-  border-radius: 3px;
   background-color: var(--color-white);
-  padding:0;
   margin:0;
 }
 .userInfo_form .signup_checkID_wrap figure{
@@ -216,16 +211,8 @@ input::-webkit-inner-spin-button {
   .progress_wrap::before {
     width: 82%;
   }
-  .userInfo_form .email_verify_wrap input[type=text] {
-    width: 40px;
-    height: 40px;
-  }
   .progress_wrap::before {
     width: 86%;
-  }
-  .userInfo_form .email_verify_wrap input[type=text] {
-    width: 40px;
-    height: 40px;
   }
 }
 
@@ -233,10 +220,6 @@ input::-webkit-inner-spin-button {
 @media (max-width: 1024) {
   .progress_wrap::before {
     width: 90%;
-  }
-  .userInfo_form .email_verify_wrap input[type=text] {
-    width: 40px;
-    height: 40px;
   }
 }
 

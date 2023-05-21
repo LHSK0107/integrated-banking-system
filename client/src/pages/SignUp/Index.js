@@ -31,7 +31,7 @@ const Index = () => {
   };
   return (
     <div className="signup_section">
-      <div className="inner">
+      <div className="inner flex justify_center">
         <div className="signup_wrap flex justify_between">
           <div className="pc">
             <div className="signup_image_section flex justify_center align_center">
