@@ -154,7 +154,7 @@ const Index = () => {
   const [inoutDataList,setInoutDataList]=useState(null);
   inoutDataList&&console.log(inoutDataList);
   const handleClickExcelExport = (e) =>{
-    console.log("실행");
+    console.log(optionVal);
     e.preventDefault();
     // cancellation token
     const getData = async () => {
@@ -183,6 +183,7 @@ const Index = () => {
     return false;
   }
   const exportExcel = useCallback(() => {
+    console.log(inoutDataList);
     return inoutDataList && <ExcelExportComponent data={inoutDataList} />;
   },[inoutDataList]);
   return (

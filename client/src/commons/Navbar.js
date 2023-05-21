@@ -1,14 +1,14 @@
 import "./Common.css";
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/brand/logo.png";
-import axios from "axios";
 import useAuth from "../hooks/useAuth";
-import useAxiosInterceptor from "../hooks/useAxiosInterceptor";
 import autoLogout from "../utils/autoLogout";
 import ExpCountDown from "./ExpCountDown";
 import useRefreshToken from "../hooks/useRefreshToken";
-
+import MenuIcon from "../assets/images/icon/menu.png";
+import MenuCloseIcon from "../assets/images/icon/close.png";
+import MenuArrowIcon from "../assets/images/icon/arrow_down.png";
 /** click */
 const handleClickCount = (menuNum) => {
   let menuList = JSON.parse(localStorage.getItem("menuClick"));
@@ -44,9 +44,19 @@ const Navbar = () => {
     SetSessionTime(1800);
   },[token]);
 
-
+  const mobileMenuRef = useRef();
+  const mobileCloseRef = useRef();
   const navigate = useNavigate();
 
+  const handleMenuIconClick = () => {
+    mobileMenuRef.current.classList.add("active");
+  };
+  const handleMenuCloseClick = () => {
+    mobileMenuRef.current.classList.remove("active");
+  }
+  const closeMobileMenu = () =>{
+    mobileMenuRef.current.classList.remove("active");
+  }
   /** logout시, context 비우는 함수 */
   const logout = () => {
     setToken2(null);
@@ -71,10 +81,10 @@ const Navbar = () => {
   const LoginSection = () => {
     return (
       <div className="login flex align_center">
-        <p>
+        <p className="signup_text">
           <Link to="./signup">회원가입</Link>
         </p>
-        <p>
+        <p className="signup_text">
           <Link to="./login">로그인</Link>
         </p>
       </div>
@@ -84,26 +94,38 @@ const Navbar = () => {
   const LogoutSection = (props) => {
     return (
       <div className="login flex align_center">
-        <p className="login_username">
-          안녕하세요&nbsp;&nbsp;&nbsp;<span><b>{props?.value?.name}</b></span>님
-        </p>
-        <ExpCountDown seconds={sessionTime}/>
-        <button onClick={()=>{ExtendLoginSession()}}>로그인 연장</button>
-        {/* <p className="login_exp">{props?.value?.exp}</p> */}
-        <p>
-          <Link to="/mypage">개인정보수정</Link>
-        </p>
-        {props?.value?.userCode === "ROLE_ADMIN" ||
-          props?.value?.userCode === "ROLE_MANAGER" ? (
-          <p>
-            <Link to="/admin">관리자 페이지</Link>
+        <div>
+          <p className="login_username">
+            안녕하세요&nbsp;&nbsp;&nbsp;
+            <span>
+              <b>{props?.value?.name}</b>
+            </span>
+            님
           </p>
-
-        ) : (null)
-        }
-        <button className="logout_btn" onClick={()=>handleLogout()}>
-          로그아웃
-        </button>
+          <ExpCountDown seconds={sessionTime} />
+          <button
+            className="login_extension_btn"
+            onClick={() => {
+              ExtendLoginSession();
+            }}
+          >
+            로그인 연장
+          </button>
+        </div>
+        <div>
+          <p>
+            <Link to="/mypage">개인정보수정</Link>
+          </p>
+          {props?.value?.userCode === "ROLE_ADMIN" ||
+          props?.value?.userCode === "ROLE_MANAGER" ? (
+            <p>
+              <Link to="/admin">관리자 페이지</Link>
+            </p>
+          ) : null}
+          <button className="logout_btn" onClick={() => handleLogout()}>
+            로그아웃
+          </button>
+        </div>
       </div>
     );
   };
@@ -152,13 +174,65 @@ const Navbar = () => {
   // },[scrollData,scrollFunc]);
   return (
     <header id="header">
+      <div ref={mobileMenuRef} className="mobile_menu_wrap">
+        <div className="mobile_content">
+          <img
+            className="mobile_close_icon"
+            ref={mobileCloseRef}
+            src={MenuCloseIcon}
+            alt="mobile 닫기 아이콘"
+            onClick={() => {
+              handleMenuCloseClick();
+            }}
+          />
+          <div className="top_gnb">
+            <div className="user_info_wrap">
+              {token ? (
+                <LogoutSection value={loggedUserInfo} func={handleLogout} />
+              ) : (
+                <LoginSection />
+              )}
+            </div>
+          </div>
+          <div className="mobile_menu_list">
+            <ul className="mobile_menu">
+              <li>
+                <Link className="flex" onClick={()=>{closeMobileMenu()}} to="/">소개</Link>
+              </li>
+              <li className="mobile_sub_menu">
+                <Link className="flex" onClick={()=>{closeMobileMenu()}} to="/inquiry">
+                  <div className="flex align_center justify_between">
+                  조회
+                  <figure>
+                    <img className="mobile_arrow_icon" src={MenuArrowIcon} alt="menu down 아이콘"/> 
+                  </figure>
+                  </div>
+                </Link>
+                <ul className="mobile_sub">
+                  <li><Link to="">asd</Link></li>
+                  <li><Link to="">asd</Link></li>
+                </ul>
+              </li>
+              <li>
+                <Link className="flex" onClick={()=>{closeMobileMenu()}} to="/dailyReport">보고서</Link>
+              </li>
+              <li>
+                <Link className="flex align_center" onClick={()=>{closeMobileMenu()}} to="/dashboard">대시보드</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
       <nav id="nav">
         <div ref={navInfoRef} className="nav_info_section flex justify_center">
           <div className="nav_inner flex justify_between align_center">
             <div className="family_site_wrap">
               <ul className="family_site flex">
                 <li>
-                  <Link to="https://www.webcash.co.kr/webcash/1000.html" target={"_blank"}>
+                  <Link
+                    to="https://www.webcash.co.kr/webcash/1000.html"
+                    target={"_blank"}
+                  >
                     Webcash
                   </Link>
                 </li>
@@ -169,7 +243,9 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
-                    to="https://www.serp.co.kr/home/home_1000.html" target={"_blank"}>
+                    to="https://www.serp.co.kr/home/home_1000.html"
+                    target={"_blank"}
+                  >
                     경리나라
                   </Link>
                 </li>
@@ -197,44 +273,76 @@ const Navbar = () => {
               <li>
                 <Link to="/">소개</Link>
               </li>
-              <li ref={selectRef}
-                onMouseOver={
-                  (e)=>{
-                    e.stopPropagation();
-                    handleDropdown("조회");
-                  }} 
-                onMouseLeave={
-                  (e)=>{
-                    e.stopPropagation();
-                    handleLeaveDropdown("조회");
-                  }} className="dropmenu_wrap">
-                <Link to="/inquiry" onClick={()=>handleClickCount(1)}>조회</Link>
+              <li
+                ref={selectRef}
+                onMouseOver={(e) => {
+                  e.stopPropagation();
+                  handleDropdown("조회");
+                }}
+                onMouseLeave={(e) => {
+                  e.stopPropagation();
+                  handleLeaveDropdown("조회");
+                }}
+                className="dropmenu_wrap"
+              >
+                <Link to="/inquiry" onClick={() => handleClickCount(1)}>
+                  조회
+                </Link>
                 <ul className="dropdown">
-                  <li><Link to="/inquiry" onClick={()=>handleClickCount(1)}>전체계좌</Link></li>
-                  <li><Link to="/inout" onClick={()=>handleClickCount(2)}>입출금내역</Link></li>
+                  <li>
+                    <Link to="/inquiry" onClick={() => handleClickCount(1)}>
+                      전체계좌
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/inout" onClick={() => handleClickCount(2)}>
+                      입출금내역
+                    </Link>
+                  </li>
                 </ul>
               </li>
-              <li ref={reportRef} 
-                onMouseOver={
-                  (e)=>{
-                    e.stopPropagation();
-                    handleDropdown("보고서");
-                  }} 
-                onMouseLeave={
-                  (e)=>{
-                    e.stopPropagation();
-                    handleLeaveDropdown("보고서");
-                  }} className="dropmenu_wrap">
-                <Link to="/dailyReport" onClick={()=>handleClickCount(3)}>보고서</Link>
+              <li
+                ref={reportRef}
+                onMouseOver={(e) => {
+                  e.stopPropagation();
+                  handleDropdown("보고서");
+                }}
+                onMouseLeave={(e) => {
+                  e.stopPropagation();
+                  handleLeaveDropdown("보고서");
+                }}
+                className="dropmenu_wrap"
+              >
+                <Link to="/dailyReport" onClick={() => handleClickCount(3)}>
+                  보고서
+                </Link>
                 <ul className="dropdown">
-                  <li><Link to="/dailyReport" onClick={()=>handleClickCount(3)}>일일시재</Link></li>
-                  <li><Link to="/inoutReport" onClick={()=>handleClickCount(4)}>입출금</Link></li>
+                  <li>
+                    <Link to="/dailyReport" onClick={() => handleClickCount(3)}>
+                      일일시재
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/inoutReport" onClick={() => handleClickCount(4)}>
+                      입출금
+                    </Link>
+                  </li>
                 </ul>
               </li>
               <li>
-                <Link to="/dashboard" onClick={()=>handleClickCount(5)}>대시보드</Link>
+                <Link to="/dashboard" onClick={() => handleClickCount(5)}>
+                  대시보드
+                </Link>
               </li>
             </ul>
+            <img
+              src={MenuIcon}
+              className="mobile_menu_icon"
+              alt="mobile 메뉴 아이콘"
+              onClick={() => {
+                handleMenuIconClick();
+              }}
+            />
           </div>
         </div>
       </nav>

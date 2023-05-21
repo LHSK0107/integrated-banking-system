@@ -21,7 +21,7 @@ const NewsSlider = () => {
           disableOnInteraction: false,
         }}
         navigation={{ clickable: true }}
-        pagination={{ clickable: true }}
+        pagination={{ clickable: false }}
         modules={[Navigation, Pagination]}
         style={{
           "--swiper-theme-color": "#898989",
