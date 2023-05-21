@@ -75,8 +75,8 @@ const Index = () => {
         // 대시보드로 리다이렉트
         navigate("/dashboard");
       })
-      .catch((error) => {
-        alert("네트워크 통신에 문제가 발생했습니다. 잠시 후, 이용해주세요.");
+      .catch((err) => {
+        alert(err.response.data.message);
         return false;
       });
   };

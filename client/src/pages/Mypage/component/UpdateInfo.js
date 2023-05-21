@@ -12,6 +12,7 @@ const UpdateInfo = () => {
   const AuthAxios = useAxiosInterceptor();
   const { loggedUserInfo } = useAuth();
   const navigate = useNavigate();
+  let menuList = JSON.parse(localStorage.getItem("menuClick"));
 
   // 페이지 확인 및 설정
   const { stepNum, setStepNum, userInfo, setUserInfo } =
@@ -216,7 +217,7 @@ const UpdateInfo = () => {
           const response = await AuthAxios.delete(
             `/api/users/${loggedUserInfo.userNo}`,
             {
-              signal: controller.signal,
+              menuList,
             }
           );
           console.log(response);
@@ -227,7 +228,7 @@ const UpdateInfo = () => {
           console.log(`error 발생: ${err}`);
         }
       };
-      logout();
+      // logout();
       callDelete();
       navigate("/");
     } else {

@@ -18,7 +18,9 @@ import com.lhsk.iam.domain.dashboard.model.vo.AcctDv01InoutSumVo;
 import com.lhsk.iam.domain.dashboard.model.vo.AcctDvByBalSumVO;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
@@ -36,7 +38,12 @@ public class DashboardService {
 		}
 		// 관리자의 총 자산 합계 계산
 		BigDecimal AllAccountBalSum = dashboardMapper.findByAdminsAllAccountToBalSum();		
-		balSumInfo.put("total", AllAccountBalSum);
+		if (balSumInfo.get("total") == null) {
+			balSumInfo.put("total", BigDecimal.ZERO);
+		} else {
+			balSumInfo.put("total", AllAccountBalSum);
+		}
+
 		if(balSumInfo.get("01") == null) {
 			balSumInfo.put("01", new BigDecimal(0.00));
 		}
@@ -231,7 +238,12 @@ public class DashboardService {
 		}
 		// 회원의 보유 총 자산 합계 계산
 		BigDecimal AllAccountBalSum = dashboardMapper.findByUsersAllAccountToBalSum(userNo);		
-		balSumInfo.put("total", AllAccountBalSum);
+		if (balSumInfo.get("total") == null) {
+			balSumInfo.put("total", BigDecimal.ZERO);
+		} else {
+			balSumInfo.put("total", AllAccountBalSum);
+		}
+		
 		if(balSumInfo.get("01") == null) {
 			balSumInfo.put("01", new BigDecimal(0.00));
 		}
