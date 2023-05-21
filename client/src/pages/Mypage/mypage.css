@@ -1,10 +1,14 @@
 @charset "utf-8";
 
+.mypage {
+
+}
+
 h2 {
     margin-bottom: 50px;
 }
 
-.confirmPw > p {
+.confirmPw p {
     margin-bottom: 30px;
 }
 
@@ -54,4 +58,11 @@ h2 {
 
 .withdraw {
  color: var(--color-red);
+}
+
+/* media query */
+@media (max-width:768px) {
+    .mypage_form li p {
+        width: 34%;
+    }
 }

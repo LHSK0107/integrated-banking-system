@@ -30,8 +30,12 @@ public interface ReportMapper {
 	
 	// 입출내역보고서
 	// 입출금내역보고서 데이터 추출
+	// 과거
 	public List<InoutReportVO> getAdminInoutReportData(InoutReportRequestVO requestVO);
 	public List<InoutReportVO> getUserInoutReportData(InoutReportRequestVO requestVO);
+	// 오늘 포함
+	public List<InoutReportVO> getAdminInoutReportDataToday(InoutReportRequestVO requestVO);
+	public List<InoutReportVO> getUserInoutReportDataToday(InoutReportRequestVO requestVO);
 	// 거래내역중 가장 최신의 날짜 추출
 	public String getLastBalanceDate(String acctNo, String date);
 	// 해당 날짜의 거래내역으로부터 잔액 추출

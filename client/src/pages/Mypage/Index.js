@@ -23,7 +23,7 @@ function Index() {
 
   return (
     <div id="wrap">
-      <div className="inner flex flex_column align_center">
+      <div className="mypage inner flex flex_column">
         <h2>개인정보수정</h2>
         {currentPage()}
       </div>

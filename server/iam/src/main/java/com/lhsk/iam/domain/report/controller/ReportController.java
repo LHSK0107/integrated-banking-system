@@ -3,6 +3,7 @@ package com.lhsk.iam.domain.report.controller;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -70,9 +71,17 @@ public class ReportController {
 		if(userCode.equals("ROLE_USER")) {
 			log.info("일반 사용자 진입");
 			int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
-			return new ResponseEntity<>(reportService.getInoutReportData(vo, userNo), HttpStatus.OK);
+			if (vo.getEndDt().equals(LocalDate.now().toString())) {
+				return new ResponseEntity<>(reportService.getInoutReportDataToday(vo, userNo), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(reportService.getInoutReportData(vo, userNo), HttpStatus.OK);
+			}
 		} else {
-			return new ResponseEntity<>(reportService.getInoutReportData(vo), HttpStatus.OK);
+			if (vo.getEndDt().equals(LocalDate.now().toString())) {
+				return new ResponseEntity<>(reportService.getInoutReportDataToday(vo), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(reportService.getInoutReportData(vo), HttpStatus.OK);
+			}
 		}
 	}
 	

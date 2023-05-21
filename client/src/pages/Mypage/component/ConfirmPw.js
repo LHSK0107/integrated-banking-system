@@ -63,12 +63,12 @@ export default function ConfirmPw() {
   };
 
   return (
-    <div className="confirmPw flex flex_column">
+    <div className="confirmPw flex flex_column align_center">
       <p>
         개인정보를 변경하고 싶으신 경우, 본인확인을 위해 비밀번호를 한 번 더
         입력해주세요.
       </p>
-      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+      <form className="flex flex_column align_center" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input type="password" {...register("password")}></input>
         <p>{errors.password?.message}</p>
         <button type="submit">확인</button>
