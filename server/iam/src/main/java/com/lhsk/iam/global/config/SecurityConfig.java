@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -34,6 +35,8 @@ public class SecurityConfig {
 	private JwtConfig jwtConfig;
 	@Autowired
 	private LoginService loginService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 	
     @Value("${aes.secret}")
     private String key;
@@ -45,7 +48,6 @@ public class SecurityConfig {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 	
-
 	@Autowired
 	private CorsConfig corsConfig;
 	

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -66,12 +68,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       // Tip: 인증 프로바이더의 디폴트 서비스는 UserDetailsService 타입
       // Tip: 인증 프로바이더의 디폴트 암호화 방식은 BCryptPasswordEncoder
       // 결론은 인증 프로바이더에게 알려줄 필요가 없음.
-      Authentication authentication = 
-            authenticationManager.authenticate(authenticationToken);
+      try {
+    	    Authentication authentication = 
+    	        authenticationManager.authenticate(authenticationToken);
+
+    	    return authentication;
+    	} catch(InternalAuthenticationServiceException e) {
+    	    Throwable cause = e.getCause();
+    	    if (cause instanceof DisabledException) {
+    	        log.info("차단된 계정");
+    	        throw new DisabledException("차단된 계정입니다.");
+    	    } else {
+    	        throw e;
+    	    }
+    	} catch (BadCredentialsException e) {
+    	    log.info("비밀번호가 일치하지 않음");
+    	    throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+    	}
       
 //      PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
       
-      return authentication;
    }
 
    
@@ -86,17 +102,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
    // 로그인 실패시 상태코드와 응답 메시지를 담아준다.
    @Override
    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) throws IOException, ServletException {
-       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // HTTP 응답 코드 401 Unauthorized 설정
-       response.setContentType("application/json;charset=UTF-8"); // 응답 데이터 타입 설정
-       String message;
-       if (failed instanceof UsernameNotFoundException) {
-           message = "아이디가 존재하지 않습니다.";
-       } else if (failed instanceof BadCredentialsException) {
-           message = "비밀번호가 잘못 입력되었습니다.";
-       } else {
-           message = "아이디가 존재하지 않습니다.";
-       }
+                                             AuthenticationException failed) throws IOException, ServletException {
+	   response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // HTTP 응답 코드 401 Unauthorized 설정
+	    response.setContentType("application/json;charset=UTF-8"); // 응답 데이터 타입 설정
+	    String message;
+	    if (failed instanceof DisabledException) {
+	        message = "차단된 계정입니다.";
+	        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // HTTP 응답 코드 403 Forbidden 설정
+	    } else if (failed instanceof BadCredentialsException) {
+	        message = "비밀번호가 잘못 입력되었습니다.";
+	    } else {
+	        message = "아이디가 존재하지 않습니다.";
+	    }
 
        response.getWriter().write("{\"message\":\"" + message + "\"}"); // 실패 메시지 반환
    }
