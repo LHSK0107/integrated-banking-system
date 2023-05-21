@@ -144,7 +144,7 @@ public class ReportService {
 		return dailyReport;
 	}
 	
-	// 일반사용자인 경우
+	// 일반사용자인 경우(과거만)
 	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO, int userNo) {
 		
 		ivToByteArray(ivString);
@@ -201,8 +201,65 @@ public class ReportService {
 	    data.setAcctlist(reportData);
 	    return data;
 	}
+	// 일반사용자인 경우(오늘 포함)
+	public InoutReportData getInoutReportDataToday(InoutReportRequestVO requestVO, int userNo) {
+		log.info("user: getInoutReportDataToday");
+		ivToByteArray(ivString);
+		
+		// 계좌번호 암호화
+		if (requestVO.getAcctNo() != null && !requestVO.getAcctNo().equals("null")) {
+			try {
+				requestVO.setAcctNo(aesGcmEncrypt.encrypt(requestVO.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		InoutReportData data = new InoutReportData();
+		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
+		requestVO.setUserNo(userNo);
+		log.info("bankCd : "+requestVO.getBankCd());
+		
+		// 데이터 추출
+		List<InoutReportVO> reportData = reportMapper.getUserInoutReportDataToday(requestVO);
+		// 응답데이터에 빈값 채우기
+		if(requestVO.getBankCd() == null || requestVO.getBankCd().equals("null")) data.setBankCd("전체");
+		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");
+		
+		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
+		for (InoutReportVO inoutReportVO : reportData) {
+			log.info("beforeBal : " + inoutReportVO.getBeforeBal());
+			// 이전잔액이 없는 경우 더 과거로 가서 잔액을 구해 넣어준다.
+			if(inoutReportVO.getBeforeBal() == null) {
+				String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo(), requestVO.getStartDt());
+				log.info("lastBalanceDate : "+lastBalanceDate);
+				
+				if (lastBalanceDate != null) {
+					inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));
+				} else {
+					inoutReportVO.setBeforeBal(reportMapper.getBalByAcctNo(inoutReportVO.getAcctNo()));
+				}
+			}
+			
+			// 이후잔액이 없는 경우(마지막날 기준 거래내역이 없음) 입금액만큼 더해주고 출금액만큼 뺀 값을 잔액으로 설정
+			if(inoutReportVO.getAfterBal() == null) {
+				BigDecimal before =  inoutReportVO.getBeforeBal();
+				before = before.add(inoutReportVO.getInSum());
+				before = before.subtract(inoutReportVO.getOutSum());
+				inoutReportVO.setAfterBal(before);
+			}
+			
+			// 복호화 작업
+			try {
+				inoutReportVO.setAcctNo(aesGcmEncrypt.decrypt(inoutReportVO.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		data.setAcctlist(reportData);
+		return data;
+	}
 	
-	// 매니저 이상인 경우
+	// 매니저 이상인 경우(과거만)
 	public InoutReportData getInoutReportData(InoutReportRequestVO requestVO) {
 		
 		ivToByteArray(ivString);
@@ -274,5 +331,77 @@ public class ReportService {
 	    data.setAcctlist(reportData);
 	    return data;
     }
+	// 매니저 이상인 경우(오늘 포함)
+	public InoutReportData getInoutReportDataToday(InoutReportRequestVO requestVO) {
+		log.info("manager: getInoutReportDataToday");
+		ivToByteArray(ivString);
+		
+		log.info(requestVO.getAcctNo());
+		// 계좌번호 암호화
+		if (requestVO.getAcctNo() != null && !requestVO.getAcctNo().equals("null")) {
+			try {
+				log.info("암호화 시작");
+				requestVO.setAcctNo(aesGcmEncrypt.encrypt(requestVO.getAcctNo(), key, iv));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		log.info(requestVO.getAcctNo() + " 매니저");
+		InoutReportData data = new InoutReportData();
+		
+		// 데이터 추출
+		List<InoutReportVO> reportData = reportMapper.getAdminInoutReportDataToday(requestVO);
+		log.info("추출 끝");
+		// 복호화 작업
+		
+		if (requestVO.getAcctNo() != null && !requestVO.getAcctNo().equals("null")) {
+			try {
+				requestVO.setAcctNo(aesGcmEncrypt.decrypt(requestVO.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		data.setDate(requestVO.getStartDt() + "~" + requestVO.getEndDt());
+		data.setBankCd(requestVO.getBankCd());
+		data.setAcctNo(requestVO.getAcctNo());
+		
+		// 응답데이터에 빈값 채우기
+		if(requestVO.getBankCd() == null || requestVO.getBankCd().equals("null")) data.setBankCd("전체");
+		if(requestVO.getAcctNo() == null || requestVO.getAcctNo().equals("null")) data.setAcctNo("전체");
+		
+		// 받아온 계좌들을 순회하며 부족한 데이터를 수동으로 넣어주기
+		for (InoutReportVO inoutReportVO : reportData) {
+			log.info("beforeBal : " + inoutReportVO.getBeforeBal());
+			// 이전잔액이 없는 경우 더 과거로 가서 잔액을 구해 넣어준다.
+			if(inoutReportVO.getBeforeBal() == null) {
+				String lastBalanceDate = reportMapper.getLastBalanceDate(inoutReportVO.getAcctNo(), requestVO.getStartDt());
+				log.info("lastBalanceDate : "+lastBalanceDate);
+				
+				if (lastBalanceDate != null) {
+					inoutReportVO.setBeforeBal(reportMapper.getLastBalance(inoutReportVO.getAcctNo(), lastBalanceDate));
+				} else {
+					inoutReportVO.setBeforeBal(reportMapper.getBalByAcctNo(inoutReportVO.getAcctNo()));
+				}
+			}
+			
+			// 이후잔액이 없는 경우(마지막날 기준 거래내역이 없음) 입금액만큼 더해주고 출금액만큼 뺀 값을 잔액으로 설정
+			if(inoutReportVO.getAfterBal() == null) {
+				BigDecimal before =  inoutReportVO.getBeforeBal();
+				before = before.add(inoutReportVO.getInSum());
+				before = before.subtract(inoutReportVO.getOutSum());
+				inoutReportVO.setAfterBal(before);
+			}
+			
+			// 복호화 작업
+			try {
+				inoutReportVO.setAcctNo(aesGcmEncrypt.decrypt(inoutReportVO.getAcctNo(), key));
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		data.setAcctlist(reportData);
+		return data;
+	}
     
 }

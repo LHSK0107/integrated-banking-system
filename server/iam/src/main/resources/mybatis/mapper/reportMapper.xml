@@ -76,13 +76,13 @@
 	</select>
 	
 
-	<select id="getAdminInoutReportData" resultType="InoutReportVO">
+	<select id="getAdminInoutReportData" parameterType="InoutReportRequestVO" resultType="InoutReportVO">
 	    SELECT b.bank_cd, a.acct_no,
 	           (SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
-	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS in_cnt,
-	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN t.trsc_amt ELSE 0 END) AS in_sum,
-	           SUM(CASE WHEN t.inout_dv = 2 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS out_cnt,
-	           SUM(CASE WHEN t.inout_dv = 2 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN t.trsc_amt ELSE 0 END) AS out_sum,
+	           SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS in_cnt,
+	           SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS in_sum,
+	           SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS out_cnt,
+	           SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS out_sum,
 	           (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
 	    FROM account a
 	    JOIN bank_code b ON a.bank_cd = b.bank_cd
@@ -99,13 +99,56 @@
 	    ORDER BY a.bank_cd asc
 	</select>
 	
+		<select id="getAdminInoutReportDataToday" parameterType="InoutReportRequestVO" resultType="InoutReportVO">
+		SELECT IO.bankCd, IO.acctNo, IO.before_bal, IO.in_cnt, IO.in_sum, IO.out_cnt, IO.out_sum, IO.after_bal
+	    FROM (SELECT b.bank_cd as bankCd, a.acct_no as acctNo,
+	    		(SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS in_cnt,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS in_sum,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS out_cnt,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS out_sum,
+		        (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
+		FROM account a
+		JOIN bank_code b ON a.bank_cd = b.bank_cd
+		LEFT JOIN inout_past t ON a.acct_no = t.acct_no
+		WHERE a.acct_dv IN ('01', '02', '03')
+	    <if test='bankCd != null and !bankCd.equals("null")'>
+	        AND a.bank_cd = #{bankCd}
+	    </if>
+	    <if test='acctNo != null and !acctNo.equals("null")'>
+	        AND a.acct_no = #{acctNo}
+	    </if>
+		GROUP BY b.bank_cd, a.acct_no
+		UNION 
+		SELECT b.bank_cd as bankCd, a.acct_no as acctNo,
+	    		(SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS in_cnt,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS in_sum,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS out_cnt,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS out_sum,
+		        (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
+		FROM account a
+		JOIN bank_code b ON a.bank_cd = b.bank_cd
+		JOIN inout_today t ON a.acct_no = t.acct_no
+		WHERE a.acct_dv IN ('01', '02', '03')
+	    <if test='bankCd != null and !bankCd.equals("null")'>
+	        AND a.bank_cd = #{bankCd}
+	    </if>
+	    <if test='acctNo != null and !acctNo.equals("null")'>
+	        AND a.acct_no = #{acctNo}
+	    </if>
+		GROUP BY b.bank_cd, a.acct_no
+		) AS IO
+	    ORDER BY bankCd asc;
+	</select>
+	
 	<select id="getUserInoutReportData" parameterType="InoutReportRequestVO" resultType="InoutReportVO">
 	    SELECT b.bank_cd, a.acct_no,
 	           (SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
-	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS in_cnt,
-	           SUM(CASE WHEN t.inout_dv = 1 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN t.trsc_amt ELSE 0 END) AS in_sum,
-	           SUM(CASE WHEN t.inout_dv = 2 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN 1 ELSE 0 END) AS out_cnt,
-	           SUM(CASE WHEN t.inout_dv = 2 AND t.trsc_dt &gt;= #{startDt} AND t.trsc_dt &lt;= #{endDt} THEN t.trsc_amt ELSE 0 END) AS out_sum,
+	           SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS in_cnt,
+	           SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS in_sum,
+	           SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS out_cnt,
+	           SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS out_sum,
 	           (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
 	    FROM account a
 	    JOIN bank_code b ON a.bank_cd = b.bank_cd
@@ -121,6 +164,53 @@
 	    AND ua.user_no = #{userNo}
 	    GROUP BY b.bank_cd, a.acct_no
 	    ORDER BY a.bank_cd asc
+	</select>
+	
+	<select id="getUserInoutReportDataToday" parameterType="InoutReportRequestVO" resultType="InoutReportVO">
+		SELECT IO.bankCd, IO.acctNo, IO.before_bal, IO.in_cnt, IO.in_sum, IO.out_cnt, IO.out_sum, IO.after_bal
+	    FROM (SELECT b.bank_cd as bankCd, a.acct_no as acctNo,
+	    		(SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS in_cnt,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS in_sum,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS out_cnt,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS out_sum,
+		        (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
+		FROM account a
+		JOIN bank_code b ON a.bank_cd = b.bank_cd
+		JOIN user_account ua ON a.acct_no = ua.acct_no
+		LEFT JOIN inout_past t ON a.acct_no = t.acct_no
+		WHERE a.acct_dv IN ('01', '02', '03')
+	    <if test='bankCd != null and !bankCd.equals("null")'>
+	        AND a.bank_cd = #{bankCd}
+	    </if>
+	    <if test='acctNo != null and !acctNo.equals("null")'>
+	        AND a.acct_no = #{acctNo}
+	    </if>
+	    AND ua.user_no = #{userNo}
+		GROUP BY b.bank_cd, a.acct_no
+		UNION 
+		SELECT b.bank_cd as bankCd, a.acct_no as acctNo,
+	    		(SELECT bal FROM inout_past WHERE trsc_dt = #{startDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS before_bal,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS in_cnt,
+		        SUM(CASE WHEN t.inout_dv = 1 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS in_sum,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN 1 ELSE 0 END) AS out_cnt,
+		        SUM(CASE WHEN t.inout_dv = 2 AND (t.trsc_dt BETWEEN #{startDt} AND #{endDt}) THEN t.trsc_amt ELSE 0 END) AS out_sum,
+		        (SELECT bal FROM inout_past WHERE trsc_dt = #{endDt} AND acct_no = a.acct_no ORDER BY trsc_tm DESC LIMIT 1) AS after_bal
+		FROM account a
+		JOIN bank_code b ON a.bank_cd = b.bank_cd
+		JOIN user_account ua ON a.acct_no = ua.acct_no
+		JOIN inout_today t ON a.acct_no = t.acct_no
+		WHERE a.acct_dv IN ('01', '02', '03')
+	    <if test='bankCd != null and !bankCd.equals("null")'>
+	        AND a.bank_cd = #{bankCd}
+	    </if>
+	    <if test='acctNo != null and !acctNo.equals("null")'>
+	        AND a.acct_no = #{acctNo}
+	    </if>
+	    AND ua.user_no = #{userNo}
+		GROUP BY b.bank_cd, a.acct_no
+		) AS IO
+	    ORDER BY bankCd asc;
 	</select>
 	
 	<select id="getLastBalanceDate" resultType="string">
