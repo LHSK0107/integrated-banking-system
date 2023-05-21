@@ -1,13 +1,16 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import { Link } from "react-router-dom";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
 import useAuth from "../../../hooks/useAuth";
 import Aside from "./Aside";
+import "../admin.css";
+import axios from "axios";
+
 const Detail = () => {
   const AuthAxios = useAxiosInterceptor();
-  const { loggedUserInfo } = useAuth();
+  const { setToken2, loggedUserInfo, setIsAuth, setLoggedUserInfo } = useAuth();
   const [member, setMember] = useState(null);
   const [role, setRole] = useState(null);
   const [rename, setRename] = useState(null);
@@ -15,10 +18,12 @@ const Detail = () => {
   const [dept, setDept] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const checkRole = useRef(null);
   // userNo param
-  const userNo = useMemo(() => location.pathname.split("/")[2], [location]);
+  let userNo = useMemo(() => location.pathname.split("/")[2], [location]);
   // const rerename = member && member.name;
   // const [rerename, setRerename] = useState(null);
+  let menuList = JSON.parse(localStorage.getItem("menuClick"));
 
   useEffect(() => {
     const controller = new AbortController();
@@ -32,7 +37,7 @@ const Detail = () => {
           setRename(response.data.name);
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        console.log(err);
       }
     };
     const getDept = async () => {
@@ -42,16 +47,16 @@ const Detail = () => {
         });
         console.log(response);
         if (response.status === 200) {
-          setDept(response.data.map(ele => ele.dept));
+          setDept(response.data.map((ele) => ele.dept));
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        console.log(err);
       }
     };
     getUsers(); // 회원 한 명 정보
     getDept(); // 부서 목록
-    // console.log(rename, rerename);
     setRename(rename === member?.name ? null : member?.name); // 이름 변경없으면 null
+    // console.log(rename, rerename);
     return () => {
       controller.abort();
     };
@@ -72,7 +77,8 @@ const Detail = () => {
     // setRerename(value);
     // }
   };
-  console.log(rename);
+  // console.log(rename);
+  // console.log(member);
   // 부서 변경 관리
   const handleTeam = (e) => {
     const value = e.target.value;
@@ -117,21 +123,20 @@ const Detail = () => {
   /** 탈퇴하기 */
   const deleteMember = () => {
     if (window.confirm("탈퇴하시겠습니까?")) {
-      const getUsers = async () => {
-        try {
-          const controller = new AbortController();
-          const response = await AuthAxios.delete(`/api/users/${userNo}`, {
-            signal: controller.signal,
-          });
-          if (response.status === 200) {
+      axios
+        .delete(
+          `https://iam-api.site/api/users/${userNo}`,
+          { data: menuList },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
             alert("탈퇴되었습니다.");
             navigate("/admin");
           }
-        } catch (err) {
-          console.log(`error 발생: ${err}`);
-        }
-      };
-      getUsers();
+        })
+        .catch((err) => console.log(err));
     } else {
       return false;
     }
@@ -200,8 +205,33 @@ const Detail = () => {
                             </option>
                           </select>
                         ) : (
-                          <select>
-                            <option value="ROLE_BLACK">ROLE_BLACK</option>
+                          <select value={role} onChange={handleRole}>
+                            <option
+                              value="ROLE_MANAGER"
+                              selected={
+                                member?.userCode === "ROLE_MANAGER"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              ROLE_MANAGER
+                            </option>
+                            <option
+                              value="ROLE_USER"
+                              selected={
+                                member?.userCode === "ROLE_USER" ? true : false
+                              }
+                            >
+                              ROLE_USER
+                            </option>
+                            <option
+                              value="ROLE_BLACK"
+                              selected={
+                                member?.userCode === "ROLE_BLACK" ? true : false
+                              }
+                            >
+                              ROLE_BLACK
+                            </option>
                           </select>
                         )}
                       </p>
@@ -255,9 +285,13 @@ const Detail = () => {
                     <button type="submit">수정하기</button>
                     <div>
                       {changeRole()}
-                      {member?.userCode === "ROLE_ADMIN" ? <></>:<button type="button" onClick={deleteMember}>
-                        탈퇴
-                      </button>}
+                      {member?.userCode === "ROLE_ADMIN" ? (
+                        <></>
+                      ) : (
+                        <button type="button" onClick={deleteMember}>
+                          탈퇴
+                        </button>
+                      )}
                     </div>
                   </div>
                 </form>

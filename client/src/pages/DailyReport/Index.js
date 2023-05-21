@@ -3,10 +3,11 @@ import "./dailyreport.css";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import { Description } from '../../commons/Description';
-import { SideNav } from '../../commons/SideNav';
+import { SideNavReport } from '../../commons/SideNavReport';
 import Breadcrumb from '../../commons/Breadcrumb';
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import ExcelExportComponent from "./component/ExcelExportComponent";
+import "./dailyreport.css";
 
 const Index = () => {
   const AuthAxios = useAxiosInterceptor();
@@ -57,9 +58,9 @@ const Index = () => {
   return (
     <div id="wrap">
       <div className="inner">
-        <Breadcrumb title={"조회"} subMenu={"입출금거래내역"} />
-        <div className="flex">
-          <SideNav />
+        <Breadcrumb title={"보고서"} subMenu={"일일시재보고서"} />
+        <div className="dailyReport flex">
+          <SideNavReport now={"일일시재보고서"} />
           <section>
             <h3>일일시재보고서</h3>
             <Description />
@@ -72,6 +73,7 @@ const Index = () => {
                       className="flex align_center"
                       onChange={handleRadioOnChange}
                     >
+                      <label className="flex align_center">
                       <input
                         type="radio"
                         id="kor"
@@ -79,7 +81,8 @@ const Index = () => {
                         value="kr"
                         defaultChecked
                       />
-                      <label>국문</label>
+                      국문</label>
+                      <label className="flex align_center">
                       <input
                         type="radio"
                         id="eng"
@@ -87,7 +90,7 @@ const Index = () => {
                         value="en"
                         disabled
                       />
-                      <label>영문</label>
+                      영문</label>
                     </div>
                   </li>
                   <li className="flex">

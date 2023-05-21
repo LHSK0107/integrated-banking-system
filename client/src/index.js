@@ -5,7 +5,7 @@ import {UserContextProvider} from "./setup/context/UserContextProvider";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
      <BrowserRouter>
        <UserContextProvider>
          <Routes>
@@ -13,5 +13,5 @@ root.render(
          </Routes>
        </UserContextProvider>
      </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

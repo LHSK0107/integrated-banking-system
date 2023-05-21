@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import Aside from "./component/Aside";
 import ReactPaginate from "react-paginate";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
+import useAuth from "../../hooks/useAuth";
 
 const Index = () => {
   const AuthAxios = useAxiosInterceptor();
+  const { loggedUserInfo } = useAuth();
   // api에서 받아온 데이터
   const [members, setMembers] = useState(null);
 
@@ -59,13 +61,42 @@ const Index = () => {
         {currentItems &&
           currentItems.map((ele) => (
             <li key={ele?.userNo}>
-              {<Link className="flex" to={`/admin/${ele?.userNo}`}>
-                <p className="list_userCode">{ele?.userCode?.split("_")[1]}</p>
-                <p className="list_userNo">{ele?.userNo}</p>
-                <p className="list_name">{ele?.name}</p>
-                <p className="list_dept">{ele?.dept}</p>
-                <p className="list_email">{ele?.email}</p>
-              </Link>}
+              {loggedUserInfo?.userNo === ele?.userNo ? (
+                <Link className="flex" to={`/admin/${ele?.userNo}`}>
+                  <p className="list_userCode">
+                    {ele?.userCode?.split("_")[1]}
+                  </p>
+                  <p className="list_userNo">{ele?.userNo}</p>
+                  <p className="list_name">{ele?.name}</p>
+                  <p className="list_dept">{ele?.dept}</p>
+                  <p className="list_email">{ele?.email}</p>
+                </Link>
+              ) : loggedUserInfo?.userCode === "ROLE_MANAGER" &&
+                (ele?.userCode === "ROLE_MANAGER" ||
+                  ele?.userCode === "ROLE_ADMIN") ? (
+                <div
+                  className="flex"
+                  onClick={() => alert("접근 권한이 없습니다.")}
+                >
+                  <p className="list_userCode">
+                    {ele?.userCode?.split("_")[1]}
+                  </p>
+                  <p className="list_userNo">{ele?.userNo}</p>
+                  <p className="list_name">{ele?.name}</p>
+                  <p className="list_dept">{ele?.dept}</p>
+                  <p className="list_email">{ele?.email}</p>
+                </div>
+              ) : (
+                <Link className="flex" to={`/admin/${ele?.userNo}`}>
+                  <p className="list_userCode">
+                    {ele?.userCode?.split("_")[1]}
+                  </p>
+                  <p className="list_userNo">{ele?.userNo}</p>
+                  <p className="list_name">{ele?.name}</p>
+                  <p className="list_dept">{ele?.dept}</p>
+                  <p className="list_email">{ele?.email}</p>
+                </Link>
+              )}
             </li>
           ))}
       </>

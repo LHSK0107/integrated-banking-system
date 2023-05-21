@@ -138,3 +138,27 @@ section .description {
     padding: 8px 28px 8px 18px;
     border: 1px solid var(--color-main);
 }
+
+/* media query */
+/* mobile */
+@media (max-width:768px) {
+    .dailyReport aside {
+        display: none;
+    }
+    .dailyReport .description {
+        display: none;
+    }
+    .dailyReport aside + section {
+        width: 100%;
+        margin: 0;
+    }
+    .dailyReport .form_wrap li > p {
+        width: 30%;
+    }
+    .dailyReport .form_wrap li > div {
+        width: 70%;
+    }
+    .dailyReport section form button {
+        padding: 8px 18px;
+    }
+}
