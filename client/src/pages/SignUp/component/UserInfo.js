@@ -96,7 +96,7 @@ const UserInfo = () => {
     console.log(triggerID().then((res)=>{
       if(res) {
         axios
-          .post("http://localhost:8080/api/signup/id", {
+          .post("https://iam-api.site/api/signup/id", {
             id: userInputValue.id,
           })
           .then((res) => {
