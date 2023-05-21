@@ -185,6 +185,17 @@ const Index = () => {
   const [pageCount, setPageCount] = useState(null);
   /** 조회 버튼 시, 서버 요청*/
   const handleOnSubmit = (e) => {
+    console.log({
+      isLoan: index, // 예금은 0 => false, 대출은 1 => true
+      bankCd: optionVal?.bankCD === "" ? "All" : optionVal?.bankCD,
+      acctNo: optionVal?.acctNO === "" ? "All" : optionVal?.acctNO,
+      startDt: optionVal?.strDate,
+      endDt: optionVal?.endDate,
+      inoutDv: optionVal?.inout === "" ? "All" : optionVal?.inout,
+      sort: optionVal?.arrange,
+      page: 1,
+      pageSize: 10,
+    });
     e.preventDefault();
     setInoutDataList(null);
     const getData = async () => {
