@@ -157,14 +157,14 @@
 }
 .mobile_menu_icon{
   display: none;
-  width: 40px;
-  height: 40px;
+  width: 23px;
+  height: 23px;
   z-index: 9998;
 }
 .mobile_close_icon{
   display: none;
-  width: 40px;
-  height: 40px;
+  width: 23px;
+  height: 23px;
   margin-left: auto;
   margin-bottom: 25px;
 }
@@ -198,10 +198,10 @@
 }
 .mobile_menu_wrap .mobile_content .top_gnb{
   z-index: 9999;
-  background-color: var(--color-background);
+  background-color: var(--color-lightgray);
   padding: 8px 10px;
   border-radius: 10px;
-  margin-top: 30px;
+
 }
 .skeleton-img{
   width: 100%;
@@ -415,16 +415,6 @@ footer .footer_contact_wrap a {
     margin: 0;
     padding: 0;
   }
-  .top_gnb .user_info_wrap .login>div {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .top_gnb .user_info_wrap .login .flex div{
-    margin-bottom: 10px;
-  }
-  .mobile_logout_btn_wrap .flex{
-    margin: 0 !important;
-  }
 }
 
 /* tablet */
@@ -437,7 +427,6 @@ footer .footer_contact_wrap a {
   .user_info_wrap{
     display: flex;
     width: 100%;
-    justify-content: flex-end;
   }
   .login{
     width: 100%;
@@ -446,14 +435,8 @@ footer .footer_contact_wrap a {
   .signup_wrap .login{
     
   }
-  .mobile_menu_wrap.active{
-    display: none;
-  }
 }
 @media (max-width: 768px) {
-  .mobile_menu_wrap.active{
-    display: block;
-  }
   footer p,
   footer a {
     font-size: 9px;
@@ -473,20 +456,17 @@ footer .footer_contact_wrap a {
   .menu_list{
     display: none;
   }
-  .nav_menu_section .mobile_menu_icon,
-  .nav_menu_section .mobile_close_icon{
+  .mobile_menu_icon,
+  .mobile_close_icon{
     display: block;
     cursor: pointer;
-    width: 24px;
-    height: 24px;
-    z-index: 9999;
   }
   .mobile_arrow_icon{
     display: inline-block;
     transition: 0.2s all ease-in-out;
   }
-  .user_info_wrap .login p:not(:last-child){
-    margin:0;
+  .mobile_menu_wrap{
+    
   }
   .login{
     justify-content: flex-end;
@@ -529,21 +509,9 @@ footer .footer_contact_wrap a {
     text-align: center;
     cursor: pointer;
   }
-  .user_info_wrap .login p:not(:last-child) {
-    margin: 0;
-  }
   /* nav end */
   #wrap{
-    /* top:0; */
-  }
-  .user_info_wrap .login p:not(:last-child){
-    margin:0;
-  }
-  .mobile_menu_wrap.active{
-    display:block;
-  }
-  .container{
-    margin-top: 60px;
+    top:0;
   }
 }
 

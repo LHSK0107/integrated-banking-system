@@ -12,32 +12,37 @@ import MenuArrowIcon from "../assets/images/icon/arrow_down.png";
 /** click */
 const handleClickCount = (menuNum) => {
   let menuList = JSON.parse(localStorage.getItem("menuClick"));
-  if (menuNum === 1) {
-    menuList = { ...menuList, allAccount: menuList.allAccount + 1 };
-  } else if (menuNum === 2) {
-    menuList = { ...menuList, inout: menuList.inout + 1 };
-  } else if (menuNum === 3) {
-    menuList = { ...menuList, inoutReport: menuList.inoutReport + 1 };
-  } else if (menuNum === 4) {
-    menuList = { ...menuList, dailyReport: menuList.dailyReport + 1 };
-  } else if (menuNum === 5) {
-    menuList = { ...menuList, dashboard: menuList.dashboard + 1 };
+  if(menuNum===1){
+    menuList =  {...menuList, allAccount:menuList.allAccount+1}
+  } else if(menuNum===2){
+    menuList =  {...menuList, inout:menuList.inout+1}
+  } else if(menuNum===3){
+    menuList =  {...menuList, inoutReport:menuList.inoutReport+1}
+  } else if(menuNum===4){
+    menuList =  {...menuList, dailyReport:menuList.dailyReport+1}
+  } else if(menuNum===5){
+    menuList =  {...menuList, dashboard:menuList.dashboard+1}
   }
   localStorage.removeItem("menuClick");
-  localStorage.setItem("menuClick", JSON.stringify(menuList));
-};
+  localStorage.setItem("menuClick",JSON.stringify(menuList));
+}
 const Navbar = () => {
-  const { token, setToken2, loggedUserInfo, setIsAuth, setLoggedUserInfo } =
-    useAuth();
+  const {
+    token,
+    setToken2,
+    loggedUserInfo,
+    setIsAuth,
+    setLoggedUserInfo
+  } = useAuth();
   useEffect(() => {
     loggedUserInfo && LogoutSection(loggedUserInfo);
   }, []);
   const refresh = useRefreshToken();
   // timer 설정, 토큰 변경 시에 작동
   const [sessionTime, SetSessionTime] = useState(0);
-  useEffect(() => {
+  useEffect(()=>{
     SetSessionTime(1800);
-  }, [token]);
+  },[token]);
 
   const mobileMenuRef = useRef();
   const mobileCloseRef = useRef();
@@ -50,7 +55,7 @@ const Navbar = () => {
   };
   const handleMenuCloseClick = () => {
     mobileMenuRef.current.classList.remove("active");
-  };
+  }
   /** logout시, context 비우는 함수 */
   const logout = () => {
     setToken2(null);
@@ -77,24 +82,10 @@ const Navbar = () => {
       <div className="signup_wrap">
         <div className="login flex align_center">
           <p className="signup_text">
-            <Link
-              to="./signup"
-              onClick={() => {
-                handleMenuCloseClick();
-              }}
-            >
-              회원가입
-            </Link>
+            <Link to="./signup" onClick={()=>{handleMenuCloseClick()}}>회원가입</Link>
           </p>
           <p className="signup_text">
-            <Link
-              to="./login"
-              onClick={() => {
-                handleMenuCloseClick();
-              }}
-            >
-              로그인
-            </Link>
+            <Link to="./login" onClick={()=>{handleMenuCloseClick()}}>로그인</Link>
           </p>
         </div>
       </div>
@@ -124,26 +115,12 @@ const Navbar = () => {
         </div>
         <div>
           <p>
-            <Link
-              to="/mypage"
-              onClick={() => {
-                handleMenuCloseClick();
-              }}
-            >
-              개인정보수정
-            </Link>
+            <Link to="/mypage" onClick={()=>{handleMenuCloseClick()}}>개인정보수정</Link>
           </p>
           {props?.value?.userCode === "ROLE_ADMIN" ||
           props?.value?.userCode === "ROLE_MANAGER" ? (
             <p>
-              <Link
-                to="/admin"
-                onClick={() => {
-                  handleMenuCloseClick();
-                }}
-              >
-                관리자 페이지
-              </Link>
+              <Link to="/admin" onClick={()=>{handleMenuCloseClick()}}>관리자 페이지</Link>
             </p>
           ) : null}
           <button className="logout_btn" onClick={() => handleLogout()}>
@@ -212,14 +189,14 @@ const Navbar = () => {
       </div>
     );
   };
-  const ExtendLoginSession = async () => {
+  const ExtendLoginSession = async () =>{
     if (window.confirm("로그인 연장을 하시겠습니까?")) {
       alert("로그인 연장");
       await refresh();
     } else {
       return false;
     }
-  };
+  }
 
   const [scrollData, setScrollData] = useState(0);
   const navInfoRef = useRef();
@@ -227,17 +204,19 @@ const Navbar = () => {
   const selectRef = useRef();
   const reportRef = useRef();
 
-  const handleDropdown = (ref) => {
+  const handleDropdown = (ref) =>{
     // e.target.context==="보고서" ? e.target.children[1].classList.add
-    ref === "보고서"
-      ? reportRef?.current?.children[1].classList.add("active")
-      : selectRef?.current?.children[1].classList.add("active");
-  };
-  const handleLeaveDropdown = (ref) => {
-    ref === "보고서"
-      ? reportRef?.current?.children[1].classList.remove("active")
-      : selectRef?.current?.children[1].classList.remove("active");
-  };
+    ref==="보고서" ?
+     reportRef?.current?.children[1].classList.add("active")
+     :
+     selectRef?.current?.children[1].classList.add("active");
+  }
+  const handleLeaveDropdown = (ref) =>{
+    ref==="보고서" ?
+     reportRef?.current?.children[1].classList.remove("active")
+     :
+     selectRef?.current?.children[1].classList.remove("active");
+  }
   // const scrollFunc = useCallback((scrollYData) => {
   //   if(scrollYData>20){
   //     navMenuRef.current.style.transition="0.2s all ease";
@@ -253,16 +232,16 @@ const Navbar = () => {
   //     scrollFunc(scrollData);
   //   })
   // },[scrollData,scrollFunc]);
-
+  
   const mobileInqiryRef = useRef();
   const mobileReportRef = useRef();
   const downIcon1Ref = useRef();
   const downIcon2Ref = useRef();
   const openMobileSubMenu = (menu) => {
-    if (menu === "inquiry") {
+    if(menu==="inquiry"){
       mobileInqiryRef.current.classList.toggle("active");
       downIcon1Ref.current.classList.toggle("img_rotate");
-    } else {
+    }else {
       mobileReportRef.current.classList.toggle("active");
       downIcon2Ref.current.classList.toggle("img_rotate");
     }
@@ -271,23 +250,19 @@ const Navbar = () => {
     <header id="header">
       <div ref={mobileMenuRef} className="mobile_menu_wrap">
         <div className="mobile_content">
-          <figure className="mobile_close_icon">
-            <img
-              ref={mobileCloseRef}
-              src={MenuCloseIcon}
-              alt="mobile 닫기 아이콘"
-              onClick={() => {
-                handleMenuCloseClick();
-              }}
-            ></img>
-          </figure>
+          <img
+            className="mobile_close_icon"
+            ref={mobileCloseRef}
+            src={MenuCloseIcon}
+            alt="mobile 닫기 아이콘"
+            onClick={() => {
+              handleMenuCloseClick();
+            }}
+          />
           <div className="top_gnb">
             <div className="user_info_wrap">
               {token ? (
-                <MobileLogoutSection
-                  value={loggedUserInfo}
-                  func={handleLogout}
-                />
+                <MobileLogoutSection value={loggedUserInfo} func={handleLogout} />
               ) : (
                 <LoginSection />
               )}
@@ -296,112 +271,40 @@ const Navbar = () => {
           <div className="mobile_menu_list">
             <ul className="mobile_menu">
               <li>
-                <Link
-                  className="flex"
-                  onClick={() => {
-                    handleMenuCloseClick();
-                  }}
-                  to="/"
-                >
-                  소개
-                </Link>
+                <Link className="flex" onClick={()=>{handleMenuCloseClick()}} to="/">소개</Link>
               </li>
               <li className="mobile_sub_menu">
-                <Link
-                  className="flex"
-                  onClick={() => {
-                    openMobileSubMenu("inquiry");
-                  }}
-                  to=""
-                >
+                <Link className="flex" onClick={()=>{openMobileSubMenu("inquiry")}} to="">
                   <div className="flex align_center justify_between">
-                    조회
-                    <figure>
-                      <img
-                        ref={downIcon1Ref}
-                        className="mobile_arrow_icon"
-                        src={MenuArrowIcon}
-                        alt="menu down 아이콘"
-                      />
-                    </figure>
+                  조회
+                  <figure>
+                    <img ref={downIcon1Ref} className="mobile_arrow_icon" src={MenuArrowIcon} alt="menu down 아이콘"/> 
+                  </figure>
                   </div>
                 </Link>
                 <ul ref={mobileInqiryRef} className="mobile_sub">
-                  <li>
-                    <Link
-                      to="/inquiry"
-                      onClick={() => {
-                        handleMenuCloseClick();
-                      }}
-                    >
-                      &middot;계좌조회
-                    </Link>
+                  <li><Link to="/inquiry" onClick={() => {handleMenuCloseClick();}}>
+                    &middot;계좌조회</Link>
                   </li>
-                  <li>
-                    <Link
-                      to="/inout"
-                      onClick={() => {
-                        handleMenuCloseClick();
-                      }}
-                    >
-                      &middot;입출금내역조회
-                    </Link>
-                  </li>
+                  <li><Link to="/inout" onClick={() => {handleMenuCloseClick();}}>&middot;입출금내역조회</Link></li>
                 </ul>
               </li>
               <li className="mobile_sub_menu">
-                <Link
-                  className="flex"
-                  onClick={() => {
-                    openMobileSubMenu("report");
-                  }}
-                  to=""
-                >
+                <Link className="flex" onClick={()=>{openMobileSubMenu("report")}} to="">
                   <div className="flex align_center justify_between">
                     보고서
                     <figure>
-                      <img
-                        ref={downIcon2Ref}
-                        className="mobile_arrow_icon"
-                        src={MenuArrowIcon}
-                        alt="menu down 아이콘"
-                      />
+                      <img ref={downIcon2Ref} className="mobile_arrow_icon" src={MenuArrowIcon} alt="menu down 아이콘"/> 
                     </figure>
-                  </div>
+                    </div>
                 </Link>
                 <ul ref={mobileReportRef} className="mobile_sub">
-                  <li>
-                    <Link
-                      to="/dailyReport"
-                      onClick={() => {
-                        handleMenuCloseClick();
-                      }}
-                    >
-                      &middot;일일시재보고서
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/inoutReport"
-                      onClick={() => {
-                        handleMenuCloseClick();
-                      }}
-                    >
-                      &middot;입출금내역보고서
-                    </Link>
-                  </li>
+                  <li><Link to="/dailyReport" onClick={() => {handleMenuCloseClick();}}>&middot;일일시재보고서</Link></li>
+                  <li><Link to="/inoutReport" onClick={() => {handleMenuCloseClick();}}>&middot;입출금내역보고서</Link></li>
                 </ul>
               </li>
               <li>
-                <Link
-                  className="flex align_center"
-                  onClick={() => {
-                    handleMenuCloseClick();
-                  }}
-                  to="/dashboard"
-                >
-                  대시보드
-                </Link>
+                <Link className="flex align_center" onClick={()=>{handleMenuCloseClick()}} to="/dashboard">대시보드</Link>
               </li>
             </ul>
           </div>
@@ -519,15 +422,14 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-            <figure className="mobile_menu_icon">
-              <img
-                src={MenuIcon}
-                alt="mobile 메뉴 아이콘"
-                onClick={() => {
-                  handleMenuIconClick();
-                }}
-              ></img>
-            </figure>
+            <img
+              src={MenuIcon}
+              className="mobile_menu_icon"
+              alt="mobile 메뉴 아이콘"
+              onClick={() => {
+                handleMenuIconClick();
+              }}
+            />
           </div>
         </div>
       </nav>
