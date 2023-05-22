@@ -437,6 +437,9 @@ footer .footer_contact_wrap a {
   }
 }
 @media (max-width: 768px) {
+  .user_info_wrap .login p:not(:last-child){
+    margin: 0;
+  }
   footer p,
   footer a {
     font-size: 9px;
