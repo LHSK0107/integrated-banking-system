@@ -25,7 +25,7 @@
     "yup": "^1.0.2"
   },
   "scripts": {
-    "start": "HTTPS=true react-scripts start",
+    "start": "cross-env HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -48,5 +48,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://scloudadmin.appplay.co.kr/gw/ErpGateWay"
+  "proxy": "https://scloudadmin.appplay.co.kr/gw/ErpGateWay",
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
 }
