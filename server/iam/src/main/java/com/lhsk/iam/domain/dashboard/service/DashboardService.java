@@ -37,12 +37,11 @@ public class DashboardService {
 			balSumInfo.put(info.getAcctDv(), info.getBalSum());
 		}
 		// 관리자의 총 자산 합계 계산
-		BigDecimal AllAccountBalSum = dashboardMapper.findByAdminsAllAccountToBalSum();		
-		if (balSumInfo.get("total") == null) {
-			balSumInfo.put("total", BigDecimal.ZERO);
-		} else {
-			balSumInfo.put("total", AllAccountBalSum);
+		BigDecimal AllAccountBalSum = dashboardMapper.findByAdminsAllAccountToBalSum();
+		if (AllAccountBalSum == null) {
+			AllAccountBalSum = BigDecimal.ZERO;
 		}
+		balSumInfo.put("total", AllAccountBalSum);
 
 		if(balSumInfo.get("01") == null) {
 			balSumInfo.put("01", new BigDecimal(0.00));
@@ -238,11 +237,10 @@ public class DashboardService {
 		}
 		// 회원의 보유 총 자산 합계 계산
 		BigDecimal AllAccountBalSum = dashboardMapper.findByUsersAllAccountToBalSum(userNo);		
-		if (balSumInfo.get("total") == null) {
-			balSumInfo.put("total", BigDecimal.ZERO);
-		} else {
-			balSumInfo.put("total", AllAccountBalSum);
+		if (AllAccountBalSum == null) {
+			AllAccountBalSum = BigDecimal.ZERO;
 		}
+		balSumInfo.put("total", AllAccountBalSum);
 		
 		if(balSumInfo.get("01") == null) {
 			balSumInfo.put("01", new BigDecimal(0.00));
