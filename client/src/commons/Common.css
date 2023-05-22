@@ -495,14 +495,14 @@ footer .footer_contact_wrap a {
   .top_gnb .user_info_wrap .login>div{
     width: 100%;
   }
-  .mobile_logout_btn_wrap{
-    margin:0;
-  }
   .user_manage_wrap{
     padding-top: 20px;
   }
-  .user_manage_wrap div>p:not(:last-child){
+  .user_manage_wrap>div>p:not(:last-child){
     margin-right: 20px;
+  }
+  .mobile_logout_btn_wrap{
+    display: none;
   }
   .signup_wrap{
     width: 100%;
