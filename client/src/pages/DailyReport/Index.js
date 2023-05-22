@@ -53,16 +53,22 @@ const Index = () => {
     getData().then(res=>{
       setApiData(res.data);
     });
+    setInterval(()=>{
+      setApiData(null);
+    },500);
   }
+  const [emailDataList, setEmailDataList] = useState(null);
   const handleClickEmailSend = () =>{
     const getData = async () => {
-        const apiData = await AuthAxios.post("/api/users/reports/daily");
-        return apiData;
+        const emailData = await AuthAxios.post("/api/users/reports/daily");
+        return emailData;
     }
     getData().then(res=>{
-      return <EmailExportComponent data={res.data}/>
-      // setApiData(res.data);
+      setEmailDataList(res.data);      
     });
+    setInterval(()=>{
+      setEmailDataList(null);
+    },500);
   }
  
   return (
@@ -125,6 +131,7 @@ const Index = () => {
                   }}>Excel 내보내기</button>
                     {apiData && <ExcelExportComponent data={apiData}/>}
                   <button type="button" onClick={()=>{handleClickEmailSend()}}>이메일로 내보내기</button>
+                  {emailDataList && <EmailExportComponent data={emailDataList}/>}
                 </div>
               </form>
             </div>

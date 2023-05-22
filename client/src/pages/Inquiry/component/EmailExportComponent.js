@@ -3,14 +3,39 @@ import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 import BankNM from "../../../hooks/useBankName";
 import ReactDomServer from 'react-dom/server';
-const ExcelExportComponent = ({ stateData, depAInsData, loadData, stateBal, depInsBal, loanBal }) => {
+import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
+const EmailExportComponent = ({ stateData, depAInsData, loadData, stateBal, depInsBal, loanBal }) => {
+  const AuthAxios = useAxiosInterceptor();
   const excelDownload = () => {
     createTable().then((url) => {
-      const downloadNode = document.createElement("a");
-      downloadNode.setAttribute("href", url);
-      downloadNode.setAttribute("download", "전체계좌조회.xlsx");
-      downloadNode.click();
-      downloadNode.remove();
+      const fetchBlobData = async(blobUrl) =>{
+        const response = await fetch(blobUrl);
+        if(!response.ok){
+          throw new Error(`fail${blobUrl}`);
+        }
+        return await response.blob();
+      }
+      const sendEmailWithAttachment = async (blob)=>{
+        console.log(`sendEmail 함수 실행`);
+        const formData = new FormData();
+        formData.append("file",blob,"전체계좌조회.xlsx");
+        const response = await AuthAxios.post("https://iam-api.site/api/users/reports/email", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        if(response.status===200){
+          alert("이메일 내보내기 성공");
+        } else {
+          alert("이메일 내보내기에 오류가 발생했습니다.");
+          return false;
+        }
+        return response.data;
+      }
+      return fetchBlobData(url).then((blob)=>{
+        console.log('url 생성');
+        return sendEmailWithAttachment(blob);
+      });
     });
   };
   // 현재시각 조회
@@ -403,6 +428,6 @@ const ExcelExportComponent = ({ stateData, depAInsData, loadData, stateBal, depI
     });
   };
 
-  return <button className="excel-btn" onClick={() => excelDownload()}>Excel 내보내기</button>;
+  return <button className="excel-btn" onClick={() => excelDownload()}>Email 내보내기</button>;
 };
-export default ExcelExportComponent;
+export default EmailExportComponent;

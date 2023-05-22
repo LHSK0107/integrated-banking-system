@@ -9,8 +9,8 @@ import { Description } from "../../commons/Description";
 import { SideNav } from "../../commons/SideNav";
 import Breadcrumb from "../../commons/Breadcrumb";
 import ExcelExportComponent from "./component/ExcelExportComponent";
+import EmailExportComponent from "./component/EmailExportComponent";
 import useAuth from "../../hooks/useAuth";
-import useRefreshToken from "../../hooks/useRefreshToken";
 const Index = () => {
   const { loggedUserInfo } = useAuth();
   // 계좌 구현
@@ -251,6 +251,16 @@ const Index = () => {
               <div className="content">{tabContArr[activeIndex].tabCont}</div>
               {apiData && (
                 <ExcelExportComponent
+                  stateData={statementList}
+                  depAInsData={depAInsList}
+                  loadData={loanList}
+                  stateBal={calcTotalBal().stateBal}
+                  depInsBal={calcTotalBal().depInsBal}
+                  loanBal={calcTotalBal().loanBal}
+                />
+              )}
+              {apiData && (
+                <EmailExportComponent
                   stateData={statementList}
                   depAInsData={depAInsList}
                   loadData={loanList}
