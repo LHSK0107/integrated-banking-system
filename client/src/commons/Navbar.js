@@ -172,7 +172,7 @@ const Navbar = () => {
         </div>
         <div className="user_manage_wrap flex justify_between">
           <div>
-            <p>
+            <p className="mobile_userinfo_btn">
               <Link to="/mypage">개인정보수정</Link>
             </p>
             {props?.value?.userCode === "ROLE_ADMIN" ||

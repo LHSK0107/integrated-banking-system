@@ -59,6 +59,9 @@
 .user_info_wrap .login p:not(:last-child) {
   margin-right: 15px;
 }
+.mobile_userinfo_btn{
+  margin-right: 15px;
+}
 /* .top_gnb .user_info_wrap .login p:not(:last-child){
   margin:0;
 } */
@@ -438,7 +441,7 @@ footer .footer_contact_wrap a {
 }
 @media (max-width: 768px) {
   .user_info_wrap .login p:not(:last-child){
-    margin: 10px;
+    margin: 0;
   }
   footer p,
   footer a {
