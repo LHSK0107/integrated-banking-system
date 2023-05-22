@@ -435,6 +435,9 @@ footer .footer_contact_wrap a {
   .signup_wrap .login{
     
   }
+  .mobile_menu_wrap.active{
+    display:none;
+  }
 }
 @media (max-width: 768px) {
   footer p,
@@ -511,7 +514,16 @@ footer .footer_contact_wrap a {
   }
   /* nav end */
   #wrap{
-    top:0;
+    /* top:0; */
+  }
+  .user_info_wrap .login p:not(:last-child){
+    margin:0;
+  }
+  .mobile_menu_wrap.active{
+    display:block;
+  }
+  .container{
+    margin-top: 60px;
   }
 }
 

@@ -7,6 +7,7 @@ import { SideNavReport } from '../../commons/SideNavReport';
 import Breadcrumb from '../../commons/Breadcrumb';
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import ExcelExportComponent from "./component/ExcelExportComponent";
+import EmailExportComponent from "./component/EmailExportComponent";
 import "./dailyreport.css";
 
 const Index = () => {
@@ -45,13 +46,22 @@ const Index = () => {
 
   const [apiData, setApiData]=useState(null);
   const handleClickExcelExport = () =>{
-    // cancellation token
     const getData = async () => {
         const apiData = await AuthAxios.post("/api/users/reports/daily");
         return apiData;
     }
     getData().then(res=>{
       setApiData(res.data);
+    });
+  }
+  const handleClickEmailSend = () =>{
+    const getData = async () => {
+        const apiData = await AuthAxios.post("/api/users/reports/daily");
+        return apiData;
+    }
+    getData().then(res=>{
+      return <EmailExportComponent data={res.data}/>
+      // setApiData(res.data);
     });
   }
  
@@ -114,7 +124,7 @@ const Index = () => {
                     handleClickExcelExport();
                   }}>Excel 내보내기</button>
                     {apiData && <ExcelExportComponent data={apiData}/>}
-                  <button type="button">이메일로 내보내기</button>
+                  <button type="button" onClick={()=>{handleClickEmailSend()}}>이메일로 내보내기</button>
                 </div>
               </form>
             </div>

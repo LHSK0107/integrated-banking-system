@@ -2,7 +2,8 @@ import React, { useEffect,useState } from "react";
 import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
-const ExcelExportComponent = ({data}) => {
+import axios from "axios";
+const EmailExportComponent = ({data}) => {
   const AuthAxios = useAxiosInterceptor();
   const data2 = [
     {
@@ -26,19 +27,17 @@ const ExcelExportComponent = ({data}) => {
   const currentDateTime = `${data?.date} ${data?.time}`;
   const excelDownload = () => {
     createTable().then((url) => {
-      const downloadNode = document.createElement("a");
-      downloadNode.setAttribute("href", url);
-      downloadNode.setAttribute("download", "일일시재보고서.xlsx");
-      downloadNode.click();
-      downloadNode.remove();
+      // const downloadNode = document.createElement("a");
+      // downloadNode.setAttribute("href", url);
+      // downloadNode.setAttribute("download", "일일시재보고서.xlsx");
+      // downloadNode.click();
+      // downloadNode.remove();
+      fetchBlobData(url).then((blob)=>{
+        return sendEmailWithAttachment(blob);
+      });
     });
   };
-
   const date = new Date();
-  const currentTime = `${date.getFullYear()}-${(
-    "0" +
-    (date.getMonth() + 1)
-  ).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
 
   const s2ab = (s) => {
     const buffer = new ArrayBuffer(s.length);
@@ -468,10 +467,6 @@ const ExcelExportComponent = ({data}) => {
           border: true
         });
       });
-      fetchBlobData(URL.createObjectURL(workbookBlob)).then((blob)=>{
-        console.log('url 생성');
-        return sendEmailWithAttachment(blob);
-      });
       // 파일 링크 생성
       return workbook
         .outputAsync()
@@ -486,10 +481,9 @@ const ExcelExportComponent = ({data}) => {
     return await response.blob();
   }
   const sendEmailWithAttachment = async (blob)=>{
-    console.log(`sendEmail 함수 실행`);
     const formData = new FormData();
     formData.append("file",blob,"일일시재보고서.xlsx");
-    const response = await AuthAxios.post("https://iam-api.site/api/users/reports/email",formData);
+    const response = await AuthAxios.post("https://iam-api.site/reports/email",formData);
     console.log(`email 요청 결과: ${response.data}`);
     return response.data;
   }
@@ -497,4 +491,4 @@ const ExcelExportComponent = ({data}) => {
   return excelDownload();
 
 };
-export default ExcelExportComponent;
+export default EmailExportComponent;
