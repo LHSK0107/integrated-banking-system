@@ -35,6 +35,7 @@ const Index = () => {
         const response = await AuthAxios.get(totalUri, {
           signal: controller.signal,
         });
+        console.log("res", response);
         if (response.status === 200) {
           setBalance(response.data);
         }
