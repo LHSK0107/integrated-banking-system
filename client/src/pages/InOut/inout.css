@@ -208,4 +208,46 @@ section form button {
   .inoutPage .result_data li:first-child {
     display: none;
   }
+
+  .result_data ul li {
+    display: block;
+    padding: 30px 10px 10px;
+    position: relative;
+  }
+  .result_data ul li:not(:first-child) > div {
+    height: auto;
+  }
+  .result_data ul li:not(:first-child) > div {
+    border: none;
+  }
+  .result_data ul li .trscTm {
+    position: absolute;
+    display: block;
+    top: 10px;
+    left: 10px;
+    color: var(--color-darkgray);
+    text-align: left;
+  }
+  .result_data ul li .rmrk {
+    display: block;
+    text-align: right;
+    font-weight: 300;
+    color: var(--color-darkgray);
+  }
+  .result_data .outMoney,
+  .result_data .inMoney {
+    display: none;
+  }
+  .result_data .mobile .c_blue,
+  .result_data .mobile .c_red {
+    text-align: right;
+    margin: 8px 0;
+    font-size: 1.2rem;
+  }
+  .result_data .mobile .c_blue {
+    color:rgb(46, 46, 247);
+  }
+  .result_data .mobile .c_red {
+    color: rgb(246, 40, 40);
+  }
 }

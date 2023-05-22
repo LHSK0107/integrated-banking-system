@@ -526,11 +526,11 @@ const Index = () => {
                                 {ele?.inoutDv === "1" ? `+${ele?.trscAmt}` : 0}
                               </div>
                               <div className="mobile">
-                              <p className="c_blue">{ele?.inoutDv === "2" ? `-${ele?.trscAmt}` : ""}</p>
-                              <p className="c_red">{ele?.inoutDv === "1" ? `+${ele?.trscAmt}` : ""}</p>
+                              <p className="c_blue">{ele?.inoutDv === "2" ? `-${ele?.trscAmt}원` : ""}</p>
+                              <p className="c_red">{ele?.inoutDv === "1" ? `+${ele?.trscAmt}원` : ""}</p>
                               </div>
                               <div className="bal flex justify_end align_center">
-                                {ele?.bal}
+                                잔액 {ele?.bal}원
                               </div>
                             </li>
                           );
