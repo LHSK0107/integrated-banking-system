@@ -70,8 +70,8 @@ public class EmailService {
 		helper.setFrom(serverEmail);
 //		helper.setTo(toEmail);
 		helper.setTo("poohharry@naver.com");
-		helper.setSubject("Email with Attachment");
-		helper.setText("This is an email with an attachment.");
+		helper.setSubject("보고서 내보내기");
+		helper.setText("보고서가 무사히 완성되었습니다.");
 		
 		FileSystemResource file = new FileSystemResource(attachmentFile);
 		helper.addAttachment(file.getFilename(), file);
