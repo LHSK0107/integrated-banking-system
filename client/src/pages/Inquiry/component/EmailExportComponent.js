@@ -428,6 +428,6 @@ const EmailExportComponent = ({ stateData, depAInsData, loadData, stateBal, depI
     });
   };
 
-  return <button className="excel-btn" onClick={() => excelDownload()}>Email 내보내기</button>;
+  return <button className="excel-btn" onClick={() => excelDownload()}>이메일로 내보내기</button>;
 };
 export default EmailExportComponent;

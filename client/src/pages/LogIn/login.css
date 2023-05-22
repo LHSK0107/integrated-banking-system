@@ -3,7 +3,6 @@
 .login_section {
   /* overflow: hidden; */
   width: 100%;
-  height: calc(100vh - 120px);
   padding: 40px;
   position: relative;
   /* height: 100%; */

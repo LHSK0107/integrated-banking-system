@@ -36,7 +36,6 @@ const EmailExportComponent = ({data}) => {
         return response.data;
       }
       return fetchBlobData(url).then((blob)=>{
-        console.log('url 생성');
         return sendEmailWithAttachment(blob);
       });
     });
