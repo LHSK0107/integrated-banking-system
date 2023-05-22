@@ -552,17 +552,6 @@ const Index = () => {
                         activeClassName={"pagingBtnActive"} // active page
                       />
                     </div>
-                    <div className="export_wrap">
-                      <ExcelExportComponent
-                      // stateData={statementList}
-                      // depAInsData={depAInsList}
-                      // loadData={loanList}
-                      // stateBal={calcTotalBal().stateBal}
-                      // depInsBal={calcTotalBal().depInsBal}
-                      // loanBal={calcTotalBal().loanBal}
-                      />
-                      <button onClick={() => print()}>인쇄</button>
-                    </div>
                   </div>
                 </div>
               </>
