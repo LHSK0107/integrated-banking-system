@@ -97,7 +97,7 @@ public class ReportController {
 			log.info("발송메일 주소 : "+email);
 			
 			// 다운로드한 파일을 디스크에 저장합니다.
-			File tempFile = File.createTempFile(file.getOriginalFilename(), ".xlsx");
+			File tempFile = File.createTempFile(file.getOriginalFilename().split(".")[0], ".xlsx");
 	        Files.copy(file.getInputStream(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			
 			// 이메일 발송
