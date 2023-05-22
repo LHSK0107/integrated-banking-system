@@ -68,8 +68,8 @@ public class EmailService {
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 		
 		helper.setFrom(serverEmail);
-//		helper.setTo(toEmail);
-		helper.setTo("poohharry@naver.com");
+		helper.setTo(toEmail);
+//		helper.setTo("poohharry@naver.com");
 		helper.setSubject("보고서 내보내기");
 		helper.setText("보고서가 무사히 완성되었습니다.");
 		
