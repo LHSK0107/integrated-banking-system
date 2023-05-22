@@ -97,8 +97,13 @@ public class ReportController {
 			log.info("발송메일 주소 : "+email);
 			log.info("건네받은 파일 이름(getOriginalFilename()) : " + file.getOriginalFilename());
 			log.info("건네받은 파일 이름(getName()) : " + file.getName());
+			int pos = file.getOriginalFilename().lastIndexOf(".");
+			String filename = null;
+			
+		    filename = file.getOriginalFilename().substring(0, pos);
+
 			// 다운로드한 파일을 디스크에 저장합니다.
-			File tempFile = File.createTempFile(file.getName(), ".xlsx");
+			File tempFile = File.createTempFile(filename, ".xlsx");
 	        Files.copy(file.getInputStream(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			
 			// 이메일 발송
