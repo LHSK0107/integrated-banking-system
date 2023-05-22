@@ -24,12 +24,6 @@ import ApproveAuth from "./commons/ApproveAuth";
 import useAuth from "./hooks/useAuth";
 import decodeJwt from "./utils/decodeJwt";
 const App = () => {
-  window.addEventListener("beforeunload", function (event) {
-    event.returnValue = "나가시겠습니까?";
-    console.log(event);
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("menuClick");
-  });
   const { setToken2, setLoggedUserInfo } = useAuth();
   const client = new QueryClient({
     defaultOptions: {
