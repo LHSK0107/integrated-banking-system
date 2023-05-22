@@ -5,6 +5,7 @@ import "../admin.css";
 import Breadcrumb from "../../../commons/Breadcrumb";
 import Aside from "./Aside";
 import { useNavigate } from "react-router-dom";
+import { set } from "react-hook-form";
 
 const Dept = () => {
   const navigate = useNavigate();
@@ -72,6 +73,7 @@ const Dept = () => {
       return updatedDeptList;
     });
   };
+  console.log(changeDept);
 
   // 수정하기 버튼 클릭시
   const handleSubmit = (e) => {
@@ -83,7 +85,7 @@ const Dept = () => {
         console.log(response);
         if (response.status === 200) {
           alert("수정되었습니다.");
-          window.location.reload();
+          // window.location.reload();
         }
       } catch (err) {
         console.log(`error 발생: ${err}`);
@@ -99,19 +101,22 @@ const Dept = () => {
     }
   };
 
+  console.log(addDept);
   // 추가 버튼 클릭시
   const hadleInsert = (e) => {
     e.preventDefault();
+    const addDeptVal = {deptNo: e.target[0].value,dept: e.target[1].value};
+    console.log(addDeptVal);
 
-    setAddDept({
-        deptNo: e.target[0].value,
-        dept: e.target[1].value
-    })
+    // setAddDept({
+    //     deptNo: e.target[0].value,
+    //     dept: e.target[1].value
+    // })
     const insertDept = async () => {
         try {
           const response = await AuthAxios.post(
             `/api/admin/dept`,
-            addDept
+            addDeptVal
           );
           console.log(response);
           if (response.status === 200) {
@@ -119,7 +124,8 @@ const Dept = () => {
             window.location.reload();
           }
         } catch (err) {
-          console.log(`error 발생: ${err}`);
+          console.log(err);
+          alert(err.response.data);
         }
       };
       if (window.confirm(`${e.target[1].value} 부서을/를 추가하시겠습니까?`)) insertDept();
@@ -255,8 +261,8 @@ const Dept = () => {
                 </ul>
                 <div className="addDeptList">
                   <form onSubmit={hadleInsert}>
-                    <input type="text" name="deptNo" maxLength={3} minLength={3} placeholder="추가할 부서번호" required></input>
-                    <input type="text" name="dept" minLength={1} placeholder="추가할 부서명" required></input>
+                    <input type="text" name="deptNo" maxLength={3} minLength={3} placeholder="추가할 부서번호" onChange={e=>setAddDept({deptNo:e.target.value})} required></input>
+                    <input type="text" name="dept" minLength={1} placeholder="추가할 부서명" onChange={e=>setAddDept({dept:e.target.value})} required></input>
                     <button type="submit">추가</button>
                   </form>
                 </div>
