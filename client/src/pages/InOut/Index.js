@@ -10,7 +10,6 @@ import BankName from "../../hooks/useBankName";
 import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import useAuth from "../../hooks/useAuth";
-import ExcelExportComponent from "./component/ExcelExportComponent";
 import ReactPaginate from "react-paginate";
 
 const Index = () => {
@@ -110,9 +109,9 @@ const Index = () => {
     apiData &&
     apiData
       ?.filter((ele) => {
-        if (optionVal.bankCD === "") {
+        if (optionVal?.bankCD === "") {
           return ele;
-        } else if (optionVal.bankCD === ele?.bankCd) {
+        } else if (optionVal?.bankCD === ele?.bankCd) {
           return ele;
         }
       })
@@ -175,7 +174,6 @@ const Index = () => {
     nowDate && initialDate();
   }, []);
 
-  console.log("option",optionVal);
   /** radio 버튼에 대한 onChange 핸들러 */
   const handleRadioOnChange = (e) => {
     const { name, value } = e.target;
@@ -185,17 +183,6 @@ const Index = () => {
   const [pageCount, setPageCount] = useState(null);
   /** 조회 버튼 시, 서버 요청*/
   const handleOnSubmit = (e) => {
-    console.log({
-      isLoan: index, // 예금은 0 => false, 대출은 1 => true
-      bankCd: optionVal?.bankCD === "" ? "All" : optionVal?.bankCD,
-      acctNo: optionVal?.acctNO === "" ? "All" : optionVal?.acctNO,
-      startDt: optionVal?.strDate,
-      endDt: optionVal?.endDate,
-      inoutDv: optionVal?.inout === "" ? "All" : optionVal?.inout,
-      sort: optionVal?.arrange,
-      page: 1,
-      pageSize: 10,
-    });
     e.preventDefault();
     setInoutDataList(null);
     const getData = async () => {
@@ -216,14 +203,11 @@ const Index = () => {
           pageSize: optionVal?.paging,
         }
       );
-      console.log(data1);
       return data1;
     };
     getData()
       .then((res) => {
         alert("조회 완료");
-        console.log(res.data.list);
-        console.log(res.data.totalPage);
         setPageCount(res.data.totalPage);
         setInoutDataList(res.data.list);
       })
@@ -257,8 +241,6 @@ const Index = () => {
         );
         setPageCount(data1.data.totalPage);
         setInoutDataList(data1.data.list);
-        console.log("res.list", data1.data.list);
-        console.log("res.totalPage", data1.data.totalPage);
       } catch (error) {
         console.error("Error fetching data:", error);
         alert("조회 확인 후, 다시 시도해주시기 바랍니다.");

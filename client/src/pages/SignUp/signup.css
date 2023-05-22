@@ -2,7 +2,6 @@
 .signup_section {
   /* overflow-y: hidden; */
   width: 100%;
-  height: calc(100vh - 120px);
   /* height: 100%; */
   padding: 40px;
   position: relative;
@@ -203,7 +202,6 @@ input::-webkit-inner-spin-button {
   }
   .signup_section {
     padding: 0;
-    height: calc(100vh - 120px);
   }
   .progress_wrap {
     margin-bottom: 30px;
