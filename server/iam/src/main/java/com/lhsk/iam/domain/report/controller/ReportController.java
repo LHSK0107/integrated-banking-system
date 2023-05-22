@@ -94,10 +94,10 @@ public class ReportController {
 			int userNo = jwtTokenProvider.getUserNoFromToken(accessToken);
 			DetailUserVO user = userService.findByUserNo(userNo);
 			String email = user.getEmail();
-			
+			log.info("발송메일 주소 : "+email);
 			
 			// 다운로드한 파일을 디스크에 저장합니다.
-			File tempFile = File.createTempFile("temp-", ".xlsx");
+			File tempFile = File.createTempFile(file.getOriginalFilename(), ".xlsx");
 	        Files.copy(file.getInputStream(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			
 			// 이메일 발송
