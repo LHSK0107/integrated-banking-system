@@ -438,7 +438,7 @@ footer .footer_contact_wrap a {
 }
 @media (max-width: 768px) {
   .user_info_wrap .login p:not(:last-child){
-    margin: 0;
+    margin: 15px;
   }
   footer p,
   footer a {
@@ -501,8 +501,8 @@ footer .footer_contact_wrap a {
   .user_manage_wrap>div>p:not(:last-child){
     margin-right: 20px;
   }
-  .mobile_logout_btn_wrap{
-    display: none;
+  .top_gnb .mobile_logout_btn_wrap{
+    display: none !important;
   }
   .signup_wrap{
     width: 100%;
