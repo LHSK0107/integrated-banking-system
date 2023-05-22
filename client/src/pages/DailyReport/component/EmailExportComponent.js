@@ -1,38 +1,40 @@
-import React, { useEffect,useState } from "react";
 import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 import useAxiosInterceptor from "../../../hooks/useAxiosInterceptor";
-import axios from "axios";
 const EmailExportComponent = ({data}) => {
   const AuthAxios = useAxiosInterceptor();
-  const data2 = [
-    {
-      STATE_ACCT: {
-        bankNm: "기업은행",
-        acctNo: "082-052234-04-013",
-        bankNk: "기업 4013",
-        outCnt: 0,
-        outBal: 0,
-        inCnt: 0,
-        inBal: 0,
-        loanMax: 0,
-        bal: "1,604",
-        outAmt: "1,604",
-      },
-    },
-  ];
   const inoutData = data?.inoutAcctList;
   const timeData = data?.timeAcctList;
   const loanData = data?.loanAcctList;
   const currentDateTime = `${data?.date} ${data?.time}`;
   const excelDownload = () => {
     createTable().then((url) => {
-      // const downloadNode = document.createElement("a");
-      // downloadNode.setAttribute("href", url);
-      // downloadNode.setAttribute("download", "일일시재보고서.xlsx");
-      // downloadNode.click();
-      // downloadNode.remove();
-      fetchBlobData(url).then((blob)=>{
+      const fetchBlobData = async(blobUrl) =>{
+        const response = await fetch(blobUrl);
+        if(!response.ok){
+          throw new Error(`fail${blobUrl}`);
+        }
+        return await response.blob();
+      }
+      const sendEmailWithAttachment = async (blob)=>{
+        console.log(`sendEmail 함수 실행`);
+        const formData = new FormData();
+        formData.append("file",blob,"일일시재보고서.xlsx");
+        const response = await AuthAxios.post("https://iam-api.site/api/users/reports/email", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        if(response.status===200){
+          alert("이메일 내보내기 성공");
+        } else {
+          alert("이메일 내보내기에 오류가 발생했습니다.");
+          return false;
+        }
+        return response.data;
+      }
+      return fetchBlobData(url).then((blob)=>{
+        console.log('url 생성');
         return sendEmailWithAttachment(blob);
       });
     });

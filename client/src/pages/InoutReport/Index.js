@@ -10,7 +10,7 @@ import useCurrentTime from "../../hooks/useCurrentTime";
 import useAxiosInterceptor from "../../hooks/useAxiosInterceptor";
 import useAuth from "../../hooks/useAuth";
 import ExcelExportComponent from "./component/ExcelExportComponent";
-
+import EmailExportComponent from "./component/EmailExportComponent";
 const Index = () => {
   const AuthAxios = useAxiosInterceptor();
   const { loggedUserInfo } = useAuth();
@@ -152,16 +152,8 @@ const Index = () => {
 
   /** 조회 버튼 시, 서버 요청*/
   const [inoutDataList,setInoutDataList]=useState(null);
-  inoutDataList&&console.log(inoutDataList);
   const handleClickExcelExport = (e) =>{
-    console.log({
-      bankNm : optionVal?.bankCD ==="" ? "null" : optionVal?.bankCD,
-      acctNo: optionVal?.acctNO === "" ? "null" : optionVal?.acctNO,
-      startDt: optionVal?.strDate,
-      endDt: optionVal?.endDate,
-    });
     e.preventDefault();
-    // cancellation token
     const getData = async () => {
         const inoutData = await AuthAxios.post("/api/users/reports/inout",{
           bankCd : optionVal?.bankCD ==="" ? "null" : optionVal?.bankCD,
@@ -181,6 +173,24 @@ const Index = () => {
       },500)
     })
     return false;
+  }
+  const [emailDataList, setEmailDataList] = useState(null);
+  const handleClickEmailSend = () =>{
+    const getData = async () => {
+      const inoutData = await AuthAxios.post("/api/users/reports/inout",{
+        bankCd : optionVal?.bankCD ==="" ? "null" : optionVal?.bankCD,
+        acctNo: optionVal?.acctNO === "" ? "null" : optionVal?.acctNO,
+        startDt: optionVal?.strDate,
+        endDt: optionVal?.endDate,
+      });
+      return inoutData;
+  }
+    getData().then(res=>{
+      setEmailDataList(res.data);      
+    });
+    setInterval(()=>{
+      setEmailDataList(null);
+    },500);
   }
   /** 제출 */
   const handleOnSubmit = (e) =>{
@@ -256,7 +266,8 @@ const Index = () => {
                     handleClickExcelExport(e);
                   }}>Excel 내보내기</button>
                     {inoutDataList&&exportExcel()}
-                  <button type="button">이메일로 내보내기</button>
+                    <button type="button" onClick={()=>{handleClickEmailSend()}}>이메일로 내보내기</button>
+                  {emailDataList && <EmailExportComponent data={emailDataList}/>}
                 </div>
               </form>
             </div>
