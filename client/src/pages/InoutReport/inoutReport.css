@@ -1,75 +1,75 @@
 @charset "utf-8";
 
 section .description {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
-.tab{
-    color: var(--color-darkgray);
-    font-weight: 500;
-    border-bottom: 1px solid var(--color-lightgray);
+.tab {
+  color: var(--color-darkgray);
+  font-weight: 500;
+  border-bottom: 1px solid var(--color-lightgray);
 }
 .tab li {
-    cursor: pointer;
-    position: relative;
-    padding: 12px 32px;
-    background-color: var(--color-background);
-    border-top: 1px solid var(--color-lightgray);
-    border-left: 1px solid var(--color-lightgray);
-    border-right: 1px solid var(--color-lightgray);
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 32px;
+  background-color: var(--color-background);
+  border-top: 1px solid var(--color-lightgray);
+  border-left: 1px solid var(--color-lightgray);
+  border-right: 1px solid var(--color-lightgray);
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
 }
 .tab li.active {
-    background-color: var(--color-white);
+  background-color: var(--color-white);
 }
 .tab li.active::after {
-    position: absolute;
-    content: "";
-    display: block;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: var(--color-white);
+  position: absolute;
+  content: "";
+  display: block;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--color-white);
 }
 
 .content_wrap > p {
-    font-size: .8rem;
-    font-weight: 300;
-    text-align: right;
-    margin: 18px 0 8px;
+  font-size: 0.8rem;
+  font-weight: 300;
+  text-align: right;
+  margin: 18px 0 8px;
 }
 .content .accordian_btn {
-    border: 1px solid var(--color-darkgray);
-    border-radius: 7px 7px 0 0;
-    background-color: var(--color-darkgray);
-    color: var(--color-white);
-    padding: 18px;
-    cursor: pointer;
+  border: 1px solid var(--color-darkgray);
+  border-radius: 7px 7px 0 0;
+  background-color: var(--color-darkgray);
+  color: var(--color-white);
+  padding: 18px;
+  cursor: pointer;
 }
 .content .accordian_btn p {
-    font-size: 1.125rem;
+  font-size: 1.125rem;
 }
 .content .accordian_btn p span {
-    font-weight: 700;
-    color: var(--color-point);
-    margin-left: 8px;
+  font-weight: 700;
+  color: var(--color-point);
+  margin-left: 8px;
 }
 .content .accordian_btn h4 {
-    font-size: 1.25rem;
-    margin-right: 10px;
+  font-size: 1.25rem;
+  margin-right: 10px;
 }
-.content .on ul {    
-    height: 0;
-    overflow: hidden;
-    animation: accordian 1;
+.content .on ul {
+  height: 0;
+  overflow: hidden;
+  animation: accordian 1;
 }
 .content ul {
-    height: auto;
-    border: 1px solid var(--color-darkgray);
-    border-radius: 0 0 7px 7px;
-    margin-bottom: 50px;
+  height: auto;
+  border: 1px solid var(--color-darkgray);
+  border-radius: 0 0 7px 7px;
+  margin-bottom: 50px;
 }
 /* @keyframes accordian {
     0% {
@@ -87,78 +87,86 @@ section .description {
     }
 } */
 .content .on figure {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 .content li > a {
-    padding: 20px;
-    border-bottom: 1px solid var(--color-lightgray);
+  padding: 20px;
+  border-bottom: 1px solid var(--color-lightgray);
 }
-.content .excel-btn{
-    background-color: black;
+.content .excel-btn {
+  background-color: black;
 }
-.content .excel-btn img{
-    width: 20px;
-    height: 20px;
+.content .excel-btn img {
+  width: 20px;
+  height: 20px;
 }
 .accordian_account {
-    flex: 0 0 56%;
+  flex: 0 0 56%;
 }
 .accordian_account figure {
-    width: 16px;
-    height: 16px;
-    margin-right: 18px;
+  width: 16px;
+  height: 16px;
+  margin-right: 18px;
 }
 .accordian_account figure img {
-    height: 100%;
+  height: 100%;
 }
 .accordian_account div h4 {
-    margin: 0;
+  margin: 0;
 }
 .accordian_account p {
-    font-size: .8rem;
-    font-weight: 300;
+  font-size: 0.8rem;
+  font-weight: 300;
 }
 .accordian_account_bank span {
-    margin-left: 18px;
-    padding-left: 8px;
-    border-left: 1px solid var(--color-lightgray);
+  margin-left: 18px;
+  padding-left: 8px;
+  border-left: 1px solid var(--color-lightgray);
 }
 .accordian_account_bal {
-    font-size: 1.25rem;
-    font-weight: 700;
-    text-align: right;
-    flex: 0 0 20%;
-    margin-right: 18px;
-    font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: right;
+  flex: 0 0 20%;
+  margin-right: 18px;
+  font-weight: 700;
 }
 .accordian_detail_btn {
-    font-weight: 500;
-    color: var(--color-main);
-    flex: 0 0 14%;
-    padding: 8px 28px 8px 18px;
-    border: 1px solid var(--color-main);
+  font-weight: 500;
+  color: var(--color-main);
+  flex: 0 0 14%;
+  padding: 8px 28px 8px 18px;
+  border: 1px solid var(--color-main);
 }
 
 /* media query */
 /* mobile */
-@media (max-width:768px) {
-    .inoutReport aside {
-        display: none;
-    }
-    .inoutReport .description {
-        display: none;
-    }
-    .inoutReport aside + section {
-        width: 100%;
-        margin: 0;
-    }
-    .inoutReport .form_wrap li > p {
-        width: 10%;
-    }
-    .inoutReport .form_wrap li > div {
-        width: 90%;
-    }
-    .inoutReport section form button {
-        padding: 8px 18px;
-    }
+@media (max-width: 768px) {
+  .inoutReport aside {
+    display: none;
+  }
+  .inoutReport .description {
+    display: none;
+  }
+  .inoutReport aside + section {
+    width: 100%;
+    margin: 0;
+  }
+  .inoutReport .form_wrap li > p {
+    width: 20%;
+  }
+  .inoutReport .form_wrap li > div {
+    width: 80%;
+    display: block;
+  }
+  .inoutReport .form_wrap li > div select {
+    margin-bottom: 10px;
+  }
+  .inoutReport section form button {
+    padding: 8px 18px;
+  }
+  .form_wrap li > div > div span {
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
 }
