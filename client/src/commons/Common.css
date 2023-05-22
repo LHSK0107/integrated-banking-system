@@ -198,10 +198,10 @@
 }
 .mobile_menu_wrap .mobile_content .top_gnb{
   z-index: 9999;
-  background-color: var(--color-lightgray);
+  background-color: var(--color-background);
   padding: 8px 10px;
   border-radius: 10px;
-
+  margin-top: 30px;
 }
 .skeleton-img{
   width: 100%;
@@ -456,10 +456,13 @@ footer .footer_contact_wrap a {
   .menu_list{
     display: none;
   }
-  .mobile_menu_icon,
-  .mobile_close_icon{
+  .nav_menu_section .mobile_menu_icon,
+  .nav_menu_section .mobile_close_icon{
     display: block;
     cursor: pointer;
+    width: 24px;
+    height: 24px;
+    z-index: 9999;
   }
   .mobile_arrow_icon{
     display: inline-block;
@@ -508,6 +511,9 @@ footer .footer_contact_wrap a {
     width: 100%;
     text-align: center;
     cursor: pointer;
+  }
+  .user_info_wrap .login p:not(:last-child) {
+    margin: 0;
   }
   /* nav end */
   #wrap{
