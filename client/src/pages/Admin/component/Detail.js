@@ -152,8 +152,7 @@ const Detail = () => {
       const controller = new AbortController();
       try {
         const response = await AuthAxios.put(`/api/admin/grantAdmin`, {
-          userNo: member.userNo,
-          userCode: "ROLE_ADMIN",
+          userNo: member.userNo
         });
         if (response.status === 200) {
           alert("위임되었습니다.");
