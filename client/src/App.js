@@ -25,6 +25,22 @@ import useAuth from "./hooks/useAuth";
 import decodeJwt from "./utils/decodeJwt";
 const App = () => {
   const { setToken2, setLoggedUserInfo } = useAuth();
+
+  // beforeunload -> text 변경 불가, 모바일에서는 visibilityChange 이벤트 각
+  const beforeUnloadListener = (e) => {
+    e.preventDefault();
+    return (e.returnValue="");
+  }
+  const onBeforeUnloadEvent = () =>{
+    window.addEventListener("beforeunload", beforeUnloadListener,{capture:true});
+    localStorage.removeItem("jwt");
+    setToken2(null);
+  }
+  const offBeforeUnloadEvent = () => {
+    window.removeEventListener("beforeunload",beforeUnloadListener,{capture: true});
+  }
+  offBeforeUnloadEvent();
+  
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -32,6 +48,7 @@ const App = () => {
       },
     },
   });
+
   useEffect(() => {
     if (localStorage.getItem("jwt")) {
       setToken2(localStorage.getItem("jwt"));
@@ -44,6 +61,7 @@ const App = () => {
         userNo: decodedPayload.userNo,
       });
     }
+    onBeforeUnloadEvent();
   }, []);
   return (
     <div className="App">
