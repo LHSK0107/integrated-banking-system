@@ -244,23 +244,29 @@ public class AdminService {
 		int adminsUserNo = jwtTokenProvider.getUserNoFromToken(accessToken);
 		try {
 			// 위임 받는 매니저의 정보 업데이트
-			userService.updateUser("ROLE_ADMIN", updateUserVO);			
-			// 위임 후 ROLE_ADMIN을 ROLE_USER로 바꿈
-			adminMapper.afterGrantAdmin(adminsUserNo);
-			// 로그아웃
-			// 메뉴 클릭 기록 집계 등록 (insert or update)
-			MenuClickRequestVO vo = MenuClickRequestVO
-								.builder()
-								.allAccount(0)
-								.inout(0)
-								.inoutReport(0)
-								.dailyReport(0)
-								.dashboard(0)
-								.build();
-			userService.updateMenuClick(vo);
-			// 로그아웃 처리
-			loginService.logout(request, response);
-			return true;
+			String updateFlag = userService.updateUser("ROLE_ADMIN", updateUserVO);
+			if (updateFlag.equals("success")) {
+				// 위임 후 ROLE_ADMIN을 ROLE_USER로 바꿈
+				int afterGrantFlag = adminMapper.afterGrantAdmin(adminsUserNo);
+				if (afterGrantFlag > 0) {
+					// 로그아웃
+					// 메뉴 클릭 기록 집계 등록 (insert or update)
+					MenuClickRequestVO vo = MenuClickRequestVO
+							.builder()
+							.allAccount(0)
+							.inout(0)
+							.inoutReport(0)
+							.dailyReport(0)
+							.dashboard(0)
+							.build();
+					userService.updateMenuClick(vo);
+					// 로그아웃 처리
+					loginService.logout(request, response);
+					return true;
+				}
+				return false;
+			}
+			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
