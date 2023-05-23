@@ -108,7 +108,8 @@ public class UserService {
 			if (userCode.equals("ROLE_USER")) {
 				// 변경할 수 없는 값이 들어온 경우
 				if (
-					(updateUserVO.getUserCode() != null && !updateUserVO.getUserCode().equals("")) ||
+					(updateUserVO.getUserCode() != null && !updateUserVO.getUserCode().equals("") 
+														&& !updateUserVO.getUserCode().equals("ROLE_ADMIN")) ||
 					(updateUserVO.getName() != null && !updateUserVO.getName().equals("")) || 
 					(updateUserVO.getDept() != null && !updateUserVO.getDept().equals(""))
 				) {
@@ -123,7 +124,9 @@ public class UserService {
 			// 2. manager일 때
 			} else if (userCode.equals("ROLE_MANAGER")) {
 				// 변경할 수 없는 값이 들어온 경우
-				if (updateUserVO.getUserCode() != null || !updateUserVO.getUserCode().equals("")) {
+				if (updateUserVO.getUserCode() != null && !updateUserVO.getUserCode().equals("") 
+													   && (!updateUserVO.getUserCode().equals("ROLE_ADMIN")
+														|| !updateUserVO.getUserCode().equals("ROLE_MANAGER"))) {
 					return "fail";
 				// 변경할 수 있는 값인 경우
 				} else {
@@ -134,8 +137,11 @@ public class UserService {
 			// 3. admin일 때
 			} else {
 				// 변경된 정보를 암호화하여 update 하고 정상적으로 수행 되었으면 success 반환
-				if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) { return "success"; }
-				else { return "fail"; }
+				if (!updateUserVO.getUserCode().equals("ROLE_ADMIN")) {
+					if (userMapper.updateUser(encryptUser(updateUserVO)) > 0) { return "success"; }
+					else { return "fail"; }
+				}
+				else { return "fail"; } 
 			}
 		}
 	}
