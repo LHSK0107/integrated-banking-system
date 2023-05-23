@@ -22,7 +22,6 @@ const EmailCheckStep = () => {
   const onSubmit = (data) => {
     axios.post("https://iam-api.site/api/signup/email",{"email":data.email})
     .then((res)=>{
-      // console.log(res);
       if(res.data===false){
         const values = {
           id: data.id,

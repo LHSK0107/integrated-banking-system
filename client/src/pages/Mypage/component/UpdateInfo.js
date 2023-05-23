@@ -177,7 +177,6 @@ const UpdateInfo = () => {
                 }
               };
               updatePwTel();
-              // console.log("true",response);
             } else if (response.data === false) {
               alert("비밀번호가 잘못되었습니다.");
             }

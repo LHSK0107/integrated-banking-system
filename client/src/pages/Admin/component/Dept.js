@@ -32,7 +32,6 @@ const Dept = () => {
         const response = await AuthAxios.get(`/api/dept`, {
           signal: controller.signal,
         });
-        // console.log(response);
         if (response.status === 200) {
           setDeptList(
             response.data.sort((a, b) => {
@@ -82,7 +81,6 @@ const Dept = () => {
     const updateDept = async () => {
       try {
         const response = await AuthAxios.put(`/api/admin/dept`, changeDept);
-        // console.log(response);
         if (response.status === 200) {
           alert("수정되었습니다.");
           // window.location.reload();
@@ -118,7 +116,6 @@ const Dept = () => {
             `/api/admin/dept`,
             addDeptVal
           );
-          // console.log(response);
           if (response.status === 200) {
             alert("추가되었습니다.");
             window.location.reload();
@@ -134,13 +131,11 @@ const Dept = () => {
 
   // 삭제 버튼 클릭시
   const handleDelete = (e) => {
-    // console.log(e);
     const deleteDept = async () => {
       try {
         const response = await AuthAxios.delete(
           `/api/admin/dept/${e.deptNo}`
         );
-        // console.log(response);
         if (response.status === 200) {
           alert("삭제되었습니다.");
           window.location.reload();

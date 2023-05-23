@@ -24,7 +24,6 @@ const InspectAccount = () => {
         const response = await AuthAxios.get(`/api/manager/users`, {
           signal: controller.signal,
         });
-        // console.log(response);
         if (response.status === 200) {
           setUserList(
             response.data.filter((ele) => ele.userCode === "ROLE_USER")
@@ -40,7 +39,6 @@ const InspectAccount = () => {
         const response = await AuthAxios.get(`/api/manager/usersAccount`, {
           signal: controller.signal,
         });
-        // console.log(response);
         if (response.status === 200) {
           setAccountList(response.data);
         }
@@ -68,7 +66,6 @@ const InspectAccount = () => {
           signal: controller.signal,
         }
       );
-      // console.log(response);
       if (response.status === 200) {
         setCheckedUser(userNo);
         setMemberAccountList(response.data);
@@ -303,13 +300,11 @@ const InspectAccount = () => {
           `/api/manager/grantAccount/${checkedUser}`,
           checkedVal
         );
-        // console.log(response);
         if (response.status === 200) {
-          // console.log("success");
           alert("계좌가 추가 및 수정되었습니다.")
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     if (checkedUser === null) alert("선택한 회원이 없습니다.");

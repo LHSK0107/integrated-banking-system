@@ -45,7 +45,6 @@ const Detail = () => {
         const response = await AuthAxios.get(`/api/dept`, {
           signal: controller.signal,
         });
-        // console.log(response);
         if (response.status === 200) {
           setDept(response.data.map((ele) => ele.dept));
         }
@@ -130,7 +129,6 @@ const Detail = () => {
           { withCredentials: true }
         )
         .then((res) => {
-          // console.log(res);
           if (res.status === 200) {
             alert("탈퇴되었습니다.");
             navigate("/admin");
@@ -150,7 +148,6 @@ const Detail = () => {
       setIsAuth(false);
       navigate("/login");
     };
-    let menuList = JSON.parse(localStorage.getItem("menuClick"));
     const delegate = async () => {
       const controller = new AbortController();
       try {
@@ -158,7 +155,6 @@ const Detail = () => {
           userNo: member.userNo,
           userCode: "ROLE_ADMIN",
         });
-        // console.log(response);
         if (response.status === 200) {
           alert("위임되었습니다.");
           localStorage.removeItem("jwt");

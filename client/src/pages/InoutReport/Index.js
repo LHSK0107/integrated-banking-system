@@ -165,7 +165,6 @@ const Index = () => {
     }
     getData().then(res=>{
       setInoutDataList(res.data);
-      // console.log(res.data);
     }).finally(()=>{
       setTimeout(()=>{
         setInoutDataList(null);

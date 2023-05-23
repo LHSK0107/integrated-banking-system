@@ -15,12 +15,10 @@ const NewsSlider = () => {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    // const url = "http://localhost:8080/api/news";
     const url = "https://iam-api.site/api/news";
     axios
       .get(url)
       .then((response) => {
-        // console.log(response);
         clearData(response.data);
       })
       .catch((err) => {

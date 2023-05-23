@@ -18,9 +18,6 @@ const LogHistory = () => {
   const pageCount = Math.ceil(log?.length / 10);
   const handlePageClick = (event) => {
     const newOffset = (event.selected * 10) % log.length;
-    // console.log(
-    //   `User requested page number ${event.selected}, which is offset ${newOffset}`
-    // );
     setItemOffset(newOffset);
   };
 
