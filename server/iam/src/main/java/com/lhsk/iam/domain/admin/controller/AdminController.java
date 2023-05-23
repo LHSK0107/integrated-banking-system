@@ -122,8 +122,9 @@ public class AdminController {
 	@PutMapping("/api/admin/grantAdmin") 
 	public ResponseEntity<?> grantAdmin (HttpServletRequest request, 
 										HttpServletResponse response,
-										@RequestBody UpdateUserVO updateUserVO) {		
-		boolean flag = adminService.grantAdmin(request, response, updateUserVO);
+										@RequestBody UpdateUserVO updateUserVO) {
+		int ManagerUserNo = updateUserVO.getUserNo();
+		boolean flag = adminService.grantAdmin(request, response, ManagerUserNo);
 		if (flag) return new ResponseEntity<>("위임 완료되었습니다.", HttpStatus.OK);
 		else return new ResponseEntity<>("요청 값이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
 	}

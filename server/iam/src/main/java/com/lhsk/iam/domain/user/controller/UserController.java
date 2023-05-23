@@ -111,16 +111,46 @@ public class UserController {
 			} else { 
 				return new ResponseEntity<>("fail", HttpStatus.FORBIDDEN); 
 			}
-		// 2. manager나 admin일 때
+		// 2. manager일 때
+		} else if (userCode.equals("ROLE_MANAGER")) {
+			// 2-1. 수정하려는 user가 자신일 때
+			if(id.equals((userService.findByUserNo(updateUserVO.getUserNo()).getId()))) {
+				String flag = userService.updateUser(userCode, updateUserVO);
+				// 쿼리 성공 여부에 따라 다른 상태코드 반환
+				if (flag.equals("success")) { 
+					return new ResponseEntity<>(flag, HttpStatus.OK); }
+				else { 
+					return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
+			// 2-2. 수정하려는 user가 manager일 때, 접근 제한
+			} else if(userService.findByUserNo(updateUserVO.getUserNo()).getUserCode().equals("ROLE_MANAGER")) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			// 2-3. 수정하려는 user가 admin일 때, 접근 제한
+			} else if(userService.findByUserNo(updateUserVO.getUserNo()).getUserCode().equals("ROLE_ADMIN")) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			} else {
+				String flag = userService.updateUser(userCode, updateUserVO);
+				// 쿼리 성공 여부에 따라 다른 상태 코드 반환
+				if (flag.equals("success")) {
+					return new ResponseEntity<>(flag, HttpStatus.OK); }
+				else {
+					return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
+			}
+		// 3. admin일 때
 		} else {
-			String flag = userService.updateUser(userCode, updateUserVO);
-			// 쿼리 성공 여부에 따라 다른 상태코드 반환
-			if (flag.equals("success")) { 
-				return new ResponseEntity<>(flag, HttpStatus.OK); }
-			else { 
-				return new ResponseEntity<>(flag, HttpStatus.BAD_REQUEST); }
+			// 자신의 정보를 수정할 때
+			if(id.equals((userService.findByUserNo(updateUserVO.getUserNo()).getId()))) {
+				if(updateUserVO.getUserCode() != null || updateUserVO.getUserCode().equals("")) {
+					return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+				}
+			} else {
+				String flag = userService.updateUser(userCode, updateUserVO);
+				if (flag.equals("success")) {
+					return new ResponseEntity<>(flag, HttpStatus.OK);
+				}
+			}
 		}
-	}
+		return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+	}	
 	
 	// 회원 삭제
 	@DeleteMapping("/api/users/{userNo}")
