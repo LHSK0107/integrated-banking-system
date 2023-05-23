@@ -14,7 +14,7 @@ export default function LogOut() {
     if (window.confirm("로그아웃 하시겠습니까?")) {
       // 확인 버튼 클릭시
       axios
-        .post("http://localhost:8080/api/logout", {})
+        .post("https://iam-api.site/api/logout", {})
         .then((res) => {
           localStorage.removeItem("jwt");
           setLoggedUserInfo(null);

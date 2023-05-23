@@ -142,13 +142,49 @@ const Detail = () => {
     }
   };
 
+  const handleDelegate = () => {
+    /** logout시, context 비우는 함수 */
+    const logout = () => {
+      setToken2(null);
+      setLoggedUserInfo(null);
+      setIsAuth(false);
+      navigate("/login");
+    };
+    let menuList = JSON.parse(localStorage.getItem("menuClick"));
+    const delegate = async () => {
+      const controller = new AbortController();
+      try {
+        const response = await AuthAxios.put(`/api/admin/grantAdmin`, {
+          userNo: member.userNo,
+          userCode: "ROLE_ADMIN",
+        });
+        console.log(response);
+        if (response.status === 200) {
+          alert("위임되었습니다.");
+          localStorage.removeItem("jwt");
+          localStorage.removeItem("menuClick");
+          logout();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (window.confirm("위임하시겠습니까?")) {
+      delegate();
+    }
+  };
+
   /** 위임하기 */
   const changeRole = () => {
     if (
       loggedUserInfo?.userCode === "ROLE_ADMIN" &&
       member?.userCode === "ROLE_MANAGER"
     ) {
-      return <button type="button">위임하기</button>;
+      return (
+        <button type="button" onClick={handleDelegate}>
+          위임하기
+        </button>
+      );
     }
   };
 
@@ -167,43 +203,9 @@ const Detail = () => {
                     <li className="flex">
                       <p className="flex align_center">권한</p>
                       <p className="flex align_center">
-                        {loggedUserInfo?.userCode === "ROLE_ADMIN" ? (
-                          <select value={role} onChange={handleRole}>
-                            <option
-                              value="ROLE_ADMIN"
-                              selected={
-                                member?.userCode === "ROLE_ADMIN" ? true : false
-                              }
-                            >
-                              ROLE_ADMIN
-                            </option>
-                            <option
-                              value="ROLE_MANAGER"
-                              selected={
-                                member?.userCode === "ROLE_MANAGER"
-                                  ? true
-                                  : false
-                              }
-                            >
-                              ROLE_MANAGER
-                            </option>
-                            <option
-                              value="ROLE_USER"
-                              selected={
-                                member?.userCode === "ROLE_USER" ? true : false
-                              }
-                            >
-                              ROLE_USER
-                            </option>
-                            <option
-                              value="ROLE_BLACK"
-                              selected={
-                                member?.userCode === "ROLE_BLACK" ? true : false
-                              }
-                            >
-                              ROLE_BLACK
-                            </option>
-                          </select>
+                        {loggedUserInfo?.userCode === "ROLE_ADMIN" &&
+                        member?.userCode === "ROLE_ADMIN" ? (
+                          "ROLE_ADMIN"
                         ) : (
                           <select value={role} onChange={handleRole}>
                             <option
@@ -289,7 +291,7 @@ const Detail = () => {
                         <></>
                       ) : (
                         <button type="button" onClick={deleteMember}>
-                          탈퇴
+                          강제탈퇴
                         </button>
                       )}
                     </div>

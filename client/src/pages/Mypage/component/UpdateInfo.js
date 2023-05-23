@@ -205,33 +205,6 @@ const UpdateInfo = () => {
     };
 
     if (window.confirm("탈퇴하시겠습니까?")) {
-      // const callDelete = () => {
-      //   const deleteMember = async () => {
-      //     const menuClickList = JSON.parse(localStorage.getItem("menuClick"));
-      //     return await axios.delete(
-      //       `https://iam-api.site/api/users/${loggedUserInfo.userNo}`,
-      //       {data:menuClickList}
-      //     );
-      //   };
-      //   //   try {
-      //   //     const response = await AuthAxios.delete(
-      //   //       `/api/users/${loggedUserInfo.userNo}`, null, menuList
-      //   //     );
-      //   //     console.log(response);
-      //   //     if (response.status === 200) {
-      //   //       alert("탈퇴되었습니다.");
-      //   //     }
-      //   //   } catch (err) {
-      //   //     console.log(`error 발생: ${err}`);
-      //   //   }
-      //   return deleteMember;
-      // };
-      // 로컬 비우고
-      // 로그아웃 시키고
-      // autoLogout();
-      // } else {
-      //   return false;
-      // callDelete();
       axios
         .delete(
           `https://iam-api.site/api/users/${loggedUserInfo.userNo}`,
