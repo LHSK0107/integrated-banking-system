@@ -110,7 +110,7 @@ const getOptions = () => ({
 });
 
 const Point = ({ data }) => {
-  console.log(data);
+  // console.log(data);
 
   return (
     <div>

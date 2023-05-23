@@ -103,11 +103,11 @@ const UserInfo = () => {
             if (res.data === true) {
               alert("중복된 아이디가 있습니다. 아이디를 다시 입력해주십시오.");
               setCheckId(false);
-              console.log(`id 체크 결과: ${res.data}`);
+              // console.log(`id 체크 결과: ${res.data}`);
             } else {
               alert("사용 가능한 아이디입니다.");
               setCheckId(true);
-              console.log(`id 체크 결과: ${res.data}`);
+              // console.log(`id 체크 결과: ${res.data}`);
             }
           });
       } else {
