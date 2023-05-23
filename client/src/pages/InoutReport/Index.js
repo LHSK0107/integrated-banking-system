@@ -39,7 +39,7 @@ const Index = () => {
         );
         setApiData(response.data);
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     loggedUserInfo?.userCode && getAvailableAcct();
@@ -164,9 +164,7 @@ const Index = () => {
         return inoutData;
     }
     getData().then(res=>{
-      console.log(`data가져옴`);
       setInoutDataList(res.data);
-      console.log(res.data);
     }).finally(()=>{
       setTimeout(()=>{
         setInoutDataList(null);
@@ -198,7 +196,7 @@ const Index = () => {
     return false;
   }
   const exportExcel = useCallback(() => {
-    console.log(inoutDataList);
+    // console.log(inoutDataList);
     return inoutDataList && <ExcelExportComponent data={inoutDataList} />;
   },[inoutDataList]);
   return (

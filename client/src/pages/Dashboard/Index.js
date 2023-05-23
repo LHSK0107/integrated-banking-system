@@ -25,7 +25,7 @@ const Index = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    console.log(loggedUserInfo);
+    // console.log(loggedUserInfo);
     const totalUri =
       loggedUserInfo?.userCode === "ROLE_USER"
         ? `/api/users/dashboard/totalBalances/${loggedUserInfo?.userNo}`
@@ -35,12 +35,11 @@ const Index = () => {
         const response = await AuthAxios.get(totalUri, {
           signal: controller.signal,
         });
-        console.log("res", response);
         if (response.status === 200) {
           setBalance(response.data);
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     const inoutUri =
@@ -52,7 +51,6 @@ const Index = () => {
         const response = await AuthAxios.get(inoutUri, {
           signal: controller.signal,
         });
-        // console.log(response);
         if (response.status === 200) {
           setInoutBal([
             response.data["day"],
@@ -61,7 +59,7 @@ const Index = () => {
           ]);
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     const hasAccountUri =
@@ -78,7 +76,7 @@ const Index = () => {
           setTotalAccount(response.data);
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     totalBalance(); // 총 계좌별 잔액 가져오기

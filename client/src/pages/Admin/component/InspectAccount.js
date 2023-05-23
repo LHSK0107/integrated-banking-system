@@ -24,14 +24,13 @@ const InspectAccount = () => {
         const response = await AuthAxios.get(`/api/manager/users`, {
           signal: controller.signal,
         });
-        console.log(response);
         if (response.status === 200) {
           setUserList(
             response.data.filter((ele) => ele.userCode === "ROLE_USER")
           );
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     // 전체 계좌 조회
@@ -40,12 +39,11 @@ const InspectAccount = () => {
         const response = await AuthAxios.get(`/api/manager/usersAccount`, {
           signal: controller.signal,
         });
-        console.log(response);
         if (response.status === 200) {
           setAccountList(response.data);
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     getUsers();
@@ -68,7 +66,6 @@ const InspectAccount = () => {
           signal: controller.signal,
         }
       );
-      console.log(response);
       if (response.status === 200) {
         setCheckedUser(userNo);
         setMemberAccountList(response.data);
@@ -79,7 +76,7 @@ const InspectAccount = () => {
         setCheckedVal(checkedAccounts);
       }
     } catch (err) {
-      console.log(`error 발생: ${err}`);
+      // console.log(err);
     }
   };
   // console.log(memberAccountList);
@@ -119,7 +116,7 @@ const InspectAccount = () => {
         {userList &&
           userList.map((ele) => (
             <li
-              className={ele?.userNo===checkedUser?"active flex":"flex"}
+              className={ele?.userNo === checkedUser ? "active flex" : "flex"}
               key={ele?.userNo}
               onClick={() => handleAccountList(ele?.userNo)}
             >
@@ -167,8 +164,8 @@ const InspectAccount = () => {
       );
     }
   };
-  console.log("checked 값",checkedVal);
-  console.log("checked 유저", checkedUser);
+  // console.log("checked 값", checkedVal);
+  // console.log("checked 유저", checkedUser);
 
   // 전체 계좌 목록 표 그리기
   function AccountItems({ accountList }) {
@@ -223,7 +220,15 @@ const InspectAccount = () => {
               key={dv}
               onClick={() => setSelectedDv(dv)}
             >
-              <p className="list_acctDv">{dv === "01" ? "입출금" : dv === "02" ? "예적금" : dv === "03" ? "대출" : ""}</p>
+              <p className="list_acctDv">
+                {dv === "01"
+                  ? "입출금"
+                  : dv === "02"
+                  ? "예적금"
+                  : dv === "03"
+                  ? "대출"
+                  : ""}
+              </p>
               {selectedDv === dv && (
                 <ul className="list_acctNo">
                   {Object.keys(groupedAccountsByBankCd[dv])
@@ -291,23 +296,29 @@ const InspectAccount = () => {
     e.preventDefault();
     const grantAccount = async () => {
       try {
-        const response = await AuthAxios.post(`/api/manager/grantAccount/${checkedUser}`, checkedVal);
-        console.log(response);
+        const response = await AuthAxios.post(
+          `/api/manager/grantAccount/${checkedUser}`,
+          checkedVal
+        );
         if (response.status === 200) {
-          console.log("success");
+          alert("계좌가 추가 및 수정되었습니다.")
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
-    if(checkedUser === null) alert("선택한 회원이 없습니다.");
+    if (checkedUser === null) alert("선택한 회원이 없습니다.");
     else {
       const msgVal = checkedVal.map((ele) => ele.acctNo);
-      if(window.confirm(`${checkedUser}에게 "${msgVal}" 계좌를 부여하시겠습니까?`))
+      if (
+        window.confirm(
+          `${checkedUser}에게 "${msgVal}" 계좌를 부여하시겠습니까?`
+        )
+      )
         grantAccount();
-        else {
-          return false;
-        }
+      else {
+        return false;
+      }
     }
   };
 

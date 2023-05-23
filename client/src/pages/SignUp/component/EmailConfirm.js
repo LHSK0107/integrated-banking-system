@@ -57,7 +57,7 @@ const UserInfo = () => {
     axios
       .post("https://iam-api.site/api/email/", { email: formData.email })
       .then((res) => {
-        console.log("이메일 전송 ok");
+        // console.log("이메일 전송 ok");
         SetsendVerifyCode(true);
       })
       .catch((err) =>{

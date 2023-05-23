@@ -19,7 +19,7 @@ const EmailExportComponent = ({data}) => {
         return await response.blob();
       }
       const sendEmailWithAttachment = async (blob)=>{
-        console.log(`sendEmail 함수 실행`);
+        // console.log(`sendEmail 함수 실행`);
         const formData = new FormData();
         formData.append("file",blob,"일일시재보고서.xlsx");
         const response = await AuthAxios.post("https://iam-api.site/api/users/reports/email", formData, {
