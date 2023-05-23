@@ -238,14 +238,14 @@ public class AdminService {
 	}
 
 	// 권한 위임
-	public boolean grantAdmin(HttpServletRequest request, HttpServletResponse response, UpdateUserVO updateUserVO) {
+	public boolean grantAdmin(HttpServletRequest request, HttpServletResponse response, int ManagerUserNo) {
 		String accessToken = request.getHeader("Authorization")
 						.replace(jwtConfig.getTokenPrefix(), "");
 		int adminsUserNo = jwtTokenProvider.getUserNoFromToken(accessToken);
 		try {
 			// 위임 받는 매니저의 정보 업데이트
-			String updateFlag = userService.updateUser("ROLE_ADMIN", updateUserVO);
-			if (updateFlag.equals("success")) {
+			int grantFlag = adminMapper.grantAdminToManager(ManagerUserNo);
+			if (grantFlag > 0) {
 				// 위임 후 ROLE_ADMIN을 ROLE_USER로 바꿈
 				int afterGrantFlag = adminMapper.afterGrantAdmin(adminsUserNo);
 				if (afterGrantFlag > 0) {

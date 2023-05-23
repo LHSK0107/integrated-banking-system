@@ -32,7 +32,6 @@ const Dept = () => {
         const response = await AuthAxios.get(`/api/dept`, {
           signal: controller.signal,
         });
-        console.log(response);
         if (response.status === 200) {
           setDeptList(
             response.data.sort((a, b) => {
@@ -42,7 +41,7 @@ const Dept = () => {
           );
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     getDept();
@@ -73,7 +72,7 @@ const Dept = () => {
       return updatedDeptList;
     });
   };
-  console.log(changeDept);
+  // console.log(changeDept);
 
   // 수정하기 버튼 클릭시
   const handleSubmit = (e) => {
@@ -82,13 +81,12 @@ const Dept = () => {
     const updateDept = async () => {
       try {
         const response = await AuthAxios.put(`/api/admin/dept`, changeDept);
-        console.log(response);
         if (response.status === 200) {
           alert("수정되었습니다.");
           // window.location.reload();
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     if (changeDept.deptNo === "" || changeDept.dept === "")
@@ -101,12 +99,12 @@ const Dept = () => {
     }
   };
 
-  console.log(addDept);
+  // console.log(addDept);
   // 추가 버튼 클릭시
   const hadleInsert = (e) => {
     e.preventDefault();
     const addDeptVal = {deptNo: e.target[0].value,dept: e.target[1].value};
-    console.log(addDeptVal);
+    // console.log(addDeptVal);
 
     // setAddDept({
     //     deptNo: e.target[0].value,
@@ -118,13 +116,12 @@ const Dept = () => {
             `/api/admin/dept`,
             addDeptVal
           );
-          console.log(response);
           if (response.status === 200) {
             alert("추가되었습니다.");
             window.location.reload();
           }
         } catch (err) {
-          console.log(err);
+          // console.log(err);
           alert(err.response.data);
         }
       };
@@ -134,19 +131,17 @@ const Dept = () => {
 
   // 삭제 버튼 클릭시
   const handleDelete = (e) => {
-    // console.log(e);
     const deleteDept = async () => {
       try {
         const response = await AuthAxios.delete(
           `/api/admin/dept/${e.deptNo}`
         );
-        console.log(response);
         if (response.status === 200) {
           alert("삭제되었습니다.");
           window.location.reload();
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     if (window.confirm(`${e.dept}를 삭제하시겠습니까?`)) deleteDept();

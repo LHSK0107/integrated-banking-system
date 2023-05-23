@@ -17,7 +17,7 @@ const EmailExportComponent = ({data}) => {
         return await response.blob();
       }
       const sendEmailWithAttachment = async (blob)=>{
-        console.log(`sendEmail 함수 실행`);
+        // console.log(`sendEmail 함수 실행`);
         const formData = new FormData();
         formData.append("file",blob,"일일시재보고서.xlsx");
         const response = await AuthAxios.post("https://iam-api.site/api/users/reports/email", formData, {
@@ -34,7 +34,7 @@ const EmailExportComponent = ({data}) => {
         return response.data;
       }
       return fetchBlobData(url).then((blob)=>{
-        console.log('url 생성');
+        // console.log('url 생성');
         return sendEmailWithAttachment(blob);
       });
     });
@@ -486,7 +486,7 @@ const EmailExportComponent = ({data}) => {
     const formData = new FormData();
     formData.append("file",blob,"일일시재보고서.xlsx");
     const response = await AuthAxios.post("https://iam-api.site/reports/email",formData);
-    console.log(`email 요청 결과: ${response.data}`);
+    // console.log(`email 요청 결과: ${response.data}`);
     return response.data;
   }
   // return <button onClick={() => excelDownload()}>Excel 내보내기</button>;

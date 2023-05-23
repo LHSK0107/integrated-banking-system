@@ -4,7 +4,7 @@ const useRefreshToken = () => {
   const { setToken2 } = useAuth();
   const refresh = async () => {
     try { // accessToken 재발급 시도
-      console.log("accessToken 재발급 실행");
+      // console.log("accessToken 재발급 실행");
       const response = await axios.post("/api/reAccessToken");
       const token = response.headers.get("Authorization").split(" ")[1];
       localStorage.removeItem("jwt");

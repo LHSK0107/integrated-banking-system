@@ -14,38 +14,15 @@ const NewsSlider = () => {
   const news_wrap = useRef();
   const [news, setNews] = useState([]);
 
-  // useEffect(() => {
-  //   const controller = new AbortController();
-
-  //   const newsData= async () => {
-  //     try {
-  //       const response = await AuthAxios.get("/api/news");
-  //       if (response.status === 200) {
-  //         clearData(response.data);
-  //       }
-  //     } catch (err) {
-  //       console.log(`error 발생: ${err}`);
-  //       news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
-  //     }
-  //   };
-
-  //   newsData();
-
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, [AuthAxios]);
   useEffect(() => {
-    // const url = "http://localhost:8080/api/news";
     const url = "https://iam-api.site/api/news";
     axios
       .get(url)
       .then((response) => {
-        console.log(response);
         clearData(response.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         news_wrap.current.innerHTML = "데이터를 불러올 수 없습니다.";
       });
   }, []);

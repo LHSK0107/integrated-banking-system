@@ -93,6 +93,10 @@
 		DELETE FROM user_account WHERE user_no = #{userNo}
 	</delete>
 	
+	<update id="grantAdminToManager">
+		UPDATE user SET user_code = 'ROLE_ADMIN' WHERE user_no = #{userNo}  
+	</update>
+	
 	<update id="afterGrantAdmin">
 		UPDATE user SET user_code = 'ROLE_USER' WHERE user_no = #{userNo}
 	</update>

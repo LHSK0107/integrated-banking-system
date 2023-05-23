@@ -24,12 +24,12 @@ const PersonalInfo = () => {
     const getDept = async () => {
       try {
         const response = await AuthAxios.get(`/api/dept`);
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           setDept(response.data.map((ele) => ele.dept));
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     getDept();
@@ -52,9 +52,9 @@ const PersonalInfo = () => {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-    console.log(
-      `data: ${data}, id:${formData.id},pw:${formData.password}, email:${formData.email}`
-    );
+    // console.log(
+    //   `data: ${data}, id:${formData.id},pw:${formData.password}, email:${formData.email}`
+    // );
     const values = {
       name: data.name,
       dept: data.dept,
