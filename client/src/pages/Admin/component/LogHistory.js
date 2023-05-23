@@ -36,7 +36,7 @@ const LogHistory = () => {
           setLog(response.data);
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     logRecord();

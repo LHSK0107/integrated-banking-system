@@ -41,7 +41,7 @@ const UpdateInfo = () => {
           });
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     getInfo();
@@ -55,7 +55,7 @@ const UpdateInfo = () => {
   const [pwValue, setPwValue] = useState(null);
   const [confirmPwValue, setConfirmPwValue] = useState(null);
   const [telValue, setTelValue] = useState(null);
-  console.log(prePwValue, pwValue, confirmPwValue, telValue);
+  // console.log(prePwValue, pwValue, confirmPwValue, telValue);
 
   // form 유효성 검사
   const schema = yup.object().shape({
@@ -111,7 +111,7 @@ const UpdateInfo = () => {
       data.confirmPassword === null &&
       data.tel === null
     ) {
-      console.log("모두 null");
+      // console.log("모두 null");
       alert("변경사항이 없습니다.");
     }
     // 패스워드만 null이고 전화번호는 변경했을 때
@@ -134,7 +134,7 @@ const UpdateInfo = () => {
             navigate("/");
           }
         } catch (err) {
-          console.log(`error 발생: ${err}`);
+          // console.log(err);
         }
       };
       updateTel();
@@ -173,7 +173,7 @@ const UpdateInfo = () => {
                   }
                 } catch (err) {
                   alert(err.response.data.message);
-                  console.log(`error 발생: ${err}`);
+                  // console.log(err);
                 }
               };
               updatePwTel();
@@ -183,17 +183,17 @@ const UpdateInfo = () => {
             }
           } catch (err) {
             alert(err.response.data.message);
-            console.log(`error 발생: ${err}`);
+            // console.log(err);
           }
         };
         checkPassword();
         // 틀리면 땡!
       } else {
-        console.log(data);
+        // console.log(data);
       }
     }
   };
-  console.log(menuList);
+  // console.log(menuList);
 
   const handleWithdraw = () => {
     /** logout시, context 비우는 함수 */
@@ -212,7 +212,7 @@ const UpdateInfo = () => {
           { withCredentials: true }
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.status === 200) {
             alert("탈퇴되었습니다.");
             localStorage.removeItem("jwt");
@@ -220,7 +220,7 @@ const UpdateInfo = () => {
             logout();
           }
         })
-        .catch((err) => console.log(err));
+        // .catch((err) => console.log(err));
     }
   };
 

@@ -37,7 +37,7 @@ const Detail = () => {
           setRename(response.data.name);
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
     };
     const getDept = async () => {
@@ -45,12 +45,12 @@ const Detail = () => {
         const response = await AuthAxios.get(`/api/dept`, {
           signal: controller.signal,
         });
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           setDept(response.data.map((ele) => ele.dept));
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
     };
     getUsers(); // 회원 한 명 정보
@@ -130,13 +130,13 @@ const Detail = () => {
           { withCredentials: true }
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.status === 200) {
             alert("탈퇴되었습니다.");
             navigate("/admin");
           }
         })
-        .catch((err) => console.log(err));
+        // .catch((err) => console.log(err));
     } else {
       return false;
     }
@@ -158,7 +158,7 @@ const Detail = () => {
           userNo: member.userNo,
           userCode: "ROLE_ADMIN",
         });
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           alert("위임되었습니다.");
           localStorage.removeItem("jwt");
@@ -166,7 +166,7 @@ const Detail = () => {
           logout();
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
     };
     if (window.confirm("위임하시겠습니까?")) {

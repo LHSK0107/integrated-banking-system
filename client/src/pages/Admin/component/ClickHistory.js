@@ -52,7 +52,7 @@ const ClickHistory = () => {
       .then((res) => {
         if (res.status === 200) {
           setClick(res.data);
-          console.log(res);
+          // console.log(res);
         }
       })
       .catch((err) => {

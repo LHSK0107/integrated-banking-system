@@ -16,7 +16,7 @@ const EmailExportComponent = ({ stateData, depAInsData, loadData, stateBal, depI
         return await response.blob();
       }
       const sendEmailWithAttachment = async (blob)=>{
-        console.log(`sendEmail 함수 실행`);
+        // console.log(`sendEmail 함수 실행`);
         const formData = new FormData();
         formData.append("file",blob,"전체계좌조회.xlsx");
         const response = await AuthAxios.post("https://iam-api.site/api/users/reports/email", formData, {
@@ -33,7 +33,7 @@ const EmailExportComponent = ({ stateData, depAInsData, loadData, stateBal, depI
         return response.data;
       }
       return fetchBlobData(url).then((blob)=>{
-        console.log('url 생성');
+        // console.log('url 생성');
         return sendEmailWithAttachment(blob);
       });
     });

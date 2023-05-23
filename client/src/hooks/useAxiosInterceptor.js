@@ -9,7 +9,7 @@ const useAxiosInterceptor = () => {
     useEffect(()=>{
         const requestIntercept = AuthAxios.interceptors.request.use(
             (config) => {
-                console.log(`AuthAxios요청발생`);
+                // console.log(`AuthAxios요청발생`);
                 if(!config.headers['Authorization']){ // 헤더에 없거나 최초 요청 시 실행
                     config.headers['Authorization'] = `Bearer ${localStorage.getItem("jwt")}`;
                 }

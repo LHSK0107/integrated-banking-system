@@ -44,12 +44,12 @@ export default function ConfirmPw() {
         });
         if (response.data === true) {
           setStepNum(stepNum + 1);
-          console.log(response.data);
+          // console.log(response.data);
         } else if (response.data === false) {
           alert("비밀번호가 틀립니다");
         }
       } catch (err) {
-        console.log(`error 발생: ${err}`);
+        // console.log(err);
       }
     };
     checkPassword();
