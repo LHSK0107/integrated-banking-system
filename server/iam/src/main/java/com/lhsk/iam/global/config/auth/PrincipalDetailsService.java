@@ -37,7 +37,6 @@ public class PrincipalDetailsService implements UserDetailsService{
 		
 		UserVO userEntity =  loginMapper.findUserById(id);
 		
-		// 이 부분을 추가하면 ROLE_BLACK을 가진 사용자를 찾을 수 있습니다.
 	    if (userEntity.getUserCodeList().get(0).equals("ROLE_BLACK")) {
 	    	log.info("차단된 계정 : "+id);
 	        throw new DisabledException("This user is blacklisted");
