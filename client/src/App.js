@@ -26,20 +26,20 @@ import decodeJwt from "./utils/decodeJwt";
 const App = () => {
   const { setToken2, setLoggedUserInfo } = useAuth();
 
-  // beforeunload -> text 변경 불가, 모바일에서는 visibilityChange 이벤트 각
-  const beforeUnloadListener = (e) => {
-    e.preventDefault();
-    return (e.returnValue="");
-  }
-  const onBeforeUnloadEvent = () =>{
-    window.addEventListener("beforeunload", beforeUnloadListener,{capture:true});
-    localStorage.removeItem("jwt");
-    setToken2(null);
-  }
-  const offBeforeUnloadEvent = () => {
-    window.removeEventListener("beforeunload",beforeUnloadListener,{capture: true});
-  }
-  offBeforeUnloadEvent();
+  // // beforeunload -> text 변경 불가, 모바일에서는 visibilityChange 이벤트 각
+  // const beforeUnloadListener = (e) => {
+  //   e.preventDefault();
+  //   return (e.returnValue="");
+  // }
+  // const onBeforeUnloadEvent = () =>{
+  //   window.addEventListener("beforeunload", beforeUnloadListener,{capture:true});
+  //   localStorage.removeItem("jwt");
+  //   setToken2(null);
+  // }
+  // const offBeforeUnloadEvent = () => {
+  //   window.removeEventListener("beforeunload",beforeUnloadListener,{capture: true});
+  // }
+  // offBeforeUnloadEvent();
   
   const client = new QueryClient({
     defaultOptions: {
@@ -61,7 +61,7 @@ const App = () => {
         userNo: decodedPayload.userNo,
       });
     }
-    onBeforeUnloadEvent();
+    // onBeforeUnloadEvent();
   }, []);
   return (
     <div className="App">
@@ -79,7 +79,7 @@ const App = () => {
               <Route path="/mypage" element={<Mypage />} />
               <Route path="inout">
                 <Route index element={<InOut />} />
-                <Route path=":bankCD/:acctNo" element={<InOut />} />
+                <Route path=":bankCd/:acctNo" element={<InOut />} />
               </Route>
               <Route path="/inquiry" element={<Inquiry />} />
               <Route path="/admin">

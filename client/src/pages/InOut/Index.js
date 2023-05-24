@@ -13,7 +13,7 @@ import useAuth from "../../hooks/useAuth";
 import ReactPaginate from "react-paginate";
 
 const Index = () => {
-  const { bankCD, acctNo } = useParams();
+  const { bankCd, acctNo } = useParams();
   const AuthAxios = useAxiosInterceptor();
   const { loggedUserInfo } = useAuth();
   const [index, setIndex] = useState(0);
@@ -90,8 +90,8 @@ const Index = () => {
       );
     });
     useEffect(()=>{
-      bankListOption && setOptionVal({...optionVal, bankCD: bankCD, acctNO: acctNo});
-    },[apiData,bankCD,acctNo]);
+      (bankListOption && bankCd && acctNo) && setOptionVal({...optionVal, bankCD: bankCd, acctNO: acctNo});
+    },[bankListOption,bankCd,acctNo]);
 
   /** 은행명 select 값 handler */
   const handleBankNMSelectOnChange = (e) => {
@@ -103,10 +103,8 @@ const Index = () => {
   };
   /** 페이지 건수 값 handler */
 
-
   /** 은행명 select 값에 따른 계좌번호 리스트 변경 */
   const acctListOption = () =>
-    apiData &&
     apiData
       ?.filter((ele) => {
         if (optionVal?.bankCD === "") {
