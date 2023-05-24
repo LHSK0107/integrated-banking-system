@@ -110,9 +110,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	        message = "차단된 계정입니다.";
 	        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // HTTP 응답 코드 403 Forbidden 설정
 	    } else if (failed instanceof BadCredentialsException) {
-	        message = "비밀번호가 잘못 입력되었습니다.";
+	        message = "아이디 혹은 비밀번호를 확인해 주세요";
 	    } else {
-	        message = "아이디가 존재하지 않습니다.";
+	        message = "아이디 혹은 비밀번호를 확인해 주세요";
 	    }
 
        response.getWriter().write("{\"message\":\"" + message + "\"}"); // 실패 메시지 반환
