@@ -24,6 +24,8 @@ Client
   ㄴ commons
   ㄴ pages
   ㄴ setup
+  ㄴ utils
+  ㄴ api
 - App.css
 - App.js
 - index.js
